@@ -258,48 +258,15 @@ define([
         };
     }]);
     
-    module.directive('singleFile', function($fileUploader, $http) {
+    module.directive('singleFile', function(FileUploader, $http) {
         return {
             restrict: 'A',
             templateUrl: '/template/KapFileManager/single-file',
             replace: true,
-            //require: 'ngModel',
             scope: {
                 uploadData: "=uploadData",
                 item: "=fileId"
             },
-//            link: function($scope, element, attributes, ngModel) {
-//                $scope.file = null;
-//                
-//                if(ngModel.$modelValue) {
-//                    $http.get('/file/' + ngModel.$modelValue).success(function(data) {
-//                        $scope.file = data;
-//                    });
-//                }
-//
-//                var uploader = $scope.uploader = $fileUploader.create({
-//                    scope: $scope,
-//                    url: '/file',
-//                    autoUpload: true,
-//                    removeAfterUpload: true
-//                });
-//
-//                uploader.bind('afteraddingfile', function (event, item) {
-//                    item.formData.push($scope.uploadData);
-//                });
-//
-//                uploader.bind('success', function(event, xhr, item, response) {
-//                    ngModel.$setViewValue(response.id);
-//                    $scope.file = response;
-//                });
-//
-//                $scope.remove = function() {
-//                    $http.delete('/file/' + ngModel.$modelValue).success(function() {
-//                        ngModel.$setViewValue(null);
-//                        $scope.file = null;
-//                    });
-//                }
-//            }
             controller: function($scope) {
                 $scope.file = null;
                 
@@ -311,22 +278,21 @@ define([
                     });
                 }
 
-                var uploader = $scope.uploader = $fileUploader.create({
-                    scope: $scope,
+                var uploader = $scope.uploader = new FileUploader({
                     url: '/file',
                     autoUpload: true,
                     removeAfterUpload: true
                 });
 
-                uploader.bind('afteraddingfile', function (event, item) {
+                uploader.onAfterAddingFile = function (item) {
                     item.formData.push($scope.uploadData);
-                });
+                };
 
-                uploader.bind('success', function(event, xhr, item, response) {
+                uploader.onSuccessItem = function(fileItem, response, status, headers) {
                     $scope.item.file_id = response.id;
                     $scope.fileId = response.id;
                     $scope.file = response;
-                });
+                }
 
                 $scope.remove = function() {
                     $http.delete('/file/' + $scope.fileId).success(function() {

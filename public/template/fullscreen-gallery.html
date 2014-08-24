@@ -5,7 +5,7 @@
 <div class="modal-body">
     <div ng-if="currentItem.type === 'FILE'">
         <a href ng-click="nextItem()">
-            <img ng-src="{{currentItem._embedded.thumbnail_file._links.thumbnail_default.href}}" class="img-responsive">
+            <img ng-src="{{currentItem._embedded.thumbnail_file._links.access.href}}" class="img-responsive">
         </a>
     </div>
     <div ng-if="currentItem.type === 'YOUTUBE_VIDEO_ID'" class="embed-responsive embed-responsive-16by9">
@@ -18,7 +18,7 @@
     <ul class="pagination">
         <li><a href="#">&laquo;</a></li>
         <li ng-repeat="item in albumItems" ng-click="setCurrent(item)">
-            <img ng-src="{{item._embedded.thumbnail_file._links.thumbnail_default.href}}" style="width: 100px; height: 100px">
+            <img ng-src="{{item._embedded.thumbnail_file._links.thumbnail_gallery_item.href}}" style="width: 128px; height: 72px">
         </li>
         <li><a href="#">&raquo;</a></li>
     </ul>

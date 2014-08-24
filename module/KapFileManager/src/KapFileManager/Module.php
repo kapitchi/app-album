@@ -7,6 +7,7 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Provider\ApigilityProviderInterface;
+use ZF\Hal\Link\Link;
 
 class Module implements ApigilityProviderInterface, ServiceProviderInterface
 {
@@ -41,7 +42,7 @@ class Module implements ApigilityProviderInterface, ServiceProviderInterface
         
         if($entity instanceof FileEntity && $entity['type'] === 'FILE') {
             
-            $entity['access'] = \ZF\Hal\Link\Link::factory(array(
+            $entity['access'] = Link::factory(array(
                 'rel' => 'access',
                 'route' => [
                     'name' => 'kap-file-manager.rpc.file-access',
@@ -51,7 +52,7 @@ class Module implements ApigilityProviderInterface, ServiceProviderInterface
                 ],
             ));
 
-            $entity['download'] = \ZF\Hal\Link\Link::factory(array(
+            $entity['download'] = Link::factory(array(
                 'rel' => 'download',
                 'route' => [
                     'name' => 'kap-file-manager.rpc.file-access',
@@ -66,26 +67,38 @@ class Module implements ApigilityProviderInterface, ServiceProviderInterface
                 ],
             ));
             
+            $this->injectThumbnailLinks($entity);
+        }
+        
+    }
+    
+    protected function injectThumbnailLinks($entity) {
+        
+        $config = $this->sm->get('Config');
+        
+        if(empty($config['file-manager']['thumbnail-types'])) {
+            return [];
+        }
+        
+        foreach($config['file-manager']['thumbnail-types'] as $typeName => $type) {
             if(strpos($entity['mime_type'], 'image') === 0) {
-                $entity['thumbnail_default'] = \ZF\Hal\Link\Link::factory(array(
-                    'rel' => 'thumbnail_default',
+                $entity['thumbnail_' . $typeName] = Link::factory(array(
+                    'rel' => 'thumbnail_' . $typeName,
                     'route' => [
-                        'name' => 'kap-file-manager.rpc.file-access',
+                        'name' => 'kap-file-manager.rpc.file-thumbnail',
                         'params' => [
+                            'filter' => $type['filter'],
+                            'width' => $type['width'],
+                            'height' => $type['height'],
                             'file_id' => $entity['id']
                         ]
                     ],
                 ));
             }
             else {
-                $entity['thumbnail_default'] = \ZF\Hal\Link\Link::factory(array(
-                    'rel' => 'thumbnail_default',
-                    'url' => 'http://www.180s.com/images/catalog/product/missing/color/detail.gif'
-                ));
+                throw new \Exception("TODO");
             }
-            
         }
-        
     }
     
     public function getConfig()

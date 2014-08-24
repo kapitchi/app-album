@@ -4,6 +4,7 @@ return array(
         'factories' => array(
             'KapFileManager\\V1\\Rpc\\FilesystemSync\\Controller' => 'KapFileManager\\V1\\Rpc\\FilesystemSync\\FilesystemSyncControllerFactory',
             'KapFileManager\\V1\\Rpc\\FileAccess\\Controller' => 'KapFileManager\\V1\\Rpc\\FileAccess\\FileAccessControllerFactory',
+            'KapFileManager\\V1\\Rpc\\FileThumbnail\\Controller' => 'KapFileManager\\V1\\Rpc\\FileThumbnail\\FileThumbnailControllerFactory',
         ),
     ),
     'router' => array(
@@ -37,6 +38,16 @@ return array(
                     ),
                 ),
             ),
+            'kap-file-manager.rpc.file-thumbnail' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/file_thumbnail/:filter:-:width:-:height:/:file_id:.jpg',
+                    'defaults' => array(
+                        'controller' => 'KapFileManager\\V1\\Rpc\\FileThumbnail\\Controller',
+                        'action' => 'fileThumbnail',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -44,6 +55,7 @@ return array(
             0 => 'kap-file-manager.rest.file',
             1 => 'kap-file-manager.rpc.filesystem-sync',
             2 => 'kap-file-manager.rpc.file-access',
+            3 => 'kap-file-manager.rpc.file-thumbnail',
         ),
     ),
     'zf-rpc' => array(
@@ -61,12 +73,20 @@ return array(
             ),
             'route_name' => 'kap-file-manager.rpc.file-access',
         ),
+        'KapFileManager\\V1\\Rpc\\FileThumbnail\\Controller' => array(
+            'service_name' => 'FileThumbnail',
+            'http_methods' => array(
+                0 => 'GET',
+            ),
+            'route_name' => 'kap-file-manager.rpc.file-thumbnail',
+        ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
             'KapFileManager\\V1\\Rest\\File\\Controller' => 'HalJson',
             'KapFileManager\\V1\\Rpc\\FilesystemSync\\Controller' => 'Json',
             'KapFileManager\\V1\\Rpc\\FileAccess\\Controller' => 'Json',
+            'KapFileManager\\V1\\Rpc\\FileThumbnail\\Controller' => 'Json',
         ),
         'accept_whitelist' => array(
             'KapFileManager\\V1\\Rest\\File\\Controller' => array(
@@ -84,6 +104,11 @@ return array(
                 1 => 'application/json',
                 2 => 'application/*+json',
             ),
+            'KapFileManager\\V1\\Rpc\\FileThumbnail\\Controller' => array(
+                0 => 'application/vnd.kap-file-manager.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ),
         ),
         'content_type_whitelist' => array(
             'KapFileManager\\V1\\Rest\\File\\Controller' => array(
@@ -95,6 +120,10 @@ return array(
                 1 => 'application/json',
             ),
             'KapFileManager\\V1\\Rpc\\FileAccess\\Controller' => array(
+                0 => 'application/vnd.kap-file-manager.v1+json',
+                1 => 'application/json',
+            ),
+            'KapFileManager\\V1\\Rpc\\FileThumbnail\\Controller' => array(
                 0 => 'application/vnd.kap-file-manager.v1+json',
                 1 => 'application/json',
             ),
