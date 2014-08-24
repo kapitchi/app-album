@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <button ng-click="$dismiss()" type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title">Video title</h3>
+</div>
+<div class="modal-body">
+    <div ng-if="currentItem.type === 'FILE'">
+        <a href ng-click="nextItem()">
+            <img ng-src="{{currentItem._embedded.thumbnail_file._links.thumbnail_default.href}}" class="img-responsive">
+        </a>
+    </div>
+    <div ng-if="currentItem.type === 'YOUTUBE_VIDEO_ID'" class="embed-responsive embed-responsive-16by9">
+        <iframe ng-src="{{getYoutubeVideoEmbedUrl(currentItem)}}"
+                class="embed-responsive-item" type="text/html"
+                frameborder="0" allowFullScreen></iframe>
+    </div>
+</div>
+<div class="modal-footer">
+    <ul class="pagination">
+        <li><a href="#">&laquo;</a></li>
+        <li ng-repeat="item in albumItems" ng-click="setCurrent(item)">
+            <img ng-src="{{item._embedded.thumbnail_file._links.thumbnail_default.href}}" style="width: 100px; height: 100px">
+        </li>
+        <li><a href="#">&raquo;</a></li>
+    </ul>
+</div>

@@ -8,7 +8,7 @@
         <input ng-file-select type="file" />
     </div>
     <div ng-show="fileId">
-        TODO SHOW {{fileId}} FILE PREVIEW
+        <img ng-src="{{file._links.thumbnail_default.href}}" class="img-responsive">
         <button ng-click="remove()" class="btn btn-danger">Remove</button>
     </div>
 </div>

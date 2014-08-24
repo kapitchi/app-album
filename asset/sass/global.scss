@@ -11,11 +11,37 @@
 //AngularJS - xeditable
 @import "vendor/angular-xeditable";
 
+@import "../../public/vendor/angular-ui-tree/source/angular-ui-tree";
+
 //modules
 @import "module/kap-file-manager";
 
 body {
   padding-top: 50px;
+}
+
+
+.modal {
+  &.full-screen {
+    height: 100%;
+    .modal-dialog {
+      margin: 0px;
+      width: 100%;
+      height: 100%;
+      .modal-content {
+        height: 100%;
+        //background: transparent;
+        .modal-body{
+          height: 70%
+        }
+        .modal-header, .modal-footer {
+          height: 15%;
+          overflow: hidden;
+        }
+
+      }
+    }
+  }
 }
 
 //spinner

@@ -2,6 +2,7 @@ require.config({
     baseUrl: '/',
     paths: {
         jquery: 'vendor/jquery/dist/jquery',
+        'jquery-ui': 'vendor/jquery-ui/jquery-ui.min',
         angular: 'vendor/angular/angular',
         affix: 'vendor/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix',
         alert: 'vendor/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert',
@@ -20,11 +21,18 @@ require.config({
         'angular-ui-router': 'vendor/angular-ui-router/release/angular-ui-router',
         'angular-file-upload': 'vendor/angular-file-upload/angular-file-upload',
         'angular-xeditable': 'vendor/angular-xeditable/dist/js/xeditable',
-        'ng-aloha-editor': 'vendor/ng-aloha-editor/ng-aloha-editor'
+        'ng-aloha-editor': 'vendor/ng-aloha-editor/ng-aloha-editor',
+        'angular-ui-sortable': 'vendor/angular-ui-sortable/sortable',
+        'angular-ui-tree': 'vendor/angular-ui-tree/dist/angular-ui-tree'
     },
     shim: {
         jquery: {
             exports: 'jquery'
+        },
+        'jquery-ui': {
+            deps: [
+                'jquery'
+            ]
         },
         angular: {
             exports: 'angular',
@@ -135,7 +143,18 @@ require.config({
                 'angular'
             ]
         },
+        'angular-ui-sortable': {
+            deps: [
+                'angular',
+                'jquery-ui'
+            ]
+        },
         'angular-xeditable': {
+            deps: [
+                'angular'
+            ]
+        },
+        'angular-ui-tree': {
             deps: [
                 'angular'
             ]

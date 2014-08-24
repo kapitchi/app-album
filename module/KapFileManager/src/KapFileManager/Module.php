@@ -27,47 +27,65 @@ class Module implements ApigilityProviderInterface, ServiceProviderInterface
         $helpers = $this->sm->get('ViewHelperManager');
         $hal = $helpers->get('hal');
 
-        $hal->getEventManager()->attach(['renderEntity'], array($this, 'onRenderEntity'));
-        //$hal->getEventManager()->attach(['renderCollection.entity'], array($this, 'onRenderCollectionEntity'));
-    }
-
-    public function onRenderCollectionEntity($e)
-    {
-        $entity = $e->getParam('entity');
-        if(!$entity instanceof FileEntity) {
-            return;
-        }
-        
-        //TODO
+        $hal->getEventManager()->attach(['renderEntity', 'renderCollection.entity'], array($this, 'onRenderEntity'));
     }
 
     public function onRenderEntity($e)
     {
-        $halEntity = $e->getParam('entity');
-        $entity = $halEntity->entity;
-        
-        if(!$entity instanceof FileEntity) {
-            return;
+        if($e->getName() === 'renderEntity') {
+            $entity = $e->getParam('entity')->entity;
+        }
+        else {
+            $entity = $e->getParam('entity');
         }
         
-        $filesystems = $this->sm->get('KapFileManager\FilesystemManager');
-        $filesystem = $filesystems->get($entity['filesystem']);
-
-        try {
-            //TODO
-            //$url = $filesystem->getUrl($entity['filesystem_path']);
-            $halEntity->getLinks()->add(\ZF\Hal\Link\Link::factory(array(
+        if($entity instanceof FileEntity && $entity['type'] === 'FILE') {
+            
+            $entity['access'] = \ZF\Hal\Link\Link::factory(array(
                 'rel' => 'access',
-                'url' => '/file-access?id=' . $entity['id']
-            )));
+                'route' => [
+                    'name' => 'kap-file-manager.rpc.file-access',
+                    'params' => [
+                        'file_id' => $entity['id']
+                    ]
+                ],
+            ));
 
-            $halEntity->getLinks()->add(\ZF\Hal\Link\Link::factory(array(
+            $entity['download'] = \ZF\Hal\Link\Link::factory(array(
                 'rel' => 'download',
-                'url' => '/file-access?download=1&id=' . $entity['id']
-            )));
-        } catch(\LogicException $e) {
-            //can't find URL plugin for this file
+                'route' => [
+                    'name' => 'kap-file-manager.rpc.file-access',
+                    'params' => [
+                        'file_id' => $entity['id']
+                    ],
+                    'options' => [
+                        'query' => [
+                            'download' => true
+                        ]
+                    ]
+                ],
+            ));
+            
+            if(strpos($entity['mime_type'], 'image') === 0) {
+                $entity['thumbnail_default'] = \ZF\Hal\Link\Link::factory(array(
+                    'rel' => 'thumbnail_default',
+                    'route' => [
+                        'name' => 'kap-file-manager.rpc.file-access',
+                        'params' => [
+                            'file_id' => $entity['id']
+                        ]
+                    ],
+                ));
+            }
+            else {
+                $entity['thumbnail_default'] = \ZF\Hal\Link\Link::factory(array(
+                    'rel' => 'thumbnail_default',
+                    'url' => 'http://www.180s.com/images/catalog/product/missing/color/detail.gif'
+                ));
+            }
+            
         }
+        
     }
     
     public function getConfig()

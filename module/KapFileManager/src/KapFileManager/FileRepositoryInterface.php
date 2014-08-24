@@ -16,6 +16,6 @@ use ZF\MvcAuth\Identity\IdentityInterface;
 
 interface FileRepositoryInterface extends EntityRepositoryInterface {
     public function sync(FilesystemManager $manager, $filesystemName, IdentityInterface $identity = null, $path = null);
-    public function createFileEntityFromPath(FilesystemManager $manager, $filesystemName, $path, IdentityInterface $identity);
+    public function createFileEntityFromPath(FilesystemManager $manager, $filesystemName, $path, IdentityInterface $identity = null);
     public function fetchByPath($filesystemName, $path);
 } 

@@ -1,9 +1,11 @@
 <?php
 namespace KapSecurity;
 
+use KapApigility\DbEntityRepository;
 use KapSecurity\Authentication\Adapter\OAuth2;
 use KapSecurity\Authentication\Adapter\CallbackAdapterInterface;
 use KapSecurity\Authentication\AuthenticationService;
+use KapSecurity\Authentication\Options;
 use KapSecurity\V1\Rest\AuthenticationService\AuthenticationServiceEntity;
 use KapSecurity\V1\Rest\IdentityAuthentication\IdentityAuthenticationResource;
 use Zend\Db\TableGateway\TableGateway;
@@ -30,9 +32,6 @@ class Module implements ApigilityProviderInterface
     
     public function onRender($e)
     {
-        //this needs to be onRender otherwise it would throw an exception, it looks like hal can't be created before onRender
-        //"Missing parameter "name" - Zend/Mvc/Router/Http/Segment.php(313) - Zend\Mvc\Router\Http\Segment->buildPath(Array, Array, true, true, Array)
-        
         $helpers = $this->sm->get('ViewHelperManager');
         $hal = $helpers->get('hal');
 
@@ -77,23 +76,20 @@ class Module implements ApigilityProviderInterface
     public function getServiceConfig()
     {
         return [
+            'aliases' => [
+                'Zend\Authentication\AuthenticationService' => 'KapSecurity\Authentication\AuthenticationService'
+            ],
             'factories' => [
                 'KapSecurity\Authentication\Adapter\AdapterManager' => 'KapSecurity\Authentication\Adapter\AdapterManager',
                 'KapSecurity\Authentication\AuthenticationService' => function($sm) {
+                        $config = $sm->get('Config');
+                        $options = empty($config['authentication_options']) ? [] : $config['authentication_options']; 
                         return new AuthenticationService(
-                            $sm->get('KapSecurity\\V1\\Rest\\IdentityAuthentication\\IdentityAuthenticationResource'),
-                            $sm->get('KapSecurity\\V1\\Rest\\Identity\\IdentityResource')
+                            new Options($options),
+                            $sm->get('KapSecurity\\IdentityAuthenticationRepository'),
+                            $sm->get('KapSecurity\\IdentityRepository')
                         );
                     },
-                'KapSecurity\\V1\\Rest\\IdentityAuthentication\\IdentityAuthenticationResource' => function($sm) {
-                        $ins = new IdentityAuthenticationResource(
-                            new TableGateway('identity_authentication', $sm->get('DefaultDbAdapter')),
-                            'id',
-                            'KapSecurity\\V1\\Rest\\IdentityAuthentication\\IdentityAuthenticationCollection'
-                        );
-                        return $ins;
-                    },
-
                 'KapSecurity\\IdentityRepository' => function($sm) {
                         $ins = new IdentityRepository(
                             $sm->get('KapSecurity\V1\Rest\Identity\IdentityResource\Table')
@@ -103,6 +99,30 @@ class Module implements ApigilityProviderInterface
                 "KapSecurity\\V1\\Rest\\Identity\\IdentityResource" => function($sm) {
                         $ins = new \KapApigility\EntityRepositoryResource(
                             $sm->get('KapSecurity\\IdentityRepository')
+                        );
+                        return $ins;
+                    },
+                'KapSecurity\\IdentityAuthenticationRepository' => function($sm) {
+                        $ins = new IdentityAuthenticationRepository(
+                            $sm->get('KapSecurity\V1\Rest\IdentityAuthentication\IdentityAuthenticationResource\Table')
+                        );
+                        return $ins;
+                    },
+                "KapSecurity\\V1\\Rest\\IdentityAuthentication\\IdentityAuthenticationResource" => function($sm) {
+                        $ins = new \KapApigility\EntityRepositoryResource(
+                            $sm->get('KapSecurity\\IdentityAuthenticationRepository')
+                        );
+                        return $ins;
+                    },
+                'KapSecurity\\AuthenticationServiceRepository' => function($sm) {
+                        $ins = new AuthenticationServiceRepository(
+                            $sm->get('KapSecurity\V1\Rest\AuthenticationService\AuthenticationServiceResource\Table')
+                        );
+                        return $ins;
+                    },
+                "KapSecurity\\V1\\Rest\\AuthenticationService\\AuthenticationServiceResource" => function($sm) {
+                        $ins = new \KapApigility\EntityRepositoryResource(
+                            $sm->get('KapSecurity\\AuthenticationServiceRepository')
                         );
                         return $ins;
                     }

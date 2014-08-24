@@ -1,0 +1,15 @@
+<?php
+return array(
+    'service_manager' => [
+        'factories' => [
+            'authenticationFacebookAdapter' => function($sm) {
+                $provider =  new \League\OAuth2\Client\Provider\Facebook([
+                    'clientId' => 'XXX',
+                    'clientSecret' => 'XXX',
+                    'redirectUri' => 'http://localhost:9002/authentication_callback?type=facebook'
+                ]);
+                return $provider;
+            }
+        ]
+    ]
+);

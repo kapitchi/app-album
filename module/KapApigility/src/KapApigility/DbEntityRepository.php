@@ -10,6 +10,7 @@ namespace KapApigility;
 
 
 use Zend\Db\Adapter\AdapterInterface;
+use Zend\Db\Sql\Literal;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Paginator\Adapter\DbTableGateway;
 
@@ -91,7 +92,7 @@ class DbEntityRepository implements EntityRepositoryInterface
             }
         });
         
-        return new DbTableGateway($this->table, $criteria);
+        return new DbTableGateway($this->table, $criteria, $orderBy);
     }
     
     /**

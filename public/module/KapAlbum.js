@@ -12,7 +12,7 @@ define([
             .state('app.album', {
                 url: "/album/:albumId",
                 views: {
-                    'container@': {
+                    'overlay@app': {
                         templateUrl: "template/KapAlbum/album.html",
                         controller: 'albumController'
                     }
@@ -39,7 +39,7 @@ define([
             .state('app.album.newItem', {
                 url: "/new-item",
                 views: {
-                    'container@': {
+                    'container@admin': {
                         controller: 'albumItemEditController',
                         templateUrl: "template/KapAlbum/album-item-edit.html"
                     }
@@ -56,7 +56,7 @@ define([
             .state('app.album.editItem', {
                 url: "/edit-item/:albumItemId",
                 views: {
-                    'container@': {
+                    'container@admin': {
                         controller: 'albumItemEditController',
                         templateUrl: 'template/KapAlbum/album-item-edit.html'
                     }
@@ -180,7 +180,7 @@ define([
         }
 
         $scope.getYoutubeVideoEmbedUrl = function(albumItem) {
-            var url = 'http://www.youtube.com/embed/' + albumItem.youbube_video_id;
+            var url = 'http://www.youtube.com/embed/' + albumItem.youtube_video_id;
             return $sce.trustAsResourceUrl(url);
         }
 

@@ -30,7 +30,7 @@ return array(
             'kap-file-manager.rpc.file-access' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/file-access',
+                    'route' => '/file-access/:file_id',
                     'defaults' => array(
                         'controller' => 'KapFileManager\\V1\\Rpc\\FileAccess\\Controller',
                         'action' => 'fileAccess',
@@ -205,14 +205,7 @@ If filesystem is specified file/directory is created under root filesystem folde
                 'allow_empty' => true,
             ),
         ),
-        'KapFileManager\\V1\\Rpc\\FileAccess\\Validator' => array(
-            0 => array(
-                'name' => 'id',
-                'required' => true,
-                'filters' => array(),
-                'validators' => array(),
-            ),
-        ),
+        'KapFileManager\\V1\\Rpc\\FileAccess\\Validator' => array(),
     ),
     'zf-apigility' => array(
         'db-connected' => array(

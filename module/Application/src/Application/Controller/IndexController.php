@@ -24,55 +24,12 @@ class IndexController extends AbstractActionController
         
     }
 
-    public function loginDialogAction()
+    public function logoutAction()
     {
-        return [
-            'redirectUrl' => (string)$this->getService('facebook')->getAuthorizationUri()
-        ];
+        $ser = $this->getServiceLocator()->get('KapSecurity\Authentication\AuthenticationService');
+        $ser->clearIdentity();
+        
+        return $this->redirect()->toRoute('home');
     }
 
-    public function callbackAction()
-    {
-        // This was a callback request from facebook, get the token
-        $service = $this->getService('facebook');
-        $token = $service->requestAccessToken($_GET['code']);
-        print_r($token); exit; //XXX
-        return [
-            'token' => $token,
-            'response' => json_decode($service->request('/me'), true)
-        ];
-    }
-
-    private function getService($serviceName)
-    {
-        $uriFactory = new \OAuth\Common\Http\Uri\UriFactory();
-        $currentUri = $uriFactory->createFromSuperGlobalArray($_SERVER);
-        $currentUri->setQuery('');
-
-        $servicesCredentials = array(
-            'facebook' => array(
-                'key'       => '773430982669649',
-                'secret'    => '842f3f8bbf89487f07959ad748348c39',
-            ),
-        );
-
-        /** @var $serviceFactory \OAuth\ServiceFactory An OAuth service factory. */
-        $serviceFactory = new \OAuth\ServiceFactory();
-
-        $storage = new \OAuth\Common\Storage\Session();
-
-        // Setup the credentials for the requests
-        $credentials = new \OAuth\Common\Consumer\Credentials(
-            $servicesCredentials[$serviceName]['key'],
-            $servicesCredentials[$serviceName]['secret'],
-            'http://myapp.local/application/index/callback'
-        );
-
-        /** @var $facebookService Facebook */
-        $facebookService = $serviceFactory->createService($serviceName, $credentials, $storage, array());
-
-
-        return $facebookService;
-    }
-    
 }

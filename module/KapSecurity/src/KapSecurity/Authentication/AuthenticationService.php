@@ -3,19 +3,23 @@
 namespace KapSecurity\Authentication;
 
 use KapSecurity\Authentication\Adapter\AdapterInterface;
+use KapSecurity\IdentityAuthenticationRepository;
+use KapSecurity\IdentityRepository;
 use KapSecurity\V1\Rest\IdentityAuthentication\IdentityAuthenticationResource;
 use Zend\Authentication\Exception;
 use ZF\Rest\AbstractResourceListener;
 
 class AuthenticationService extends \Zend\Authentication\AuthenticationService {
     
-    protected $identityAuthenticationResource;
-    protected $identityResource;
+    protected $options;
+    protected $identityAuthenticationRepository;
+    protected $identityRepository;
     
-    public function __construct(IdentityAuthenticationResource $identityAuthenticationResource, AbstractResourceListener $identityResource)
+    public function __construct(Options $options, IdentityAuthenticationRepository $identityAuthenticationRepository, IdentityRepository $identityRepository)
     {
-        $this->identityAuthenticationResource = $identityAuthenticationResource;
-        $this->identityResource = $identityResource;
+        $this->options = $options;
+        $this->identityAuthenticationRepository = $identityAuthenticationRepository;
+        $this->identityRepository = $identityRepository;
     }
     
     public function authenticate(AdapterInterface $adapter = null)
@@ -44,20 +48,43 @@ class AuthenticationService extends \Zend\Authentication\AuthenticationService {
                 'identity' => $identity
             );
 
-            //todo this was throwing error 'Fatal error: Cannot use object of type Zend\Db\ResultSet\ResultSet as array in /Zend/Paginator/Paginator.php on line 531'
-            //$authEntity = $this->identityAuthenticationResource->fetchAll($data)->getItem(1, 1);
+            $res = $this->identityAuthenticationRepository->getPaginatorAdapter($data)->getItems(0, 1);
+            $authEntity = $res->current();
 
-            $authEntity = current($this->identityAuthenticationResource->fetchAll($data)->getCurrentItems()->toArray());
-            
+            $identityEntity = null;
             if(!$authEntity) {
-                $ret = $this->identityResource->create([
-                    'enabled' => 0,
-                    'authentication_enabled' => 0,
-                    'registered_time' => date('Y-m-d H:i:s')
-                ]);
+                if(!$this->options->getAllowRegistration()) {
+                    $failed = new Result(Result::FAILURE_REGISTRATION_DISABLED, $identity);
+                    //$failed->setUserProfile($result->getUserProfile());
+                    return $failed;
+                }
 
-                $data['owner_id'] = $ret['id'];
-                $authEntity = $this->identityAuthenticationResource->create($data);
+                $enable = $this->options->getEnableOnRegistration();
+
+                $idData = [
+                    'enabled' => $enable,
+                    'authentication_enabled' => $enable,
+                    'registered_time' => date('Y-m-d H:i:s')
+                ];
+                
+                $profile = $result->getUserProfile();
+                if($profile) {
+                    $idData['display_name'] = $profile['displayName'];
+                }
+                
+                $identityEntity = $this->identityRepository->create($idData);
+                
+                $data['owner_id'] = $identityEntity['id'];
+                $authEntity = $this->identityAuthenticationRepository->create($data);
+            }
+            
+            if(!$identityEntity) {
+                $identityEntity = $this->identityRepository->find($authEntity['owner_id']);
+            }
+            
+            if(!$identityEntity['authentication_enabled']) {
+                $failed = new Result(Result::FAILURE_IDENTITY_DISABLED, $identity);
+                return $failed;
             }
             
             $result->setIdentityId($authEntity['owner_id']);

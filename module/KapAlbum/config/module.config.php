@@ -20,12 +20,12 @@ return array(
                     ),
                 ),
             ),
-            'kap-album.rest.album-items' => array(
+            'kap-album.rest.album-item-rel' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/album_items[/:album_items_id]',
+                    'route' => '/album_item_rel[/:album_item_rel_id]',
                     'defaults' => array(
-                        'controller' => 'KapAlbum\\V1\\Rest\\AlbumItems\\Controller',
+                        'controller' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller',
                     ),
                 ),
             ),
@@ -35,7 +35,7 @@ return array(
         'uri' => array(
             0 => 'kap-album.rest.album',
             1 => 'kap-album.rest.album-item',
-            2 => 'kap-album.rest.album-items',
+            2 => 'kap-album.rest.album-item-rel',
         ),
     ),
     'zf-rest' => array(
@@ -86,37 +86,37 @@ return array(
             'collection_class' => 'KapAlbum\\V1\\Rest\\AlbumItem\\AlbumItemCollection',
             'service_name' => 'album_item',
         ),
-        'KapAlbum\\V1\\Rest\\AlbumItems\\Controller' => array(
-            'listener' => 'KapAlbum\\V1\\Rest\\AlbumItems\\AlbumItemsResource',
-            'route_name' => 'kap-album.rest.album-items',
-            'route_identifier_name' => 'album_items_id',
-            'collection_name' => 'album_items',
+        'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => array(
+            'listener' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelResource',
+            'route_name' => 'kap-album.rest.album-item-rel',
+            'route_identifier_name' => 'album_item_rel_id',
+            'collection_name' => 'album_item_rel',
             'entity_http_methods' => array(
                 0 => 'GET',
                 1 => 'PATCH',
                 2 => 'PUT',
                 3 => 'DELETE',
-                4 => 'POST',
             ),
             'collection_http_methods' => array(
                 0 => 'GET',
                 1 => 'POST',
             ),
             'collection_query_whitelist' => array(
-                0 => 'query',
+                0 => 'order_by',
+                1 => 'query',
             ),
             'page_size' => 25,
             'page_size_param' => null,
-            'entity_class' => 'KapAlbum\\V1\\Rest\\AlbumItems\\AlbumItemsEntity',
-            'collection_class' => 'KapAlbum\\V1\\Rest\\AlbumItems\\AlbumItemsCollection',
-            'service_name' => 'album_items',
+            'entity_class' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelEntity',
+            'collection_class' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelCollection',
+            'service_name' => 'album_item_rel',
         ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
             'KapAlbum\\V1\\Rest\\Album\\Controller' => 'HalJson',
             'KapAlbum\\V1\\Rest\\AlbumItem\\Controller' => 'HalJson',
-            'KapAlbum\\V1\\Rest\\AlbumItems\\Controller' => 'HalJson',
+            'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => 'HalJson',
         ),
         'accept_whitelist' => array(
             'KapAlbum\\V1\\Rest\\Album\\Controller' => array(
@@ -129,7 +129,7 @@ return array(
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ),
-            'KapAlbum\\V1\\Rest\\AlbumItems\\Controller' => array(
+            'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => array(
                 0 => 'application/vnd.kap-album.v1+json',
                 1 => 'application/hal+json',
                 2 => 'application/json',
@@ -144,7 +144,7 @@ return array(
                 0 => 'application/vnd.kap-album.v1+json',
                 1 => 'application/json',
             ),
-            'KapAlbum\\V1\\Rest\\AlbumItems\\Controller' => array(
+            'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => array(
                 0 => 'application/vnd.kap-album.v1+json',
                 1 => 'application/json',
             ),
@@ -176,16 +176,16 @@ return array(
                 'route_identifier_name' => 'album_item_id',
                 'is_collection' => true,
             ),
-            'KapAlbum\\V1\\Rest\\AlbumItems\\AlbumItemsEntity' => array(
+            'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelEntity' => array(
                 'entity_identifier_name' => 'id',
-                'route_name' => 'kap-album.rest.album-items',
-                'route_identifier_name' => 'album_items_id',
+                'route_name' => 'kap-album.rest.album-item-rel',
+                'route_identifier_name' => 'album_item_rel_id',
                 'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
             ),
-            'KapAlbum\\V1\\Rest\\AlbumItems\\AlbumItemsCollection' => array(
+            'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelCollection' => array(
                 'entity_identifier_name' => 'id',
-                'route_name' => 'kap-album.rest.album-items',
-                'route_identifier_name' => 'album_items_id',
+                'route_name' => 'kap-album.rest.album-item-rel',
+                'route_identifier_name' => 'album_item_rel_id',
                 'is_collection' => true,
             ),
         ),
@@ -207,13 +207,12 @@ return array(
                 'entity_identifier_name' => 'id',
                 'table_service' => 'KapAlbum\\V1\\Rest\\AlbumItem\\AlbumItemResource\\Table',
             ),
-            'KapAlbum\\V1\\Rest\\AlbumItems\\AlbumItemsResource' => array(
+            'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelResource' => array(
                 'adapter_name' => 'DefaultDbAdapter',
-                'table_name' => 'album_items',
+                'table_name' => 'album_item_rel',
                 'hydrator_name' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
-                'controller_service_name' => 'KapAlbum\\V1\\Rest\\AlbumItems\\Controller',
+                'controller_service_name' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller',
                 'entity_identifier_name' => 'id',
-                'table_service' => 'KapAlbum\\V1\\Rest\\AlbumItems\\AlbumItemsResource\\Table',
             ),
         ),
     ),
@@ -263,6 +262,58 @@ return array(
                 'validators' => array(),
                 'allow_empty' => false,
                 'continue_if_empty' => false,
+            ),
+        ),
+    ),
+    'zf-mvc-auth' => array(
+        'authorization' => array(
+            'KapAlbum\\V1\\Rest\\Album\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'KapAlbum\\V1\\Rest\\AlbumItem\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
             ),
         ),
     ),

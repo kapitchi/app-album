@@ -7,9 +7,12 @@
 /.idea
 /config/autoload/local.php
 /config/development.config.php
+/config/autoload/*.local.php
 /vendor
 /node_modules/
+/develop/*.bak
 /data
 /public/vendor/
 /public/build/
 /public/data/
+/public/var

@@ -1,0 +1,10 @@
+<?php
+$this->ng('ng-app', 'LoginApp');
+?>
+<div id="ng-app" ng-controller="LoginController">
+    <ul>
+        <li ng-repeat="option in authenticationOptions">
+            <a href ng-click="openDialog(option)">{{option.name}}</a>
+        </li>
+    </ul>
+</div>

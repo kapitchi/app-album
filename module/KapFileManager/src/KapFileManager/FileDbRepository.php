@@ -27,9 +27,12 @@ class FileDbRepository extends DbEntityRepository implements FileRepositoryInter
         return $dbFiles;
     }
 
-    public function createFileEntityFromPath(FilesystemManager $manager, $filesystemName, $path, IdentityInterface $identity)
+    public function createFileEntityFromPath(FilesystemManager $manager, $filesystemName, $path, IdentityInterface $identity = null)
     {
-        $ownerId = $identity->getAuthenticationIdentity();
+        $ownerId = null;
+        if($identity) {
+            $ownerId = $identity->getAuthenticationIdentity();
+        }
 
         $parent = $this->fetchParentByPath($filesystemName, $path);
         $parentId = $parent ? $parent['id'] : null;

@@ -10,6 +10,12 @@ namespace KapSecurity\Authentication;
 
 
 class Result extends \Zend\Authentication\Result {
+    /**
+     * Authenticated (e.g. facebook) but not registered in the system yet and registration is disabled
+     */
+    const FAILURE_REGISTRATION_DISABLED = -5;
+    const FAILURE_IDENTITY_DISABLED = -6;
+
     protected $userProfile;
     protected $identityId;
 
