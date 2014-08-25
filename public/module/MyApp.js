@@ -1,7 +1,9 @@
 define([
     'angular',
+    'moment',
     'angular-ui-router',
     'angular-ui-tree',
+    'angular-moment',
     //'angular-ui-sortable',
     'module/kap-hal',
     //'angular-xeditable',
@@ -9,7 +11,7 @@ define([
     'module/kap-security',
     'module/KapFileManager'
     //'module/KapAlbum'
-], function(angular) {
+], function(angular, moment) {
 
     var module = angular.module('MyApp', [
         'ui.router',
@@ -34,8 +36,8 @@ define([
                 url: "/home",
                 views: {
                     'content': {
-                        controller: "AlbumController",
-                        templateUrl: "template/album.html"
+                        controller: "AlbumCollectionController",
+                        templateUrl: "template/album-collection.html"
                     },
                     'contact': {
                         controller: 'ContactController',
@@ -85,20 +87,24 @@ define([
         return new KapHalClient(baseUrl);
     })
     
-    module.controller('AppController', function($scope, $modal, $state, apiClient, authenticationService, $window) {
-        
-        $scope.app = {
+    module.controller('AppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, KapHalCollection) {
+
+        $rootScope.app = {
             edit: false
         };
-        
-        $scope.auth = authenticationService;
-        
-        $scope.logout = function() {
+
+        $rootScope.auth = authenticationService;
+
+        $rootScope.logout = function() {
             authenticationService.logout();
             $window.location = '/application/index/logout';
         }
-        
-        $scope.albumItemUpdate = function(item) {
+
+        $rootScope.toggleEdit = function() {
+            $rootScope.app.edit = !$rootScope.app.edit;
+        }
+
+        $rootScope.albumItemUpdate = function(item) {
             var modalInstance = $modal.open({
                 templateUrl: 'template/album-item-edit.html',
                 controller: function($scope, $modalInstance, apiClient) {
@@ -117,7 +123,7 @@ define([
             return modalInstance.result;
         }
 
-        $scope.albumItemCreate = function() {
+        $rootScope.albumItemCreate = function() {
             var modalInstance = $modal.open({
                 templateUrl: 'template/album-item-edit.html',
                 controller: function($scope, $modalInstance, apiClient) {
@@ -138,18 +144,20 @@ define([
             return modalInstance.result;
         }
 
-        $scope.albumItemRelRemove = function(collection, item) {
+        $rootScope.albumItemRelRemove = function(collection, item) {
             return collection.remove(item, true);
         }
 
-        $scope.albumCreate = function() {
+        $rootScope.albumCreate = function() {
             var modalInstance = $modal.open({
                 templateUrl: 'template/album-edit.html',
                 controller: function($scope, $modalInstance, apiClient) {
-                    $scope.item = {};
+                    //$scope.item = item;
+                    $scope.item = {}
 
-                    $scope.save = function() {
-                        apiClient.create('album', $scope.item).then(function(data) {
+                    $scope.save = function(item) {
+                        item.create_time = moment().format('YYYY-MM-DDTHH:mm:ss');
+                        apiClient.create('album', item).then(function(data) {
                             $modalInstance.close(data);
                         });
                     }
@@ -160,7 +168,25 @@ define([
             return modalInstance.result;
         }
 
-        $scope.fullscreenGallery = function(albumItems, current) {
+        $rootScope.albumUpdate = function(album) {
+            var modalInstance = $modal.open({
+                templateUrl: 'template/album-edit.html',
+                controller: function($scope, $modalInstance, apiClient) {
+                    $scope.item = album;
+                    $scope.save = function(item) {
+                        apiClient.update('album', item).then(function(data) {
+                            angular.extend(item, data);
+                            $modalInstance.close(data);
+                        });
+                    }
+                },
+                size: 'lg'
+            });
+
+            return modalInstance.result;
+        }
+
+        $rootScope.fullscreenGallery = function(albumItems, current) {
             var modalInstance = $modal.open({
                 templateUrl: 'template/fullscreen-gallery.html',
                 controller: function($scope, $modalInstance, apiClient, $sce, $timeout) {
@@ -197,7 +223,7 @@ define([
             return modalInstance.result;
         };
 
-        $scope.fullScreenGalleryRel = function(albumItemRel, albumItemRelCollection) {
+        $rootScope.fullScreenGalleryRel = function(albumItemRelCollection, albumItemRel) {
             var items = [];
             var current = null;
             angular.forEach(albumItemRelCollection.items, function(itemRel) {
@@ -208,14 +234,27 @@ define([
                 items.push(item);
             })
             
-            return $scope.fullscreenGallery(items, current);
+            return $rootScope.fullscreenGallery(items, current);
         };
 
-        $scope.createNewAlbum = function() {
-            $scope.albumCreate().then(function(album) {
-                $state.go('app.home.album', {albumId: album.id}, {reload: true});
+        $rootScope.fullScreenGalleryAlbum = function(album) {
+            return apiClient.fetchAll('album_item_rel', {
+                    album_id: album.id
+                },
+                {
+                    index: 'ASC'
+                }
+            ).then(function(data) {
+                    var items = [];
+                    var current = null;
+                    angular.forEach(data._embedded.album_item_rel, function(itemRel) {
+                        var item = itemRel._embedded.album_item;
+                        items.push(item);
+                    })
+
+                    return $rootScope.fullscreenGallery(items, current);
             });
-        }
+        };
         
     })
     
@@ -259,6 +298,14 @@ define([
             }
         };
         
+        $scope.setPrimaryItem = function(album, relItem) {
+            apiClient.partialUpdate('album', relItem.album_id, {
+                primary_item_id: relItem.album_item_id
+            }).then(function(data) {
+                angular.copy(data, album);
+            });
+        }
+        
         $scope.createItemAfter = function(relItem) {
             $scope.albumItemCreate().then(function(data) {
                 $scope.albumItemRelCollection.createAfter(relItem, {
@@ -274,6 +321,37 @@ define([
                     'album_id': albumId,
                     'album_item_id': data.id
                 }, true);
+            });
+        }
+
+    });
+
+    module.controller('AlbumCollectionController', function($scope, $state, $modal, $stateParams, apiClient, KapHalCollection) {
+
+        $scope.albumCollection = KapHalCollection.createAndFetch(apiClient, 'album', null,
+            {
+                create_time: 'ASC'
+            }
+        );
+
+        $scope.treeOptions = {
+            dropped: function(e) {
+                var nodes = e.dest.nodesScope.$modelValue;
+
+                var source = nodes[e.source.index];
+                var dest = nodes[e.dest.index];
+
+                if(source === dest) {
+                    return;
+                }
+
+                $scope.albumItemRelCollection.updateIndex(source, dest);
+            }
+        };
+
+        $scope.createNewAlbum = function(relItem) {
+            $scope.albumCreate().then(function(data) {
+                $state.go('app.home.album', {albumId: data.id});
             });
         }
 

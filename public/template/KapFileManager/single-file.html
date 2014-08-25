@@ -2,13 +2,13 @@
     <div ng-show="!fileId">
         <div ng-show="uploader.isHTML5">
             <div class="well my-drop-zone" nv-file-drop nv-file-over="file-over" uploader="uploader">
-                Base drop zone
+                Drop a file here 
             </div>
         </div>
         <input nv-file-select uploader="uploader" type="file" />
     </div>
     <div ng-show="fileId">
-        <img ng-src="{{file._links.thumbnail_default.href}}" class="img-responsive">
+        <img ng-src="{{file._links.thumbnail_album.href}}" class="img-responsive">
         <button ng-click="remove()" class="btn btn-danger">Remove</button>
     </div>
 </div>

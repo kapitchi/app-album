@@ -64,7 +64,7 @@ class FileThumbnailController extends AbstractActionController
         
         
         //save to public location
-        $newImageData = $image->encode('jpg')->__toString();
+        $newImageData = $image->encode('jpg', 80)->__toString();
 
         $outputFilesystem = $this->filesystemManager->get('file_thumbnail');
         $fileName = $filter . '-' . $width . '-' . $height . '/' . $fileId . '.jpg';

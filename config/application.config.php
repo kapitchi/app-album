@@ -29,8 +29,7 @@ return array(
         'KapSecurity',
         'KapFileManager',
         'KapGallery',
-        'KapAlbum',
-        'KapTag'
+        'KapAlbum'
     ),
     'module_listener_options' => array(
         'module_paths' => array(

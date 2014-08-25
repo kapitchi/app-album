@@ -1,6 +1,7 @@
 <?php
 namespace KapAlbum;
 
+use KapAlbum\V1\Rest\Album\AlbumEntity;
 use KapAlbum\V1\Rest\AlbumItem\AlbumItemEntity;
 use KapAlbum\V1\Rest\AlbumItemRel\AlbumItemRelEntity;
 use KapApigility\DbEntityRepository;
@@ -37,7 +38,10 @@ class Module implements ApigilityProviderInterface
         }
         
         if($entity instanceof AlbumEntity) {
-            
+            if(!empty($entity['primary_item_id'])) {
+                $albumItemRepo = $this->sm->get('KapAlbum\\AlbumItemRepository');
+                $entity['primary_item'] = $albumItemRepo->find($entity['primary_item_id']);
+            }
         }
 
         if($entity instanceof AlbumItemEntity) {

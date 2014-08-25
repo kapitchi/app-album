@@ -23,7 +23,7 @@
                     <a href="#">Contact</a>
                 </li>
                 <li>
-                    <a ng-show="auth.identity" ng-click="app.edit = !app.edit" href>Edit</a>
+                    <a ng-show="auth.identity" ng-click="toggleEdit()" href>Edit</a>
                 </li>
                 <li>
                     <a ng-show="auth.identity" ng-click="logout()" href>Logout</a>

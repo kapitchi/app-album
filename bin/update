@@ -1,0 +1,14 @@
+#!/bin/bash
+cd /vagrant
+
+echo "Running npm ..."
+npm install
+
+echo "Running composer ..."
+composer install
+
+echo "Running bower ..."
+bower install
+
+echo "Running compass ..."
+compass compile

@@ -23,7 +23,9 @@ require.config({
         'angular-xeditable': 'vendor/angular-xeditable/dist/js/xeditable',
         'ng-aloha-editor': 'vendor/ng-aloha-editor/ng-aloha-editor',
         'angular-ui-sortable': 'vendor/angular-ui-sortable/sortable',
-        'angular-ui-tree': 'vendor/angular-ui-tree/dist/angular-ui-tree'
+        'angular-ui-tree': 'vendor/angular-ui-tree/dist/angular-ui-tree',
+        'moment': 'vendor/moment/min/moment-with-langs.min',
+        'angular-moment': 'vendor/angular-moment/angular-moment'
     },
     shim: {
         jquery: {
@@ -157,6 +159,12 @@ require.config({
         'angular-ui-tree': {
             deps: [
                 'angular'
+            ]
+        },
+        'angular-moment': {
+            deps: [
+                'angular',
+                'moment'
             ]
         },
         'ng-aloha-editor': {

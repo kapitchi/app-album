@@ -13,7 +13,8 @@
     "angular-xeditable": "~0.1.8",
     "ng-aloha-editor": "~0.0.2",
     "angular-ui-sortable": "~0.12.10",
-    "angular-ui-tree": "~2.1.5"
+    "angular-ui-tree": "~2.1.5",
+    "angular-moment": "~0.8.0"
   },
   "devDependencies": {},
   "resolutions": {

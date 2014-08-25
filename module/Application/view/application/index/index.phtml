@@ -1,6 +1,6 @@
 <?php
 $this->ng('ng-app', 'MyApp');
 ?>
-<div id="ng-app">
+<div id="ng-app" ng-class="{'app-mode-edit': app.edit}">
     <ui-view></ui-view>
 </div>

@@ -15,10 +15,10 @@
     </div>
 </div>
 <div class="modal-footer">
-    <ul class="pagination">
+    <ul class="list-inline">
         <li><a href="#">&laquo;</a></li>
-        <li ng-repeat="item in albumItems" ng-click="setCurrent(item)">
-            <img ng-src="{{item._embedded.thumbnail_file._links.thumbnail_gallery_item.href}}" style="width: 128px; height: 72px">
+        <li ng-repeat="item in albumItems">
+            <a href ng-click="setCurrent(item)"><img ng-src="{{item._embedded.thumbnail_file._links.thumbnail_gallery_item.href}}" style="width: 128px; height: 72px"></a>
         </li>
         <li><a href="#">&raquo;</a></li>
     </ul>
