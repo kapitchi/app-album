@@ -261,7 +261,7 @@ define([
     module.directive('singleFile', function(FileUploader, $http) {
         return {
             restrict: 'A',
-            templateUrl: '/template/KapFileManager/single-file',
+            templateUrl: '/template/KapFileManager/single-file.html',
             replace: true,
             scope: {
                 uploadData: "=uploadData",
