@@ -13,19 +13,19 @@ return [
                 'album_item' => [
                     'type' => 'local',
                     'options' => [
-                        'path' => 'data/album-item'
+                        'path' => __DIR__ . '/../../data/album-item'
                     ]
                 ],
                 'album_item_thumbnail' => [
                     'type' => 'local',
                     'options' => [
-                        'path' => 'data/album-item-thumbnail'
+                        'path' => __DIR__ . '/../../data/album-item-thumbnail'
                     ]
                 ],
                 'file_thumbnail' => [
                     'type' => 'local',
                     'options' => [
-                        'path' => 'public/file_thumbnail'
+                        'path' => __DIR__ . '/../../public/file_thumbnail'
                     ]
                 ]
             ]
