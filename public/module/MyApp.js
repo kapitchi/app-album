@@ -360,6 +360,12 @@ define([
                 $scope.loadYoutubeThumbnails();
             }
         });
+
+        $scope.$watch('item.file_id', function(newValue, oldValue) {
+            if($scope.item.type === 'FILE' && newValue) {
+                $scope.item.thumbnail_file_id = newValue;
+            }
+        });
     });
     
     module.controller('ContactController', function($scope) {
