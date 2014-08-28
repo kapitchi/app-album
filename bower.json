@@ -14,7 +14,14 @@
     "ng-aloha-editor": "~0.0.2",
     "angular-ui-sortable": "~0.12.10",
     "angular-ui-tree": "~2.1.5",
-    "angular-moment": "~0.8.0"
+    "angular-moment": "~0.8.0",
+    "textAngular": "~1.2.2",
+    "angular-sanitize": "~1.2.23",
+    "components-font-awesome": "~4.1.0",
+    "animate.css": "~3.2.0",
+    "angular-animate": "~1.2.23",
+    "angular-strap": "~2.0.5",
+    "ng-tags-input": "~2.1.0"
   },
   "devDependencies": {},
   "resolutions": {

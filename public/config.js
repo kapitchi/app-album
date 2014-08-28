@@ -24,8 +24,14 @@ require.config({
         'ng-aloha-editor': 'vendor/ng-aloha-editor/ng-aloha-editor',
         'angular-ui-sortable': 'vendor/angular-ui-sortable/sortable',
         'angular-ui-tree': 'vendor/angular-ui-tree/dist/angular-ui-tree',
-        'moment': 'vendor/moment/min/moment-with-langs.min',
-        'angular-moment': 'vendor/angular-moment/angular-moment'
+        moment: 'vendor/moment/min/moment-with-langs.min',
+        'angular-moment': 'vendor/angular-moment/angular-moment',
+        textAngular: 'vendor/textAngular/dist/textAngular.min',
+        'angular-sanitize': 'vendor/angular-sanitize/angular-sanitize',
+        'angular-animate': 'vendor/angular-animate/angular-animate',
+        'angular-strap': 'vendor/angular-strap/dist/angular-strap.min',
+        'angular-strap.tpl': 'vendor/angular-strap/dist/angular-strap.tpl.min',
+        'ng-tags-input': 'vendor/ng-tags-input/ng-tags-input.min'
     },
     shim: {
         jquery: {
@@ -36,10 +42,25 @@ require.config({
                 'jquery'
             ]
         },
+        'angular-strap': {
+            deps: [
+                'angular'
+            ]
+        },
+        'angular-strap.tpl': {
+            deps: [
+                'angular-strap'
+            ]
+        },
         angular: {
             exports: 'angular',
             deps: [
                 'jquery'
+            ]
+        },
+        'angular-sanitize': {
+            deps: [
+                'angular'
             ]
         },
         'angular-bootstrap': {
@@ -167,9 +188,18 @@ require.config({
                 'moment'
             ]
         },
-        'ng-aloha-editor': {
+        moment: {
+            exports: 'moment'
+        },
+        textAngular: {
             deps: [
-                'aloha-init'
+                'angular',
+                'angular-sanitize'
+            ]
+        },
+        'ng-tags-input': {
+            deps: [
+                'angular'
             ]
         }
     },

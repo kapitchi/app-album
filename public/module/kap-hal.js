@@ -131,6 +131,7 @@ angular.module('KapHal', [])
             this.repository = repository;
             this.service = service;
             
+            this.loading = false;
             this.page = 1;
             this.items = [];
             this.links = {};
@@ -140,12 +141,15 @@ angular.module('KapHal', [])
             this.indexProperty = 'index';
             
             this.fetch = function(query, orderBy, pageSize, page) {
+                self.loading = true;
                 return repository.fetchAll(self.service, query, orderBy, pageSize, page).then(function(data) {
                     self.links = data._links;
                     self.items = data._embedded[self.service];
                     self.totalItems = data.total_items;
                     self.pageSize = data.page_size;
                     self.pageCount = data.page_count;
+
+                    self.loading = false;
                     
                     return self;
                 });

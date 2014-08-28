@@ -1,15 +1,21 @@
 <div class="modal-header">
-    <h3 class="modal-title">{{item.title}}</h3>
+    <h3 class="modal-title">{{item.name}}</h3>
 </div>
 <div class="modal-body">
     <form role="form">
         <div class="form-group">
             <label for="title">Title</label>
-            <input ng-model="item.title" id="title" class="form-control" placeholder="Title">
+            <input ng-model="item.name" id="title" class="form-control" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <label for="description">Tags</label>
+            <tags-input ng-model="item._embedded.tag_collection" display-property="name" replace-spaces-with-dashes="false" on-tag-added="tagAdded($tag)">
+                <auto-complete source="loadTags($query)"></auto-complete>
+            </tags-input>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <input ng-model="item.description" id="description" class="form-control" placeholder="Description">
+            <div text-angular ta-toolbar="app.editor.defaultToolbar" ng-model="item.description" id="description" placeholder="Description"></div>
         </div>
         <div id="url" class="btn-group" data-toggle="buttons">
             <label class="btn btn-primary" ng-class="{active: item.type === 'EMBED_URL'}">
@@ -26,6 +32,11 @@
             <div class="form-group">
                 <label for="video-id">Youtube Video ID</label>
                 <input ng-model="item.youtube_video_id" id="video-id" class="form-control" placeholder="Youtube Video ID">
+            </div>
+
+            <div ng-show="selectedThumbnail" class="form-group">
+                <label for="video-id">Thumbnail</label>
+                <img ng-src="{{selectedThumbnail.url}}" class="img-responsive">
             </div>
         </div>
         <div ng-show="item.type == 'EMBED_URL'">

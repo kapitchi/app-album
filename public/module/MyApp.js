@@ -1,8 +1,12 @@
 define([
     'angular',
     'moment',
+    //'angular-strap.tpl',
+    'angular-animate',
     'angular-ui-router',
     'angular-ui-tree',
+    'ng-tags-input',
+    'textAngular',
     'angular-moment',
     //'angular-ui-sortable',
     'module/kap-hal',
@@ -13,18 +17,45 @@ define([
     //'module/KapAlbum'
 ], function(angular, moment) {
 
+    //moment stuff
+    //http://momentjs.com/docs/#/customization/calendar/
+    moment.lang('en-GB', {
+        calendar : {
+            lastDay : '[Yesterday]',
+            sameDay : '[Today]',
+            nextDay : '[Tomorrow]',
+            lastWeek : '[last] dddd',
+            nextWeek : '[this] dddd',
+            sameElse : 'L'
+        }
+    });
+    //END - moment
+
     var module = angular.module('MyApp', [
+        'ngAnimate',
+        //'mgcrea.ngStrap',
         'ui.router',
         'ui.tree',
+        'ngTagsInput',
+        'textAngular',
+        'angularMoment',
         'KapHal',
         //'xeditable',
         //'KapLogin',
         'KapSecurity',
-        'KapFileManager'
+        'KapFileManager',
         //'KapAlbum'
     ]);
+    
+    module.config(function($stateProvider, $urlRouterProvider, $provide, datepickerConfig, datepickerPopupConfig) {
 
-    module.config(function($stateProvider, $urlRouterProvider, $provide) {
+        angular.extend(datepickerConfig, {
+            
+        });
+
+        angular.extend(datepickerPopupConfig, {
+            datepickerPopup: 'dd/MM/yyyy'
+        });
         
         $stateProvider
             .state('app', {
@@ -52,6 +83,15 @@ define([
                     'content@app': {
                         controller: "AlbumController",
                         templateUrl: "template/album.html"
+                    }
+                }
+            })
+            .state('app.home.tag', {
+                url: "/tag/:tagId",
+                views: {
+                    'content@app': {
+                        controller: "TagFilterController",
+                        templateUrl: "template/tag-filter.html"
                     }
                 }
             })
@@ -90,7 +130,11 @@ define([
     module.controller('AppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, KapHalCollection) {
 
         $rootScope.app = {
-            edit: false
+            edit: false,
+            editor: {
+                //https://github.com/fraywing/textAngular/wiki/Customising-The-Toolbar
+                defaultToolbar: [['bold','italics', 'underline'], ['ul', 'ol'], ['html']]
+            }
         };
 
         $rootScope.auth = authenticationService;
@@ -107,14 +151,10 @@ define([
         $rootScope.albumItemUpdate = function(item) {
             var modalInstance = $modal.open({
                 templateUrl: 'template/album-item-edit.html',
-                controller: function($scope, $modalInstance, apiClient) {
-                    $scope.item = item;
-                    
-                    $scope.save = function() {
-                        apiClient.update('album_item', $scope.item.id, $scope.item).then(function(data) {
-                            angular.extend(item, data);
-                            $modalInstance.close(item);
-                        });
+                controller: 'AlbumItemModalController',
+                resolve: {
+                    albumItem: function() {
+                        return item;
                     }
                 },
                 size: 'lg'
@@ -126,16 +166,13 @@ define([
         $rootScope.albumItemCreate = function() {
             var modalInstance = $modal.open({
                 templateUrl: 'template/album-item-edit.html',
-                controller: function($scope, $modalInstance, apiClient) {
-                    $scope.item = {
-                        type: 'FILE',
-                        file_id: null
-                    };
-
-                    $scope.save = function() {
-                        apiClient.create('album_item', $scope.item).then(function(data) {
-                            $modalInstance.close(data);
-                        });
+                controller: 'AlbumItemModalController',
+                resolve: {
+                    albumItem: function() {
+                        return {
+                            type: 'FILE',
+                            file_id: null
+                        }
                     }
                 },
                 size: 'lg'
@@ -174,7 +211,7 @@ define([
                 controller: function($scope, $modalInstance, apiClient) {
                     $scope.item = album;
                     $scope.save = function(item) {
-                        apiClient.update('album', item).then(function(data) {
+                        apiClient.update('album', item.id, item).then(function(data) {
                             angular.extend(item, data);
                             $modalInstance.close(data);
                         });
@@ -186,7 +223,8 @@ define([
             return modalInstance.result;
         }
 
-        $rootScope.fullscreenGallery = function(albumItems, current) {
+        $rootScope.fullScreenGallery = function(albumItems, current) {
+            
             var modalInstance = $modal.open({
                 templateUrl: 'template/fullscreen-gallery.html',
                 controller: function($scope, $modalInstance, apiClient, $sce, $timeout) {
@@ -234,7 +272,7 @@ define([
                 items.push(item);
             })
             
-            return $rootScope.fullscreenGallery(items, current);
+            return $rootScope.fullScreenGallery(items, current);
         };
 
         $rootScope.fullScreenGalleryAlbum = function(album) {
@@ -252,36 +290,135 @@ define([
                         items.push(item);
                     })
 
-                    return $rootScope.fullscreenGallery(items, current);
+                    return $rootScope.fullScreenGallery(items, current);
             });
         };
         
-    })
+    });
+
+    module.controller('AlbumItemModalController', function($scope, $modalInstance, apiClient, albumItem, $http, $q) {
+        $scope.item = albumItem;
+        
+        $scope.thumbnails = [];
+        $scope.selectedThumbnail = null;
+        
+        $scope.selectThumbnail = function(thumb) {
+            $scope.selectedThumbnail = thumb;
+            $scope.item.thumbnail_file_url = thumb.url;
+        }
+        
+        $scope.loadYoutubeThumbnails = function() {
+            var videoId = $scope.item.youtube_video_id;
+
+            $http.get('http://gdata.youtube.com/feeds/api/videos/' + videoId + '?v=2&alt=json').then(function(data) {
+                for(var i in data.data.entry['media$group']['media$thumbnail']) {
+                    var thumb = data.data.entry['media$group']['media$thumbnail'][i];
+                    if(thumb['yt$name'] === 'sddefault') {
+                        $scope.selectThumbnail({
+                            url: thumb['url']
+                        });
+                        return;
+                    }
+                }
+            });
+        }
+        
+        $scope.loadTags = function(query) {
+            return apiClient.fetchAll('tag', {
+                fulltext: query
+            }).then(function(data) {
+                return data._embedded.tag;
+            });
+        }
+        
+        $scope.tagAdded = function(tag) {
+            if(!tag.id) {
+                //create new
+                apiClient.create('tag', tag).then(function(data) {
+                    angular.extend(tag, data);
+                });
+            }
+        }
+        
+        $scope.save = function() {
+            
+            if($scope.item.id) {
+                apiClient.update('album_item', $scope.item.id, $scope.item).then(function(data) {
+                    angular.extend(albumItem, data);
+                    $modalInstance.close(albumItem);
+                });
+                return;
+            }
+            
+            apiClient.create('album_item', $scope.item).then(function(data) {
+                $modalInstance.close(data);
+            });
+        }
+        
+        $scope.$watch('item.youtube_video_id', function(newValue, oldValue) {
+            if(newValue && newValue != oldValue) {
+                $scope.loadYoutubeThumbnails();
+            }
+        });
+    });
     
     module.controller('ContactController', function($scope) {
         $scope.test = 'DDDD';
     });
 
     module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, KapHalCollection, $sce) {
+        
+        function loader() {
+            var self = this;
+            
+            this.counter = 0;
+            this.loading = false;
+            
+            this.load = function(promise) {
+                self.counter++;
+                
+                promise.then(function() {
+                    self.counter--;
+                    check();
+                });
+                
+                check();
+            }
+            
+            function check() {
+                if(self.counter) {
+                    self.loading = true;
+                    return;
+                }
+
+                self.loading = false;
+            }
+        }
+        
+        $scope.loader = new loader();
 
         var albumId = $stateParams.albumId;
         if(!albumId) {
             albumId = $state.current.albumId;
         }
         
+        $scope.loadingAlbum = true;
+        $scope.loadingItems = true;
+        
         $scope.album = null;
         
-        apiClient.fetch('album', albumId).then(function(data) {
+        $scope.loader.load(apiClient.fetch('album', albumId).then(function(data) {
             $scope.album = data;
-        });
+        }));
         
-        $scope.albumItemRelCollection = KapHalCollection.createAndFetch(apiClient, 'album_item_rel', {
+        $scope.albumItemRelCollection = new KapHalCollection(apiClient, 'album_item_rel');
+        $scope.loader.load($scope.albumItemRelCollection.fetch({
                 album_id: albumId
             },
             {
                 index: 'ASC'
             }
-        );
+        ));
         
         $scope.treeOptions = {
             dropped: function(e) {
@@ -334,20 +471,20 @@ define([
             }
         );
 
-        $scope.treeOptions = {
-            dropped: function(e) {
-                var nodes = e.dest.nodesScope.$modelValue;
-
-                var source = nodes[e.source.index];
-                var dest = nodes[e.dest.index];
-
-                if(source === dest) {
-                    return;
-                }
-
-                $scope.albumItemRelCollection.updateIndex(source, dest);
-            }
-        };
+//        $scope.treeOptions = {
+//            dropped: function(e) {
+//                var nodes = e.dest.nodesScope.$modelValue;
+//
+//                var source = nodes[e.source.index];
+//                var dest = nodes[e.dest.index];
+//
+//                if(source === dest) {
+//                    return;
+//                }
+//
+//                $scope.albumItemRelCollection.updateIndex(source, dest);
+//            }
+//        };
 
         $scope.createNewAlbum = function(relItem) {
             $scope.albumCreate().then(function(data) {
@@ -357,40 +494,34 @@ define([
 
     });
 
-    module.service('modalEdit', function() {
-        this.open = function(data, settings) {
-            
-            var modalInstance = $modal.open({
-                templateUrl: settings.templateUrl,
-                controller: ModalInstanceCtrl,
-                size: 'lg',
-                resolve: {
-                    data: data
-                }
-            });
-
-            modalInstance.result.then(function (newdata) {
-                angular.extend(data, newData);
-            });
-        }
+    module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient, KapHalCollection) {
+        $scope.tag = null;
+        
+        apiClient.fetch('tag', $stateParams.tagId).then(function(tag) {
+            $scope.tag = tag;
+        });
+        
     });
-    
-    module.directive('modalEdit', function() {
-        function link(scope, element, attrs) {
-            element.on('click', function(e) {
-                console.log(e); //XXX
-            })
 
-            element.on('$destroy', function() {
-                //$interval.cancel(timeoutId);
+    module.directive('localDateToString', function($filter) {
+        function link(scope, element, attrs, ngModel) {
+            ngModel.$parsers.push(function(value) {
+                if(value instanceof Date) {
+                    return $filter('date')(value, "yyyy-MM-ddT00:00:00'Z'", 'UTC');
+                }
+                
+                return value;
             });
+
+//            ngModel.$formatters.unshift(function(value) {
+//                console.log(value); //XXX
+//                return $filter('date')(value, "dd/MM/YYYY");
+//            });
         }
         
         return {
-            link: link,
-            scope: {
-                entity: '=entity'
-            }
+            require: 'ngModel',
+            link: link
         }
     })
 

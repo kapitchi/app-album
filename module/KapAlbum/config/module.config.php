@@ -29,6 +29,15 @@ return array(
                     ),
                 ),
             ),
+            'kap-album.rest.album-item-tag' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/album_item_tag[/:album_item_tag_id]',
+                    'defaults' => array(
+                        'controller' => 'KapAlbum\\V1\\Rest\\AlbumItemTag\\Controller',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -36,6 +45,7 @@ return array(
             0 => 'kap-album.rest.album',
             1 => 'kap-album.rest.album-item',
             2 => 'kap-album.rest.album-item-rel',
+            3 => 'kap-album.rest.album-item-tag',
         ),
     ),
     'zf-rest' => array(
@@ -111,12 +121,35 @@ return array(
             'collection_class' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelCollection',
             'service_name' => 'album_item_rel',
         ),
+        'KapAlbum\\V1\\Rest\\AlbumItemTag\\Controller' => array(
+            'listener' => 'KapAlbum\\V1\\Rest\\AlbumItemTag\\AlbumItemTagResource',
+            'route_name' => 'kap-album.rest.album-item-tag',
+            'route_identifier_name' => 'album_item_tag_id',
+            'collection_name' => 'album_item_tag',
+            'entity_http_methods' => array(
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ),
+            'collection_http_methods' => array(
+                0 => 'GET',
+                1 => 'POST',
+            ),
+            'collection_query_whitelist' => array(),
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => 'KapAlbum\\V1\\Rest\\AlbumItemTag\\AlbumItemTagEntity',
+            'collection_class' => 'KapAlbum\\V1\\Rest\\AlbumItemTag\\AlbumItemTagCollection',
+            'service_name' => 'album_item_tag',
+        ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
             'KapAlbum\\V1\\Rest\\Album\\Controller' => 'HalJson',
             'KapAlbum\\V1\\Rest\\AlbumItem\\Controller' => 'HalJson',
             'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => 'HalJson',
+            'KapAlbum\\V1\\Rest\\AlbumItemTag\\Controller' => 'HalJson',
         ),
         'accept_whitelist' => array(
             'KapAlbum\\V1\\Rest\\Album\\Controller' => array(
@@ -134,6 +167,11 @@ return array(
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ),
+            'KapAlbum\\V1\\Rest\\AlbumItemTag\\Controller' => array(
+                0 => 'application/vnd.kap-album.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ),
         ),
         'content_type_whitelist' => array(
             'KapAlbum\\V1\\Rest\\Album\\Controller' => array(
@@ -145,6 +183,10 @@ return array(
                 1 => 'application/json',
             ),
             'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => array(
+                0 => 'application/vnd.kap-album.v1+json',
+                1 => 'application/json',
+            ),
+            'KapAlbum\\V1\\Rest\\AlbumItemTag\\Controller' => array(
                 0 => 'application/vnd.kap-album.v1+json',
                 1 => 'application/json',
             ),
@@ -188,6 +230,18 @@ return array(
                 'route_identifier_name' => 'album_item_rel_id',
                 'is_collection' => true,
             ),
+            'KapAlbum\\V1\\Rest\\AlbumItemTag\\AlbumItemTagEntity' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'kap-album.rest.album-item-tag',
+                'route_identifier_name' => 'album_item_tag_id',
+                'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+            ),
+            'KapAlbum\\V1\\Rest\\AlbumItemTag\\AlbumItemTagCollection' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'kap-album.rest.album-item-tag',
+                'route_identifier_name' => 'album_item_tag_id',
+                'is_collection' => true,
+            ),
         ),
     ),
     'zf-apigility' => array(
@@ -214,6 +268,13 @@ return array(
                 'controller_service_name' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller',
                 'entity_identifier_name' => 'id',
             ),
+            'KapAlbum\\V1\\Rest\\AlbumItemTag\\AlbumItemTagResource' => array(
+                'adapter_name' => 'DefaultDbAdapter',
+                'table_name' => 'album_item_tag',
+                'hydrator_name' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+                'controller_service_name' => 'KapAlbum\\V1\\Rest\\AlbumItemTag\\Controller',
+                'entity_identifier_name' => 'id',
+            ),
         ),
     ),
     'zf-content-validation' => array(
@@ -232,7 +293,7 @@ return array(
                 'continue_if_empty' => false,
             ),
             1 => array(
-                'name' => 'title',
+                'name' => 'name',
                 'required' => true,
                 'filters' => array(),
                 'validators' => array(),

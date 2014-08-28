@@ -11,6 +11,7 @@ namespace KapApigility;
 
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Sql\Literal;
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Paginator\Adapter\DbTableGateway;
 
@@ -74,7 +75,7 @@ class DbEntityRepository implements EntityRepositoryInterface
         $resultSet = $this->table->select(array($this->identifierName => $id));
         return $resultSet->current();
     }
-
+    
     /**
      * @param array $criteria
      * @param array $orderBy
@@ -82,9 +83,12 @@ class DbEntityRepository implements EntityRepositoryInterface
      */
     public function getPaginatorAdapter(array $criteria, array $orderBy = null)
     {
-        
+        return new DbTableGateway($this->table, $this->createCriteriaWhere($criteria), $orderBy);
+    }
+    
+    protected function createCriteriaWhere(array $criteria)
+    {
         $data = (array)$criteria;
-
         //needed for integer values
         array_walk($data, function(&$item, $key) {
             if(is_int($item)) {
@@ -92,7 +96,10 @@ class DbEntityRepository implements EntityRepositoryInterface
             }
         });
         
-        return new DbTableGateway($this->table, $criteria, $orderBy);
+        $where = new Where();
+        $where->addPredicates($data);
+        
+        return $where;
     }
     
     /**
