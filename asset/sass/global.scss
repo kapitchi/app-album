@@ -1,6 +1,13 @@
+//compass
+@import "compass/css3/filter";
+@import "compass/css3/box-shadow";
+
 //Bootstrap
 @import "../../public/vendor/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap";
 @import "../../public/vendor/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/theme";
+
+//Font awesome
+//@import "../../public/vendor/components-font-awesome/scss/font-awesome";
 
 //Fontcustom - icon
 //@import "../../public/build/icon/icon";
@@ -15,6 +22,7 @@
 
 //modules
 @import "module/kap-file-manager";
+
 
 body {
   padding-top: 50px;
@@ -41,6 +49,13 @@ body {
 
       }
     }
+  }
+}
+
+
+.album {
+  .angular-ui-tree-empty {
+    display: none;
   }
 }
 
@@ -83,3 +98,9 @@ body {
   }
 }
 //end spinner
+
+
+//ANIMATIONS
+//http://www.divshot.com/blog/tips-and-tricks/angular-1-2-and-animate-css/
+//https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-animate-ui-view-with-ng-animate
+//http://www.nganimate.org/

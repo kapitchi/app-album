@@ -1,4 +1,8 @@
 <?php
+$this->headLink()->prependStylesheet($this->basePath() . '/vendor/ng-tags-input/ng-tags-input.min.css');
+//$this->headLink()->prependStylesheet($this->basePath() . '/vendor/ng-tags-input/ng-tags-input.bootstrap.min.css');
+$this->headLink()->prependStylesheet('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
+
 $this->ng('ng-app', 'MyApp');
 ?>
 <div id="ng-app" ng-class="{'app-mode-edit': app.edit}">

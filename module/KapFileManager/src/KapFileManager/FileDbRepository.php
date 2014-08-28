@@ -36,7 +36,7 @@ class FileDbRepository extends DbEntityRepository implements FileRepositoryInter
 
         $parent = $this->fetchParentByPath($filesystemName, $path);
         $parentId = $parent ? $parent['id'] : null;
-
+        
         $meta = $manager->get($filesystemName)->getWithMetadata($path, ['mimetype', 'timestamp']);
 
         $data = [

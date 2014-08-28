@@ -29,42 +29,95 @@ class AlbumItemRepository extends DbEntityRepository
         $this->filesystemManager = $filesystemManager;
         $this->fileRepository = $fileRepository;
     }
+    
+    protected function updateThumbnail($entity, $thumbUrl)
+    {
+        $filesystem = $this->filesystemManager->get('album_item_thumbnail');
+
+        //Warning: rewind(): stream does not support seeking in /vagrant/vendor/league/flysystem/src/Adapter/Local.php on line 118
+        //$filesystem->writeStream('xxxx.jpg', fopen($thumbUrl, 'r'));
+
+        $fileContent = file_get_contents($thumbUrl);
+        if($filesystem->has($entity['id'])) {
+            $remove = $this->fileRepository->fetchByPath('album_item_thumbnail', $entity['id']);
+            return;
+        }
         
+        $filesystem->write($entity['id'], $fileContent);
+        $fileEntity = $this->fileRepository->createFileEntityFromPath($this->filesystemManager, 'album_item_thumbnail', $entity['id']);
+        
+        return parent::update($entity['id'], [
+            'thumbnail_file_id' => $fileEntity['id']
+        ]);
+    }
+    
     public function create(array $data)
     {
-        if($data['type'] === 'FILE') {
+        if($data['type'] === 'FILE' && empty($data['thumbnail_file_id'])) {
             $data['thumbnail_file_id'] = $data['file_id'];
         }
-
+        
+        $thumbUrl = null;
+        if(!empty($data['thumbnail_file_url'])) {
+            $thumbUrl = $data['thumbnail_file_url'];
+            unset($data['thumbnail_file_url']);
+        }
+        
         $entity = parent::create($data);
         
-        if($data['type'] === 'YOUTUBE_VIDEO_ID') {
-            $client = new \GuzzleHttp\Client();
-            $res = $client->get('http://gdata.youtube.com/feeds/api/videos/' . $data['youtube_video_id'] . '?v=2&alt=json');
-            $json = $res->json();
-            
-            foreach($json['entry']['media$group']['media$thumbnail'] as $thumb) {
-                if($thumb['yt$name'] === 'hqdefault') {
-                    $thumbUrl = $thumb['url'];
-                    break;
-                }
-            }
+        if(!empty($thumbUrl)) {
+            $entity = $this->updateThumbnail($entity, $thumbUrl);
+        }
+        
+//        if($data['type'] === 'YOUTUBE_VIDEO_ID') {
+//            $client = new \GuzzleHttp\Client();
+//            $res = $client->get('http://gdata.youtube.com/feeds/api/videos/' . $data['youtube_video_id'] . '?v=2&alt=json');
+//            $json = $res->json();
+//            
+//            foreach($json['entry']['media$group']['media$thumbnail'] as $thumb) {
+//                if($thumb['yt$name'] === 'hqdefault') {
+//                    $thumbUrl = $thumb['url'];
+//                    break;
+//                }
+//            }
+//
+//            $filesystem = $this->filesystemManager->get('album_item_thumbnail');
+//
+//            //Warning: rewind(): stream does not support seeking in /vagrant/vendor/league/flysystem/src/Adapter/Local.php on line 118
+//            //$filesystem->writeStream('xxxx.jpg', fopen($thumbUrl, 'r'));
+//
+//            $filesystem->write($entity['id'], file_get_contents($thumbUrl));
+//            $fileEntity = $this->fileRepository->createFileEntityFromPath($this->filesystemManager, 'album_item_thumbnail', $entity['id']);
+//            return $this->update($entity['id'], [
+//                'thumbnail_file_id' => $fileEntity['id']
+//            ]);
+//        }
+        
+        return $entity;
+    }
 
-            $filesystem = $this->filesystemManager->get('album_item_thumbnail');
+    public function update($id, array $data)
+    {
+        if($data['type'] === 'FILE' && empty($data['thumbnail_file_id'])) {
+            $data['thumbnail_file_id'] = $data['file_id'];
+        }
+ 
+        $thumbUrl = null;
+        if(!empty($data['thumbnail_file_url'])) {
+            $thumbUrl = $data['thumbnail_file_url'];
+            unset($data['thumbnail_file_url']);
+        }
+        
+        $entity = parent::update($id, $data);
 
-            //Warning: rewind(): stream does not support seeking in /vagrant/vendor/league/flysystem/src/Adapter/Local.php on line 118
-            //$filesystem->writeStream('xxxx.jpg', fopen($thumbUrl, 'r'));
-
-            $filesystem->write($entity['id'], file_get_contents($thumbUrl));
-            $fileEntity = $this->fileRepository->createFileEntityFromPath($this->filesystemManager, 'album_item_thumbnail', $entity['id']);
-            return $this->update($entity['id'], [
-                'thumbnail_file_id' => $fileEntity['id']
-            ]);
+        if(!empty($thumbUrl)) {
+            $entity = $this->updateThumbnail($entity, $thumbUrl);
         }
         
         return $entity;
     }
-    
+
+
     public function getPaginatorAdapter(array $criteria, array $orderBy = null)
     {
 //        if(!empty($criteria['album_id'])) {

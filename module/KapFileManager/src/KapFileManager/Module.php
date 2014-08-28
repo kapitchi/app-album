@@ -96,7 +96,7 @@ class Module implements ApigilityProviderInterface, ServiceProviderInterface
                 ));
             }
             else {
-                throw new \Exception("TODO");
+                throw new \Exception("TODO what's thumbnail for {$entity['mime_type']}?");
             }
         }
     }

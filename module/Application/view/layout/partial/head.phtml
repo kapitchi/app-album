@@ -4,6 +4,9 @@
     ->appendName('viewport', 'width=device-width, initial-scale=1.0')
     ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
     ?>
+
+<!-- link href="/vendor/animate.css/animate.min.css" rel="stylesheet" -->
+
 <?=$this->headLink()->prependStylesheet($this->basePath() . '/build/css/global.css')?>
 <?=$this->headScript()?>
 <?=$this->requireJs()?>

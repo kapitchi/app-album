@@ -61,7 +61,7 @@ class FileResource extends EntityRepositoryResource
 
             //name not specified -- generate random number
             if(empty($data->name)) {
-                $data->name = Rand::getString(32);
+                $data->name = date('Y-m-dTh:i:s');// . Rand::getString(2);
             }
             
             $phpFile = null;
