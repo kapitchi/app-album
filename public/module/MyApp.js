@@ -131,6 +131,9 @@ define([
 
         $rootScope.app = {
             edit: false,
+            nav: {
+                collapsed: true
+            },
             editor: {
                 //https://github.com/fraywing/textAngular/wiki/Customising-The-Toolbar
                 defaultToolbar: [['bold','italics', 'underline'], ['ul', 'ol'], ['html']]
