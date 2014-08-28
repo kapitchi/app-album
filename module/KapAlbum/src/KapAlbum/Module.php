@@ -85,7 +85,7 @@ class Module implements ApigilityProviderInterface
             $entity['album_collection'] = new AlbumCollection(new ArrayAdapter($tags));
             //END
             
-            if($entity['type'] == 'FILE') {
+            if(!empty($entity['file_id'])) {
                 $fileRepo = $this->sm->get('KapFileManager\\FileRepository');
                 $entity['file'] = $fileRepo->find($entity['file_id']);
             }
