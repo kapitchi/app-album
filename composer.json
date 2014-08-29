@@ -42,6 +42,7 @@
         "kapitchi/base": "@dev",
         "kapitchi/entity": "@dev",
         "lusitanian/oauth": "~0.3",
+        "oryzone/oauth-user-data": "~1.0@dev",
         "league/oauth2-client": "dev-master",
         "league/flysystem": "0.4.*",
         "aws/aws-sdk-php": "~2.5",
