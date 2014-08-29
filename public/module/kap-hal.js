@@ -28,22 +28,6 @@ angular.module('kap-hal', [])
                     angular.extend(queryObj, query);
                 }
 
-//                if(query) {
-//                    queryObj.query = query;
-//                }
-//
-//                if(pageSize) {
-//                    queryObj.page_size = pageSize;
-//                }
-//
-//                if(page) {
-//                    queryObj.page = page;
-//                }
-//
-//                if(orderBy) {
-//                    queryObj.order_by = orderBy;
-//                }
-
                 url += '?' + encodeQuery(queryObj);
 
                 $http.get(url).success(function(data) {
@@ -72,9 +56,6 @@ angular.module('kap-hal', [])
             this.create = function(service, data) {
                 var deferred = $q.defer();
                 
-                console.log(service); //XXX
-                console.log(data); //XXX
-
                 $http.post(baseUrl + service, data).success(function(data) {
                     deferred.resolve(data);
                 }).error(function(data, status, headers) {
@@ -214,11 +195,11 @@ angular.module('kap-hal', [])
                     throw "Run fetch() first";
                 }
 
-                if(self.page <= 1) {
+                if(self.query.page <= 1) {
                     throw "There is no previous page";
                 }
 
-                self.page--;
+                self.query.page--;
 
                 return self.fetchCurrent();
             }

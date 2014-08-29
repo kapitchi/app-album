@@ -149,7 +149,11 @@ define([
 
         $rootScope.logout = function() {
             authenticationService.logout();
-            $window.location = '/application/index/logout';
+            $window.location = '/logout';
+        }
+
+        $rootScope.login = function() {
+            $window.location = '/login';
         }
 
         $rootScope.toggleEdit = function() {

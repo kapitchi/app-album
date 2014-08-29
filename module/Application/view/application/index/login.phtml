@@ -1,10 +1,18 @@
 <?php
 $this->ng('ng-app', 'LoginApp');
 ?>
-<div id="ng-app" ng-controller="LoginController">
-    <ul>
-        <li ng-repeat="option in authenticationOptions">
-            <a href ng-click="openDialog(option)">{{option.name}}</a>
-        </li>
-    </ul>
+<div id="ng-app" ng-controller="LoginController" class="container">
+    <div ng-show="status.result.code == 1" class="row">
+        <h1>Hi {{status.result.userProfile.displayName}}!</h1>
+        <img ng-src="{{status.result.userProfile.imageUrl}}" class="img-responsive">
+        <a href="/" target="_self" class="btn btn-primary">Go to homepage</a>
+    </div>
+    <div ng-hide="status.result.code == 1">
+        <h1>Login</h1>
+        <ul>
+            <li ng-repeat="option in authenticationOptions">
+                <a ng-click="openDialog(option)" class="btn btn-default">{{option.name}}</a>
+            </li>
+        </ul>
+    </div>
 </div>

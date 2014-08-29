@@ -5,13 +5,13 @@ define([
 ], function(angular) {
 
     var module = angular.module('LoginApp', [
-        'KapHal',
+        'kap-hal',
         'KapSecurity'
     ]);
 
-    module.factory('apiClient', function(KapHalClient) {
+    module.factory('apiClient', function(HalClient) {
         var baseUrl = '/';
-        return new KapHalClient(baseUrl);
+        return new HalClient(baseUrl);
     });
     
     return module;
