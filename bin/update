@@ -4,7 +4,7 @@ echo "Running npm ..."
 npm install
 
 echo "Running composer ..."
-composer install
+composer update
 
 echo "Running bower ..."
 bower install
