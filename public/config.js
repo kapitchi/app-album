@@ -31,7 +31,8 @@ require.config({
         'angular-animate': 'vendor/angular-animate/angular-animate',
         'angular-strap': 'vendor/angular-strap/dist/angular-strap.min',
         'angular-strap.tpl': 'vendor/angular-strap/dist/angular-strap.tpl.min',
-        'ng-tags-input': 'vendor/ng-tags-input/ng-tags-input.min'
+        'ng-tags-input': 'vendor/ng-tags-input/ng-tags-input.min',
+        ngInfiniteScroll: 'vendor/ngInfiniteScroll/build/ng-infinite-scroll'
     },
     shim: {
         jquery: {
@@ -199,6 +200,12 @@ require.config({
         },
         'ng-tags-input': {
             deps: [
+                'angular'
+            ]
+        },
+        'ngInfiniteScroll': {
+            deps: [
+                'jquery',
                 'angular'
             ]
         }

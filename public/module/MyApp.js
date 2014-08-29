@@ -7,6 +7,7 @@ define([
     'angular-ui-tree',
     'ng-tags-input',
     'textAngular',
+    'ngInfiniteScroll',
     'angular-moment',
     //'angular-ui-sortable',
     'module/kap-hal',
@@ -39,11 +40,12 @@ define([
         'ngTagsInput',
         'textAngular',
         'angularMoment',
-        'KapHal',
+        'infinite-scroll',
+        'kap-hal',
         //'xeditable',
         //'KapLogin',
         'KapSecurity',
-        'KapFileManager',
+        'KapFileManager'
         //'KapAlbum'
     ]);
     
@@ -122,12 +124,15 @@ define([
         
     });
 
-    module.factory('apiClient', function(KapHalClient) {
+    module.factory('apiClient', function(HalClient) {
         var baseUrl = '/';
-        return new KapHalClient(baseUrl);
+        var client = new HalClient(baseUrl);
+        HalClient.default = client;
+        
+        return client;
     })
     
-    module.controller('AppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, KapHalCollection) {
+    module.controller('AppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window) {
 
         $rootScope.app = {
             edit: false,
@@ -375,7 +380,7 @@ define([
         $scope.test = 'DDDD';
     });
 
-    module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, KapHalCollection, $sce) {
+    module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce) {
         
         function loader() {
             var self = this;
@@ -420,14 +425,16 @@ define([
             $scope.album = data;
         }));
         
-        $scope.albumItemRelCollection = new KapHalCollection(apiClient, 'album_item_rel');
+        $scope.albumItemRelCollection = new HalCollection('album_item_rel');
         $scope.loader.load($scope.albumItemRelCollection.fetch({
+            query: {
                 album_id: albumId
             },
-            {
+            page_size: 9999,
+            order_by: {
                 index: 'ASC'
             }
-        ));
+        }));
         
         $scope.treeOptions = {
             dropped: function(e) {
@@ -472,13 +479,13 @@ define([
 
     });
 
-    module.controller('AlbumCollectionController', function($scope, $state, $modal, $stateParams, apiClient, KapHalCollection) {
+    module.controller('AlbumCollectionController', function($scope, $state, $modal, $stateParams, apiClient, HalCollection) {
 
-        $scope.albumCollection = KapHalCollection.createAndFetch(apiClient, 'album', null,
-            {
-                create_time: 'ASC'
+        $scope.albumCollection = HalCollection.createAndFetch('album', {
+            order_by: {
+                album_time: 'DESC'
             }
-        );
+        });
 
 //        $scope.treeOptions = {
 //            dropped: function(e) {
@@ -503,7 +510,7 @@ define([
 
     });
 
-    module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient, KapHalCollection) {
+    module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient) {
         $scope.tag = null;
         
         apiClient.fetch('tag', $stateParams.tagId).then(function(tag) {

@@ -1,9 +1,9 @@
 define(['angular'], function(angular) {
 
-angular.module('KapHal', [])
-    .factory('KapHalClient', function($http, $q) {
+angular.module('kap-hal', [])
+    .factory('HalClient', function($http, $q) {
         
-        function KapHalClient(baseUrl) {
+        function HalClient(baseUrl) {
             function encodeQuery(obj, prefix) {
                 var str = [];
                 for(var p in obj) {
@@ -16,29 +16,33 @@ angular.module('KapHal', [])
             }
             
             
-            this.fetchAll = function(service, query, orderBy, pageSize, page) {
+            this.fetchAll = function(service, query) {
                 var deferred = $q.defer();
                 var url = baseUrl + service;
 
                 var queryObj = {
                     page: 1
                 };
-
+                
                 if(query) {
-                    queryObj.query = query;
+                    angular.extend(queryObj, query);
                 }
 
-                if(pageSize) {
-                    queryObj.page_size = pageSize;
-                }
-
-                if(page) {
-                    queryObj.page = page;
-                }
-
-                if(orderBy) {
-                    queryObj.order_by = orderBy;
-                }
+//                if(query) {
+//                    queryObj.query = query;
+//                }
+//
+//                if(pageSize) {
+//                    queryObj.page_size = pageSize;
+//                }
+//
+//                if(page) {
+//                    queryObj.page = page;
+//                }
+//
+//                if(orderBy) {
+//                    queryObj.order_by = orderBy;
+//                }
 
                 url += '?' + encodeQuery(queryObj);
 
@@ -120,39 +124,103 @@ angular.module('KapHal', [])
             }
         }
         
-        return KapHalClient; 
+        HalClient.default = null;
+        
+        return HalClient; 
+    })
+    
+    .constant('HalCollectionConfig', {
+        defaultQuery: {
+            page: 1,
+            //query: null,
+            //order_by: null,
+            page_size: 25
+        }
     })
 
-    .factory('KapHalCollection', function($q) {
+    .factory('HalCollection', function($q, HalClient, HalCollectionConfig) {
         
-        function KapHalCollection(repository, service) {
+        function HalCollection(service, halClient) {
             var self = this;
             
-            this.repository = repository;
+            if(!halClient) {
+                halClient = HalCollection.defaultHalClient
+            }
+            
+            if(!halClient) {
+                halClient = HalClient.default;
+            }
+
+            if(!halClient) {
+                throw "No HalClient injected";
+            }
+            
+            this.halClient = halClient;
             this.service = service;
             
             this.loading = false;
-            this.page = 1;
             this.items = [];
             this.links = {};
             this.pageCount = 0;
-            this.pageSize = 0;
             this.totalItems = 0;
             this.indexProperty = 'index';
             
-            this.fetch = function(query, orderBy, pageSize, page) {
+            this.query = null;
+            
+            this.fetch = function(query) {
+                query = query || {};
+                
+                self.query = angular.copy(query, angular.copy(HalCollectionConfig.defaultQuery));
+                
+                return self.fetchCurrent();
+            }
+            
+            this.fetchCurrent = function() {
+                if(!self.query) {
+                    throw "Run fetch() first";
+                }
+
                 self.loading = true;
-                return repository.fetchAll(self.service, query, orderBy, pageSize, page).then(function(data) {
+
+                return self.halClient.fetchAll(self.service, self.query).then(function(data) {
                     self.links = data._links;
                     self.items = data._embedded[self.service];
-                    self.totalItems = data.total_items;
-                    self.pageSize = data.page_size;
-                    self.pageCount = data.page_count;
+                    self.totalItems = parseInt(data.total_items);
+                    self.query.page_size = parseInt(data.page_size);
+                    self.pageCount = parseInt(data.page_count);
 
                     self.loading = false;
-                    
+
                     return self;
                 });
+            }
+            
+            this.fetchNext = function() {
+                if(!self.query) {
+                    throw "Run fetch() first";
+                }
+                
+                if(self.pageCount < self.query.page + 1) {
+                    throw "There is no next page";
+                }
+
+                self.query.page++;
+                
+                return self.fetchCurrent();
+            }
+
+            this.fetchPrevious = function() {
+                if(!self.query) {
+                    throw "Run fetch() first";
+                }
+
+                if(self.page <= 1) {
+                    throw "There is no previous page";
+                }
+
+                self.page--;
+
+                return self.fetchCurrent();
             }
             
             this.updateIndex = function(item1, item2) {
@@ -162,11 +230,11 @@ angular.module('KapHal', [])
 
                 var update = {};
                 update[self.indexProperty] = item1[self.indexProperty];
-                self.repository.partialUpdate(self.service, item1.id, update);
+                self.halClient.partialUpdate(self.service, item1.id, update);
 
                 var update2 = {};
                 update2[self.indexProperty] = item2[self.indexProperty];
-                self.repository.partialUpdate(self.service, item2.id, update2);
+                self.halClient.partialUpdate(self.service, item2.id, update2);
             };
             
             this.createAfter = function(relItem, item, api) {
@@ -186,7 +254,7 @@ angular.module('KapHal', [])
                     
                     item.index = index;
                     
-                    return self.repository.create(service, item).then(function(data) {
+                    return self.halClient.create(service, item).then(function(data) {
                         angular.extend(item, data);
                         
                         self.items.splice(itemArrayIndex, 0, item);
@@ -197,16 +265,14 @@ angular.module('KapHal', [])
 
                 self.items.splice(itemArrayIndex, 0, item);
 
-                var def = $q.defer();
-                def.resolve(item);
-                return def.promise;
+                return resolvePromise(item);
             }
             
             this.createFirst = function(item, api) {
                 item.index = 1;
                 
                 if(api) {
-                    return self.repository.create(service, item).then(function(data) {
+                    return self.halClient.create(service, item).then(function(data) {
                         angular.extend(item, data);
 
                         self.items.unshift(item);
@@ -217,9 +283,7 @@ angular.module('KapHal', [])
                 
                 self.items.unshift(item);
 
-                var def = $q.defer();
-                def.resolve(item);
-                return def.promise;
+                return resolvePromise(item);
             }
             
             this.remove = function(item, api) {
@@ -229,7 +293,7 @@ angular.module('KapHal', [])
                 }
 
                 if(api) {
-                    return self.repository.remove(service, item.id).then(function(data) {
+                    return self.halClient.remove(service, item.id).then(function(data) {
                         self.items.splice(arrayIndex, 1);
                         return item;
                     });
@@ -237,19 +301,25 @@ angular.module('KapHal', [])
 
                 self.items.splice(arrayIndex, 1);
 
+                return resolvePromise(item);
+            }
+            
+            function resolvePromise(data) {
                 var def = $q.defer();
-                def.resolve(item);
+                def.resolve(data);
                 return def.promise;
             }
             
         }
         
-        KapHalCollection.createAndFetch = function(apiClient, service, query, orderBy, pageSize, page) {
-            var ins = new KapHalCollection(apiClient, service);
-            ins.fetch(query, orderBy, pageSize, page);
+        HalCollection.createAndFetch = function(service, query, apiClient) {
+            var ins = new HalCollection(service, apiClient);
+            ins.fetch(query);
             return ins;
         }
+        
+        HalCollection.defaultHalClient = null;
 
-        return KapHalCollection;
+        return HalCollection;
     })
 });
