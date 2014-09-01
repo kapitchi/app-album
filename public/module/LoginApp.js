@@ -2,14 +2,16 @@ define([
     'module',
     'angular',
     'module/kap-hal',
-    'angular-easyfb'
+    'angular-easyfb',
+    'module/kap-security'
 ], function(requireModule, angular) {
     
     var appConfig = requireModule.config();
 
     var module = angular.module('LoginApp', [
         'kap-hal',
-        'ezfb'
+        'ezfb',
+        'KapSecurity'
     ]);
 
     module.config(function (ezfbProvider) {
@@ -19,7 +21,7 @@ define([
         });
     });
     
-    module.controller('FbLoginController', function($scope, ezfb, $http) {
+    module.controller('FbLoginController', function($scope, ezfb, $http, authenticationService) {
 
         $scope.showLogin = false;
         
@@ -36,6 +38,7 @@ define([
                 $scope.showLogin = false;
                 
                 $http.post('/authenticate', {type: 'facebook_javascript'}).then(function(data) {
+                    authenticationService.handleResult(data.data);
                     $scope.authResult = data.data;
                 });
                 

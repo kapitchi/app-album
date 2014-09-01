@@ -9,4 +9,5 @@ $this->ng('ng-app', 'LoginApp');
     </div>
 
     <button ng-show="showLogin" ng-click="login()" class="btn btn-primary">Login</button>
+    <button ng-show="authResult.code == 1" ng-click="logout()" class="btn btn-primary">Logout</button>
 </div>
