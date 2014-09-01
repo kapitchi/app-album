@@ -1,8 +1,11 @@
 define([
+    'module',
     'angular',
     'module/kap-hal',
     'angular-easyfb'
-], function(angular) {
+], function(requireModule, angular) {
+    
+    var appConfig = requireModule.config();
 
     var module = angular.module('LoginApp', [
         'kap-hal',
@@ -11,7 +14,7 @@ define([
 
     module.config(function (ezfbProvider) {
         ezfbProvider.setInitParams({
-            appId: '773430982669649',
+            appId: appConfig.facebookAppId,
             version: 'v2.0'
         });
     });
