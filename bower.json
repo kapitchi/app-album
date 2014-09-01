@@ -22,7 +22,8 @@
     "angular-animate": "~1.2.23",
     "angular-strap": "~2.0.5",
     "ng-tags-input": "~2.1.0",
-    "ngInfiniteScroll": "~1.1.2"
+    "ngInfiniteScroll": "~1.1.2",
+    "angular-easyfb": "~1.1.0"
   },
   "devDependencies": {},
   "resolutions": {

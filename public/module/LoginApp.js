@@ -1,13 +1,50 @@
 define([
     'angular',
     'module/kap-hal',
-    'module/kap-security'
+    'angular-easyfb'
 ], function(angular) {
 
     var module = angular.module('LoginApp', [
         'kap-hal',
-        'KapSecurity'
+        'ezfb'
     ]);
+
+    module.config(function (ezfbProvider) {
+        ezfbProvider.setInitParams({
+            appId: '773430982669649',
+            version: 'v2.0'
+        });
+    });
+    
+    module.controller('FbLoginController', function($scope, ezfb, $http) {
+
+        $scope.showLogin = false;
+        
+        $scope.logout = function() {
+            ezfb.logout();
+        }
+        
+        $scope.login = function() {
+            ezfb.login(checkLoginStatus);
+        }
+        
+        function checkLoginStatus(res) {
+            if(res && res.status === 'connected') {
+                $scope.showLogin = false;
+                
+                $http.post('/authenticate', {type: 'facebook_javascript'}).then(function(data) {
+                    $scope.authResult = data.data;
+                });
+                
+                return;
+            }
+
+            $scope.showLogin = true;
+            $scope.loginStatus = res;
+        }
+        
+        ezfb.getLoginStatus(checkLoginStatus);
+    });
 
     module.factory('apiClient', function(HalClient) {
         var baseUrl = '/';

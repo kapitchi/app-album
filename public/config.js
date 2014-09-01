@@ -32,7 +32,8 @@ require.config({
         'angular-strap': 'vendor/angular-strap/dist/angular-strap.min',
         'angular-strap.tpl': 'vendor/angular-strap/dist/angular-strap.tpl.min',
         'ng-tags-input': 'vendor/ng-tags-input/ng-tags-input.min',
-        ngInfiniteScroll: 'vendor/ngInfiniteScroll/build/ng-infinite-scroll'
+        ngInfiniteScroll: 'vendor/ngInfiniteScroll/build/ng-infinite-scroll',
+        'angular-easyfb': 'vendor/angular-easyfb/angular-easyfb'
     },
     shim: {
         jquery: {
@@ -203,7 +204,12 @@ require.config({
                 'angular'
             ]
         },
-        'ngInfiniteScroll': {
+        'angular-easyfb': {
+            deps: [
+                'angular'
+            ]
+        },
+        ngInfiniteScroll: {
             deps: [
                 'jquery',
                 'angular'
