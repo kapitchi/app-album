@@ -17,23 +17,17 @@ use Zend\Db\Sql\Where;
 use Zend\Paginator\Adapter\DbTableGateway;
 
 class TagRepository extends DbEntityRepository {
-    
-    public function createCriteriaWhere(array $criteria)
+    protected function configurePaginatorSelect(Select $select, array $criteria, array $orderBy)
     {
-        $fulltext = null;
-        
         if(!empty($criteria['fulltext'])) {
             $fulltext = $criteria['fulltext'];
+            
+            $select->where->like('name', '%' . $fulltext . '%');
+            
             unset($criteria['fulltext']);
         }
-        
-        $where = parent::createCriteriaWhere($criteria);
-        
-        if($fulltext) {
-            $where->like('name', $fulltext . '%');
-        }
-        
-        return $where;
+
+        parent::configurePaginatorSelect($select, $criteria, $orderBy);
     }
 
 } 

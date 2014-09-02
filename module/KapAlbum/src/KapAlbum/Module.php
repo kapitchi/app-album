@@ -126,6 +126,8 @@ class Module implements ApigilityProviderInterface
 
                 $adapter = $this->sm->get('KapAlbum\AlbumItemTagRepository')->getPaginatorAdapter([
                     'tag_id' => $entity['id']
+                ], [
+                    'album_time' => 'DESC'
                 ]);
 
                 $embedItems = [];

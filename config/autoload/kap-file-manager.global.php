@@ -43,8 +43,8 @@ return [
             ],
             'gallery_item' => [
                 'filter' => 'fit',
-                'width' => 128,
-                'height' => 72
+                'width' => 256,
+                'height' => 144
             ]
         ]
     ),

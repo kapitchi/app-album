@@ -12,6 +12,9 @@ namespace KapAlbum;
 use KapAlbum\V1\Rest\AlbumItem\AlbumItemEntity;
 use KapApigility\DbEntityRepository;
 use KapApigility\EntityRepositoryInterface;
+use Zend\Db\Sql\Literal;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 
 class AlbumItemTagRepository extends DbEntityRepository
@@ -42,5 +45,24 @@ class AlbumItemTagRepository extends DbEntityRepository
         
         return $tagRel;
     }
-    
+
+    protected function configurePaginatorSelect(Select $select, array $criteria, array $orderBy)
+    {
+        //order by album_time and position in a album itself
+        if(!empty($orderBy['album_time'])) {
+            $albumTimeOrder = $orderBy['album_time'];
+            
+            $select->join('album_item_rel', 'album_item_tag.album_item_id = album_item_rel.album_item_id', []);
+            $select->join('album', 'album_item_rel.album_id = album.id', []);
+            $select->order([
+                'album_time' => $albumTimeOrder,
+                'album_item_rel.index' => 'ASC'
+            ]);
+            
+            unset($orderBy['album_time']);
+        }
+        
+        parent::configurePaginatorSelect($select, $criteria, $orderBy);
+    }
+
 } 

@@ -241,19 +241,50 @@ define([
                 templateUrl: 'template/fullscreen-gallery.html',
                 controller: function($scope, $modalInstance, apiClient, $sce, $timeout) {
                     var currentIndex = 0;
+                    var controlPanelTimer = null;
+                    
+                    $scope.renderControlPanel = true;
                     $scope.currentItem = null;
                     $scope.albumItems = albumItems;
                     
                     $timeout(function() {
                         $scope.setCurrent(current);
+                        
+                        runControlPanelTimer();
                     });
                     
+                    $scope.showControlPanel = function() {
+                        $scope.renderControlPanel = true;
+                        runControlPanelTimer();
+                    }
+                    
+                    function runControlPanelTimer() {
+                        if(controlPanelTimer) {
+                            $timeout.cancel(controlPanelTimer);
+                        }
+
+                        controlPanelTimer = $timeout(function() {
+                            $scope.renderControlPanel = false;
+                        }, 3000);
+                    }
+                    
                     $scope.nextItem = function() {
-                        $scope.currentItem = albumItems[++currentIndex];
+                        ++currentIndex;
+                        
+                        if(currentIndex >= albumItems.length) {
+                            currentIndex = 0;
+                        }
+                        
+                        $scope.currentItem = albumItems[currentIndex];
                     }
 
                     $scope.previousItem = function() {
-                        $scope.currentItem = albumItems[--currentIndex];
+                        currentIndex--;
+                        if(currentIndex < 0) {
+                            currentIndex = albumItems.length - 1;
+                        }
+                        
+                        $scope.currentItem = albumItems[currentIndex];
                     }
                     
                     $scope.setCurrent = function(item) {
@@ -337,7 +368,9 @@ define([
         
         $scope.loadTags = function(query) {
             return apiClient.fetchAll('tag', {
-                fulltext: query
+                query: {
+                    fulltext: query
+                }
             }).then(function(data) {
                 return data._embedded.tag;
             });
