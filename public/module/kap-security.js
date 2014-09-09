@@ -7,7 +7,8 @@ define(['angular', 'module/SharedRegistry'], function(angular) {
         this.identity = null;
         this.userProfile = null;
 
-        this.identity = $window.sessionStorage.getItem('identityId');
+        //this.identity = $window.sessionStorage.getItem('identityId');
+        this.identity = 1;
 
         this.handleResult = function(result) {
             this.identity = result.identityId;
