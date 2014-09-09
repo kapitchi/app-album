@@ -24,7 +24,7 @@ require.config({
         'ng-aloha-editor': 'vendor/ng-aloha-editor/ng-aloha-editor',
         'angular-ui-sortable': 'vendor/angular-ui-sortable/sortable',
         'angular-ui-tree': 'vendor/angular-ui-tree/dist/angular-ui-tree',
-        moment: 'vendor/moment/min/moment-with-langs.min',
+        moment: 'vendor/moment/min/moment-with-locales.min',
         'angular-moment': 'vendor/angular-moment/angular-moment',
         textAngular: 'vendor/textAngular/dist/textAngular.min',
         'angular-sanitize': 'vendor/angular-sanitize/angular-sanitize',

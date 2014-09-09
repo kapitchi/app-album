@@ -1,16 +1,22 @@
 <div ng-hide="loader.loading">
+<div class="row button-set">
+    <div class="pull-right">
+    <button ng-show="app.edit" ng-click="albumUpdate(album)" class="btn btn-edit">Edit album</button>
+    <button ng-show="app.edit" ng-click="createItem()" class="btn btn-edit">Create item</button>
+</div>
+</div>
     
-    
-<h1>{{album.name}}</h1>
-<p>{{album.album_time|amCalendar}}</p>
-<p ng-bind-html="album.description"></p>
-<button ng-show="app.edit" ng-click="albumUpdate(album)">Edit album</button>
-<button ng-show="app.edit" ng-click="createItem()">Create item</button>
-<div ui-tree="treeOptions" data-empty-place-holder-enabled="false" data-drag-enabled="app.edit" ui-tree-nodes ng-model="albumItemRelCollection.items" class="album row">
+<div class="thumb-container" ui-tree="treeOptions" data-empty-place-holder-enabled="false" data-drag-enabled="app.edit" ui-tree-nodes ng-model="albumItemRelCollection.items" class="album row">
+
+    <div class="col-lg-3 col-md-4 col-xs-6 thumb album-info">
+         <h1 class="album-title">{{album.name}}</h1>
+        <p class="album-description" ng-bind-html="album.description"></p>
+        <p class="album-date">{{album.album_time|amCalendar}}</p>
+    </div>
 
     <div ng-repeat="itemRel in albumItemRelCollection.items" ui-tree-node ng-class="{'album-primary-item': album.primary_item_id == itemRel.album_item_id}" class="col-lg-3 col-md-4 col-xs-6 thumb">
         <div class="thumbnail">
-            <a href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)"><img ng-src="{{itemRel._embedded.album_item._embedded.thumbnail_file._links.thumbnail_album.href}}" class="img-responsive"></a>
+            <a href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)" ng-style="{'background-image': 'url(' + itemRel._embedded.album_item._embedded.thumbnail_file._links.thumbnail_album.href + ')'}" class="image-holder"></a> 
             <div class="caption">
                 <h3><a href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)">{{itemRel._embedded.album_item.name}}</a></h3>
                 <ul>

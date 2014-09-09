@@ -23,12 +23,141 @@
 //modules
 @import "module/kap-file-manager";
 
+//FONT
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,400italic,300italic,500,100italic,500italic,300,700italic,100);
 
-body {
-  padding-top: 50px;
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+.modal-dialog {
+  color: #000;
 }
 
+footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding-left: 20px;
+  right: 0px;
+  font-size: 12px;
+}
+.thumbnail {
+  width: 100%;
+  position: relative;
+  background: none;
+  border: none;
+  min-height: 350px;
+  padding:0px;
+  &:hover {
+    .caption {
+      opacity: 1;
+    }
+  }
+  .image-holder {
+    width: 100%;
+    height: 100%;
+    float: left;
+    position: absolute;
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+  .caption {
+    width: 100%;
+    position: absolute;
+    bottom:0px;
+    transition: all ease-in 0.1s;
+    opacity: 0;
+    left: 0px;
+    text-align: center;
+    padding:20px;
+    background: -moz-linear-gradient(top,  rgba(0,0,0,0) 1%, rgba(0,0,0,0.65) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#a6000000',GradientType=0 ); /* IE6-9 */
+    h3 {
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: 100;
+    }
+  
+  a {
+    color: #fff;
+  }
 
+  }
+}
+body {
+  padding-top: 50px;
+  font-family: Roboto, arial;
+  background: #000;
+  color: #fff;
+  padding-left: 280px;
+  padding-top: 10px;
+}
+.thumb-container {
+  width: 100%;
+  float: left;
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top:solid 1px rgba(255,255,255,0.1);
+}
+.album-info {
+  padding: 20px;
+}
+.album-title {
+  font-size: 26px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: solid 1px rgba(255,255,255,0.2);
+}
+.album-date {
+  color: rgba(255,255,255,0.3);
+    margin-top: 30px;
+}
+.row {
+  &.button-set {
+    margin: 0px;
+  }
+}
+
+.navbar {
+  height: 100%;
+  float: left;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width:220px;
+  padding-top: 20px;
+  background: #fff;
+  color: #000;
+  .container {
+    width: 100%;
+    padding: 0px;
+    height: auto;
+  }
+  li {
+    width: 100%;
+    float: left;
+    a {
+      color: #000!important;
+      text-transform: uppercase;
+      font-size: 13px!important;
+      padding: 10px 25px;
+      font-weight: 300!important;
+      width: 100%;
+    }
+  }
+}
+
+h1, h2, h3, h4 {
+  font-weight: 100;
+}
 .modal {
   &.full-screen {
     height: 100%;
