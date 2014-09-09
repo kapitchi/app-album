@@ -28,7 +28,8 @@ return array(
         'KapSecurity',
         'KapFileManager',
         'KapAlbum',
-        'KapTaxonomy'
+        'KapTaxonomy',
+        'Dev'
     ),
     'module_listener_options' => array(
         'module_paths' => array(
