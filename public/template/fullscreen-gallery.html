@@ -1,18 +1,13 @@
 <div class="modal-header" ng-click="showControlPanel()" ng-mouseover="showControlPanel()">
     <h3 class="modal-title" >{{currentItem.name}}</h3>
     <p ng-bind-html="currentItem.description"></p>
-    <button ng-click="$dismiss()" type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <button ng-click="$dismiss()" type="button" class="close"><span aria-hidden="true" class="close-icon"></span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body" ng-mouseover="showControlPanel()">
     <div ng-show="renderControlPanel" class="control-panel container-fluid">
         <div class="row">
-            <div class="col-xs-1"><a href ng-click="previousItem()" class="btn btn-default">Previous</a></div>
-            <div class="col-xs-10">
-                <div ng-repeat="item in albumItems" ng-class="{active: item === currentItem}" class="col-xs-3">
-                    <a href ng-click="setCurrent(item)"><img ng-src="{{item._embedded.thumbnail_file._links.thumbnail_gallery_item.href}}" class="img-responsive"></a>
-                </div>
-            </div>
-            <div class="col-xs-1"><a href ng-click="nextItem()" class="btn btn-default">Next</a></div>
+            <a href ng-click="previousItem()" class="previous"></a>
+            <a href ng-click="nextItem()" class="next"></a>
         </div>
     </div>
     

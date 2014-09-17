@@ -50,6 +50,7 @@ footer {
   border: none;
   min-height: 350px;
   padding:0px;
+  border-right: solid 2px #000;
   &:hover {
     .caption {
       opacity: 1;
@@ -98,13 +99,22 @@ body {
   color: #fff;
   padding-left: 280px;
   padding-top: 10px;
+  .app-mode-edit {
+    .caption {
+      .btn {
+        background: #3e3e3e;
+        text-shadow:none;
+        border:solid 1px #000;
+        margin-bottom: 5px;
+      }
+    }
+  }
 }
+
 .thumb-container {
   width: 100%;
   float: left;
   margin-top: 40px;
-  padding-top: 40px;
-  border-top:solid 1px rgba(255,255,255,0.1);
 }
 .album-info {
   padding: 20px;
@@ -118,7 +128,7 @@ body {
 }
 .album-date {
   color: rgba(255,255,255,0.3);
-    margin-top: 30px;
+    margin-top: 10px;
 }
 .row {
   &.button-set {
@@ -136,6 +146,14 @@ body {
   padding-top: 20px;
   background: #fff;
   color: #000;
+  &:before {
+    content: " ";
+    position: absolute;
+    right: 3px;
+    height: 100%;
+    border-left: dashed 1px rgba(0,0,0,0.2);
+    width: 1px;
+  }
   .container {
     width: 100%;
     padding: 0px;
@@ -158,16 +176,102 @@ body {
 h1, h2, h3, h4 {
   font-weight: 100;
 }
+.modal-backdrop {
+  &.in {
+    opacity: 0.9;
+  }
+}
+.tag-list {
+  margin: 0px;
+  padding:10px 0px 0px 0px;
+  width: 100%;
+  float: left;
+  text-align: center;
+  border-top: solid 1px rgba(255,255,255,0.2);
+  &.summary {
+    padding: 10px 0px 10px 0px;
+  }
+  li {
+    display: inline;
+
+    padding-right: 10px;
+    margin-right: 10px;
+    border-right: solid 1px rgba(255,255,255,0.2);
+    font-size: 12px;
+    &.title {
+      color: #fff;
+      border: none;
+      padding-right: 0px;
+    }
+    &:last-child {
+      border-right: none;
+    }
+    a {
+      font-weight: 100;
+      color: rgba(255,255,255,0.7);
+    }
+  }
+}
+.previous, .next {
+  width: 50px;
+  height: 100px;
+  position: fixed;
+  top: 50%;
+  margin-top: -25px;
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
+}
+.previous {
+  left: 20px;
+  background: url(../../images/previous.png);
+}
+.next {
+  right: 20px;
+  background: url(../../images/next.png);
+}
 .modal {
   &.full-screen {
     height: 100%;
+    width: 100%;
+    button {
+      &.close {
+         width: 50px;
+        height: 50px;
+        position: fixed;
+        top: 20px;
+        right:20px;
+        opacity: 0.5;
+        background: url(../../images/close.png);
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
     .modal-dialog {
-      margin: 0px;
-      width: 100%;
-      height: 100%;
+      width: 90%;
+      height: 90%;
+      .img-responsive, iframe {
+        max-height: 100%;
+        margin: 0 auto;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        border: solid 5px #fff;
+      }
+      iframe  {
+        padding: 0px!important;
+        margin: 0 auto;
+      }
+      .embed-responsive {
+        height: 100%!important;
+        padding: 0px!important;
+      }
       .modal-content {
         height: 100%;
-        //background: transparent;
+        width: 100%;
+        background: transparent;
+        box-shadow: none;
+        border: none;
         .modal-body{
           height: 90%;
           padding: 0px;
@@ -177,12 +281,23 @@ h1, h2, h3, h4 {
             position: absolute;
             width: 100%;
             z-index: 10;
-            background-color:rgba(0, 0, 0, 0.5)
+            background-color:transparent;
           }
         }
         .modal-header, .modal-footer {
           height: 10%;
           overflow: hidden;
+          text-align: center;
+          color: #fff;
+          padding:0px;
+          border: none;
+          .modal-title {
+            text-transform: uppercase;
+          }
+          p {
+            color: rgba(255,255,255,0.5);
+          }
+
         }
 
       }
@@ -190,6 +305,14 @@ h1, h2, h3, h4 {
   }
 }
 
+.angular-ui-tree-placeholder {
+  border: dashed 2px #3e3e3e;
+  display: block!important;
+  width:25%!important;
+  height: 350px!important;
+  margin:0px;
+  float: left;
+}
 
 .album {
   .angular-ui-tree-empty {
