@@ -33,7 +33,9 @@ require.config({
         'angular-strap.tpl': 'vendor/angular-strap/dist/angular-strap.tpl.min',
         'ng-tags-input': 'vendor/ng-tags-input/ng-tags-input.min',
         ngInfiniteScroll: 'vendor/ngInfiniteScroll/build/ng-infinite-scroll',
-        'angular-easyfb': 'vendor/angular-easyfb/angular-easyfb'
+        'angular-easyfb': 'vendor/angular-easyfb/angular-easyfb',
+        'ng-preload-src': 'vendor/ng-preload-src/ng-preload-src',
+        'angular-loading-bar': 'vendor/angular-loading-bar/build/loading-bar'
     },
     shim: {
         jquery: {
@@ -205,6 +207,16 @@ require.config({
             ]
         },
         'angular-easyfb': {
+            deps: [
+                'angular'
+            ]
+        },
+        'ng-preload-src': {
+            deps: [
+                'angular'
+            ]
+        },
+        'angular-loading-bar': {
             deps: [
                 'angular'
             ]

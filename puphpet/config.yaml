@@ -146,6 +146,7 @@ php:
             - intl
             - mcrypt
             - memcached
+            - curl
         pear: {  }
         pecl:
             - pecl_http
@@ -153,6 +154,8 @@ php:
         display_errors: On
         error_reporting: '-1'
         session.save_path: /tmp
+        upload_max_filesize: 256MB
+        post_max_size: 256MB
     timezone: Europe/London
 hhvm:
     install: 0

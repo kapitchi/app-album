@@ -10,5 +10,8 @@ return [
     'authentication_options' => [
         'allow_registration' => true,
         'enable_on_registration' => true
-    ]
+    ],
+    'zf-oauth2' => array(
+        'allow_implicit' => true,
+    ),
 ];
