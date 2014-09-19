@@ -5,14 +5,18 @@
     <button ng-show="app.edit" ng-click="createItem()" class="btn btn-edit">Create item</button>
 </div>
 </div>
-    
-<div class="thumb-container" ui-tree="treeOptions" data-empty-place-holder-enabled="false" data-drag-enabled="app.edit" ui-tree-nodes ng-model="albumItemRelCollection.items" class="album row">
 
-    <div class="col-lg-3 col-md-4 col-xs-6 thumb album-info">
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 thumb album-info">
          <h1 class="album-title">{{album.name}}</h1>
         <p class="album-description" ng-bind-html="album.description"></p>
         <p class="album-date">{{album.album_time|amCalendar}}</p>
     </div>
+    </div>
+    
+<div class="thumb-container" ui-tree="treeOptions" data-empty-place-holder-enabled="false" data-drag-enabled="app.edit" ui-tree-nodes ng-model="albumItemRelCollection.items" class="album row">
+
+    
 
     <div ng-repeat="itemRel in albumItemRelCollection.items" ui-tree-node ng-class="{'album-primary-item': album.primary_item_id == itemRel.album_item_id}" class="col-lg-3 col-md-4 col-xs-6 thumb">
         <div class="thumbnail">
