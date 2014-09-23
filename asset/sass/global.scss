@@ -6,6 +6,8 @@
 @import "../../public/vendor/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap";
 @import "../../public/vendor/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/theme";
 
+@import url(http://fonts.googleapis.com/css?family=Lora);
+
 //Font awesome
 //@import "../../public/vendor/components-font-awesome/scss/font-awesome";
 
@@ -14,7 +16,8 @@
 
 //AngularJS
 @import "angular";
-
+@import url(http://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic);
+@import url(http://fonts.googleapis.com/css?family=Raleway:600,500,300,700,400,200,100);
 //AngularJS - xeditable
 @import "vendor/angular-xeditable";
 
@@ -28,8 +31,10 @@
 
 
 html, body {
-  height: 100%;
-  width: 100%;
+
+  font-family: Raleway;
+  font-weight: 100;
+  font-size: 16px;
 }
 .modal-dialog {
   color: #000;
@@ -40,9 +45,10 @@ html, body {
 footer {
   position: fixed;
   bottom: 0px;
-  width: 100%;
-  padding-left: 20px;
-  right: 0px;
+  width: 150px;
+  padding-left: 10px;
+  padding-right: 10px;
+  left: 0px;
   font-size: 12px;
 }
 .thumbnail {
@@ -66,6 +72,8 @@ footer {
       opacity: 1;
     }
   }
+
+
   .image-holder {
     width: 100%;
     height: 100%;
@@ -85,7 +93,7 @@ footer {
     padding:20px;
     background: -moz-linear-gradient(top,  rgba(0,0,0,0) 1%, rgba(0,0,0,0.65) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* Chrome10+,Safari5.1+ */
+background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%) fixed no-repeat; /* Chrome10+,Safari5.1+ */
 background: -o-linear-gradient(top,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* Opera 11.10+ */
 background: -ms-linear-gradient(top,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* IE10+ */
 background: linear-gradient(to bottom,  rgba(0,0,0,0) 1%,rgba(0,0,0,0.65) 100%); /* W3C */
@@ -104,8 +112,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', e
 }
 body {
   padding-top: 50px;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  padding-bottom: 50px;
+  margin:0px;
   padding-right: 40px;
-  font-family: Roboto, arial;
   background: rgb(0,0,0); /* Old browsers */
 background: -moz-linear-gradient(45deg,  rgba(0,0,0,1) 25%, rgba(86,55,43,1) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left bottom, right top, color-stop(25%,rgba(0,0,0,1)), color-stop(100%,rgba(86,55,43,1))); /* Chrome,Safari4+ */
@@ -118,7 +129,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 
 
   color: #fff;
-  padding-left: 280px;
+  padding-left: 190px;
   padding-top: 10px;
   .app-mode-edit {
     .caption {
@@ -136,23 +147,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
   width: 100%;
   float: left;
   margin-top: 0px;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  border-top: dashed 1px rgba(255,255,255,0.2);
-  border-bottom: dashed 1px rgba(255,255,255,0.2);
+  padding-top: 20px;
+  margin-bottom: 40px;
 }
 .album-info {
   padding: 20px;
   @include animation(slide-in 0.5s);
   -webkit-animation-fill-mode: forwards; /* Chrome, Safari, Opera */
   animation-fill-mode: forwards;
+  text-align: center;
 }
 .album-title {
-  font-size: 26px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: solid 1px rgba(255,255,255,0.2);
+  font-size: 36px;
+  font-weight: 400;
+   font-family: 'Playfair Display', cursive;
+  &.site-title {
+  
+    text-transform: none;
+    padding-top: 20px;
+  }
 }
 .album-date {
   color: rgba(255,255,255,0.3);
@@ -170,11 +183,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
   position: fixed;
   left: 0px;
   top: 0px;
-  width:220px;
-  padding-top: 20px;
+  width:150px;
+  padding-top: 0px;
   background: #fff;
   box-shadow: 0px 0px 28px 0px rgba(86, 55, 43, 0.5);
   color: #000;
+  border-top: dashed 1px rgba(0,0,0,0.1);
+  font-family: Playfair Display;
+  text-align: center;
   &:before {
     content: " ";
     position: absolute;
@@ -182,6 +198,24 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
     height: 100%;
     border-left: dashed 1px rgba(0,0,0,0.2);
     width: 1px;
+  }
+  .navbar-brand {
+    font-size: 60px;
+    width: 100%;
+    text-align: center;
+    color: rgba(0,0,0,0.1);
+    margin: 0px!important;
+    padding: 20px 0px!important;
+    height: auto;
+    border-bottom: dashed 1px rgba(0,0,0,0.1);
+    line-height: normal;
+    transition:all 0.2 ease-in;
+    &:hover {
+      color: rgba(0,0,0,0.5);
+    }
+  }
+  .navbar-header {
+    width: 100%;
   }
   .container {
     width: 100%;
@@ -191,13 +225,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
   li {
     width: 100%;
     float: left;
+    padding-right: 5px;
     a {
       color: #000!important;
       text-transform: uppercase;
       font-size: 13px!important;
       padding: 10px 25px;
+      transition:0.2s all ease-in;
       font-weight: 300!important;
       width: 100%;
+      border-bottom: dashed 1px rgba(0,0,0,0.1);
     }
   }
 }
@@ -439,6 +476,88 @@ h1, h2, h3, h4 {
         margin-top: 0px;
     }
 }
+
+
+@media (max-width: 767px) {
+  body, html {
+    padding: 0px;
+  }
+.thumbnail .caption {
+    opacity: 1!important;
+  }
+  .navbar {
+  height: 50px;
+  float: left;
+  position: relative;
+  left: 0px;
+  top: 0px;
+  width:100%;
+  padding-top: 0px;
+  background: #fff;
+  box-shadow: 0px 0px 28px 0px rgba(86, 55, 43, 0.5);
+  color: #000;
+  border-top: dashed 1px rgba(0,0,0,0);
+  font-family: Playfair Display;
+  text-align: center;
+  &:before {
+    display: none;
+  }
+  .navbar-collapse {
+    background-color: #fff;
+  }
+  
+  .navbar-toggle .icon-bar { background: #000;}
+  .navbar-brand {
+    font-size: 35px;
+    width: auto;
+    text-align: center;
+    color: rgba(0,0,0,0.1);
+    margin: 0px!important;
+    padding: 0px 10px!important;
+    height: auto;
+    border-bottom: dashed 1px rgba(0,0,0,0.1);
+    line-height: normal;
+    transition:all 0.2 ease-in;
+    &:hover {
+      color: rgba(0,0,0,0.5);
+    }
+  }
+  .navbar-header {
+    width: 100%;
+
+  }
+  .container {
+    width: 100%;
+    padding: 0px;
+    height: auto;
+  }
+  li {
+    width: 100%;
+    float: left;
+    padding-right: 5px;
+    a {
+      color: #000!important;
+      text-transform: uppercase;
+      font-size: 13px!important;
+      padding: 10px 25px;
+      font-weight: 300!important;
+      width: 100%;
+      border-bottom: dashed 1px rgba(0,0,0,0.1);
+    }
+  }
+}
+footer {
+  width: 100%;
+  background:#fff;
+  text-align: center;
+}
+
+.container > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-header, .container-fluid > .navbar-collapse {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+  }
 
 
 //ANIMATIONS
