@@ -13,5 +13,6 @@ return [
     ],
     'zf-oauth2' => array(
         'allow_implicit' => true,
+        'storage' => 'KapSecurity\\OAuth2\\PdoAdapter'
     ),
 ];

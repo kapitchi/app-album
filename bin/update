@@ -1,13 +1,13 @@
 #!/bin/bash
 
+echo "Running compass ..."
+compass compile
+
 echo "Running npm ..."
 npm install
-
-echo "Running composer ..."
-composer update
 
 echo "Running bower ..."
 bower install
 
-echo "Running compass ..."
-compass compile
+echo "Running composer ..."
+composer update
