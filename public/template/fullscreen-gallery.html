@@ -13,7 +13,7 @@
     
     <div ng-if="currentItem.type === 'FILE'">
         <a href ng-click="nextItem()">
-            <img ng-src="{{currentItem._embedded.thumbnail_file._links.access.href}}" class="img-responsive">
+            <img ng-src="{{currentItem._embedded.thumbnail_file._links.access.href}}" preload-with-default-src class="img-responsive">
         </a>
     </div>
     <div ng-if="currentItem.type === 'YOUTUBE_VIDEO_ID'" class="embed-responsive embed-responsive-16by9">

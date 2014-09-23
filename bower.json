@@ -23,7 +23,9 @@
     "angular-strap": "~2.0.5",
     "ng-tags-input": "~2.1.0",
     "ngInfiniteScroll": "~1.1.2",
-    "angular-easyfb": "~1.1.0"
+    "angular-easyfb": "~1.1.0",
+    "ng-preload-src": "~0.0.4",
+    "angular-loading-bar": "~0.6.0"
   },
   "devDependencies": {},
   "resolutions": {
