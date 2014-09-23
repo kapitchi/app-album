@@ -29,12 +29,12 @@
 //FONT
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700,400italic,300italic,500,100italic,500italic,300,700italic,100);
 
-
 html, body {
 
   font-family: Raleway;
   font-weight: 100;
   font-size: 16px;
+  height: 100%;
 }
 .modal-dialog {
   color: #000;
@@ -42,6 +42,16 @@ html, body {
 .thumb {
   transition:all 0.2s ease-in;
 }
+.content-view {
+  transition:all 0.3s ease-in;
+  opacity: 1;
+  margin-top: 0px;
+  &.ng-leave-active, &.ng-enter-active {
+    opacity: 0;
+    margin-top: -20px;
+  }
+}
+
 footer {
   position: fixed;
   bottom: 0px;
@@ -505,7 +515,7 @@ h1, h2, h3, h4 {
   .navbar-collapse {
     background-color: #fff;
   }
-  
+
   .navbar-toggle .icon-bar { background: #000;}
   .navbar-brand {
     font-size: 35px;
