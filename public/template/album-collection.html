@@ -1,4 +1,4 @@
-<button ng-show="app.edit" ng-click="createNewAlbum()">Create album</button>
+<button ng-show="app.edit" ng-click="createNewAlbum()" class="btn btn-default">Create album</button>
 <div ui-tree="treeOptions" ng-model="albumCollection.items" ng-class="{loading: albumCollection.loading}" class="album-collection row">
 
     <div ng-repeat="album in albumCollection.items" class="col-lg-3 col-md-4 col-xs-6 thumb">

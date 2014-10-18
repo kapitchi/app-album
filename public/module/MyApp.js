@@ -517,7 +517,10 @@ define([
                 }, true);
             });
         }
-
+      
+        $scope.bulkUpload = function() {
+          console.log('WHAT NOW?'); //XXX
+        };
     });
 
     module.controller('AlbumCollectionController', function($scope, $state, $modal, $stateParams, apiClient, HalCollection) {
