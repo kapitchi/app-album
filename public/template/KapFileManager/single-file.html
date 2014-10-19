@@ -1,11 +1,11 @@
-<div class="form-control single-file">
+<div class="single-file">
     <div ng-show="!file">
         <div ng-show="uploader.isHTML5">
-            <div class="well my-drop-zone" nv-file-drop nv-file-over="file-over" uploader="uploader">
+            <div class="well my-drop-zone" nv-file-drop nv-file-over="file-over" uploader="uploader" options="fileOptions">
                 Drop a file here 
             </div>
         </div>
-        <input nv-file-select uploader="uploader" type="file" />
+        <input nv-file-select uploader="uploader" options="fileOptions" type="file" />
     </div>
     <div ng-show="file">
         <img ng-src="{{file._links.thumbnail_album.href}}" class="img-responsive">

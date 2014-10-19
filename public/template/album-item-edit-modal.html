@@ -1,0 +1,10 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{item.name}}</h3>
+</div>
+<div class="modal-body">
+    <div album-item-form item="item"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="save(item)">Save</button>
+    <button class="btn btn-warning" ng-click="$dismiss()">Cancel</button>
+</div>

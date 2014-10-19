@@ -1,0 +1,89 @@
+<div class="modal-header">
+    <h3 class="modal-title">Bulk upload</h3>
+</div>
+<div class="modal-body">
+    
+    <div>
+        <div ng-show="uploader.isHTML5">
+            <div class="well my-drop-zone" nv-file-drop nv-file-over="file-over" uploader="uploader" options="fileOptions">
+                Drop a files here 
+            </div>
+        </div>
+        <input nv-file-select uploader="uploader" options="fileOptions" type="file" multiple/>
+    </div>
+
+    <accordion close-others="true">
+        <accordion-group ng-repeat="fileItem in uploader.queue|filter:{albumItemFile:true}:true" is-disabled="!fileItem.isSuccess">
+            <accordion-heading>
+                <div class="row">
+                    <strong class="col-md-5">{{fileItem.albumItem.name||fileItem.file.name }}</strong>
+                    <div ng-show="uploader.isHTML5" ng-thumb="{ file: fileItem._file, height: 50 }"></div>
+                    <div class="col-md-3">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': fileItem.progress + '%' }"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span ng-show="fileItem.albumItem.id"><i class="glyphicon glyphicon-ok"></i></span>
+                        <span ng-show="fileItem.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                        <span ng-show="fileItem.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success" ng-click="save(fileItem)" stop-event ng-disabled="!fileItem.isSuccess">
+                            <span class="glyphicon glyphicon-upload"></span> Save
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="remove(fileItem)" stop-event>
+                            <span class="glyphicon glyphicon-trash"></span> Remove
+                        </button>
+                    </div>
+                </div>
+            </accordion-heading>
+
+            <div album-item-form item="fileItem.albumItem"></div>
+            
+        </accordion-group>
+    </accordion>
+    
+    <div ng-show="false" ng-repeat="fileItem in uploader.queue|filter:{albumItemFile:true}:true">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>
+                    <strong>{{ fileItem.file.name }}</strong>
+                    <div ng-show="uploader.isHTML5" ng-thumb="{ file: fileItem.file, height: 50 }"></div>
+                </td>
+                <td ng-show="uploader.isHTML5" nowrap>{{ fileItem.file.size/1024/1024|number:2 }} MB</td>
+                <td ng-show="uploader.isHTML5">
+                    <div class="progress" style="margin-bottom: 0;">
+                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': fileItem.progress + '%' }"></div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <span ng-show="fileItem.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                    <span ng-show="fileItem.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                    <span ng-show="fileItem.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                </td>
+                <td nowrap>
+                    <button type="button" class="btn btn-success btn-xs" ng-click="fileItem.$showForm = !fileItem.$showForm" ng-disabled="!fileItem.isSuccess">
+                        <span class="glyphicon glyphicon-upload"></span> Edit
+                    </button>
+                    <button type="button" class="btn btn-success btn-xs" ng-click="save(fileItem)" ng-disabled="!fileItem.isSuccess">
+                        <span class="glyphicon glyphicon-upload"></span> Save
+                    </button>
+                    <button type="button" class="btn btn-danger btn-xs" ng-click="fileItem.remove()">
+                        <span class="glyphicon glyphicon-trash"></span> Remove
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        
+        <div album-item-form item="fileItem.albumItem" ng-show="fileItem.$showForm"></div>
+    </div>
+        
+    
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="saveAll()">Save all</button>
+    <button class="btn btn-warning" ng-click="$dismiss()">Cancel</button>
+</div>

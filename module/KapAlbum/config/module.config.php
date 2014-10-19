@@ -299,10 +299,10 @@ return array(
             ),
             2 => array(
                 'name' => 'description',
-                'required' => true,
+                'required' => false,
                 'filters' => array(),
                 'validators' => array(),
-                'allow_empty' => false,
+                'allow_empty' => true,
                 'continue_if_empty' => false,
             ),
             3 => array(
