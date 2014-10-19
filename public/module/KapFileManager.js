@@ -263,44 +263,44 @@ define([
             restrict: 'A',
             templateUrl: '/template/KapFileManager/single-file.html',
             replace: true,
+            require: 'ngModel',
             scope: {
-                uploadData: "=uploadData",
-                item: "=fileId"
+                uploadData: "=uploadData"
             },
-            controller: function($scope) {
+            link: {
+              pre: function($scope, $element, $attrs, ngModel) {
                 $scope.file = null;
-                
-                $scope.fileId = $scope.item.file_id;
 
-                if($scope.fileId) {
-                    $http.get('/file/' + $scope.fileId).success(function(data) {
-                        $scope.file = data;
+                ngModel.$formatters.push(function(value) {
+                  if(value) {
+                    $http.get('/file/' + value).success(function(data) {
+                      $scope.file = data;
                     });
-                }
+                  }
+                });
 
                 var uploader = $scope.uploader = new FileUploader({
-                    url: '/file',
-                    autoUpload: true,
-                    removeAfterUpload: true
+                  url: '/file',
+                  autoUpload: true,
+                  removeAfterUpload: true
                 });
 
                 uploader.onAfterAddingFile = function (item) {
-                    item.formData.push($scope.uploadData);
+                  item.formData.push($scope.uploadData);
                 };
 
                 uploader.onSuccessItem = function(fileItem, response, status, headers) {
-                    $scope.item.file_id = response.id;
-                    $scope.fileId = response.id;
-                    $scope.file = response;
+                  ngModel.$setViewValue(response.id);
+                  $scope.file = response;
                 }
 
                 $scope.remove = function() {
-                    $http.delete('/file/' + $scope.fileId).success(function() {
-                        $scope.item.file_id = null;
-                        $scope.fileId = null;
-                        $scope.file = null;
-                    });
+                  $http.delete('/file/' + $scope.file.id).success(function() {
+                    ngModel.$setViewValue(null);
+                    $scope.file = null;
+                  });
                 }
+              }
             }
         };
     });

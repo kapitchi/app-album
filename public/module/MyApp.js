@@ -2,12 +2,14 @@ define([
     'angular',
     'moment',
     //'angular-strap.tpl',
-    'angular-animate',
+    //'angular-animate',
     'angular-ui-router',
     'angular-ui-tree',
     'ng-tags-input',
     'textAngular',
     'ngInfiniteScroll',
+    'ngImgCrop',
+    'ngstorage',
     'ng-preload-src',
     'angular-loading-bar',
     'angular-moment',
@@ -35,13 +37,15 @@ define([
     //END - moment
 
     var module = angular.module('MyApp', [
-        'ngAnimate',
+        //'ngAnimate',
         //'mgcrea.ngStrap',
         'ui.router',
         'ui.tree',
         'ngTagsInput',
         'textAngular',
         'ng-preload-src',
+        'ngImgCrop',
+        'ngStorage',
         'angular-loading-bar',
         'angularMoment',
         'infinite-scroll',
@@ -136,10 +140,14 @@ define([
         return client;
     })
     
-    module.controller('AppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window) {
+    module.controller('AppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, $sessionStorage) {
 
+      $sessionStorage.$default({
+        edit: false
+      });
+      
         $rootScope.app = {
-            edit: false,
+            edit: $sessionStorage.edit,
             nav: {
                 collapsed: true
             },
@@ -161,7 +169,8 @@ define([
         }
 
         $rootScope.toggleEdit = function() {
-            $rootScope.app.edit = !$rootScope.app.edit;
+          
+            $rootScope.app.edit = $sessionStorage.edit = !$rootScope.app.edit;
         }
 
         $rootScope.albumItemUpdate = function(item) {

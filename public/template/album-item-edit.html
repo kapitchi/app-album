@@ -48,7 +48,7 @@
         <div ng-show="item.type == 'FILE'">
             <div class="form-group">
                 <label for="fileId">File</label>
-                <input single-file upload-data="{filesystem: 'album_item'}" file-id="item" id="fileId" type="file" class="form-control" placeholder="File">
+                <input single-file upload-data="{filesystem: 'album_item'}" ng-model="item.file_id" id="fileId" type="file" class="form-control" placeholder="File">
             </div>
         </div>
     </form>

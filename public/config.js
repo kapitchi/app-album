@@ -35,7 +35,9 @@ require.config({
         ngInfiniteScroll: 'vendor/ngInfiniteScroll/build/ng-infinite-scroll',
         'angular-easyfb': 'vendor/angular-easyfb/angular-easyfb',
         'ng-preload-src': 'vendor/ng-preload-src/ng-preload-src',
-        'angular-loading-bar': 'vendor/angular-loading-bar/build/loading-bar'
+        'angular-loading-bar': 'vendor/angular-loading-bar/build/loading-bar',
+        ngImgCrop: 'vendor/ngImgCrop/compile/minified/ng-img-crop',
+        ngstorage: 'vendor/ngstorage/ngStorage'
     },
     shim: {
         jquery: {
@@ -226,6 +228,16 @@ require.config({
                 'jquery',
                 'angular'
             ]
+        },
+        ngImgCrop: {
+            deps: [
+                'angular'
+            ]
+        },
+        ngstorage: {
+          deps: [
+            'angular'
+          ]
         }
     },
     packages: [
