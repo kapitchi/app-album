@@ -52,7 +52,7 @@
     <div class="form-group">
         <label>Thumbnail</label>
         <div>
-            <img crop-selection on-save="onThumbnailSave($blob)" ng-src="{{item._embedded.thumbnail_file._links.thumbnail_album.href}}" class="img-responsive">
+            <img crop-selection on-save="onThumbnailSave($blob)" ng-src="{{item._embedded.thumbnail_file._links.access.href}}" class="img-responsive">
             <button ng-click="resetThumbnail()" class="btn btn-warning">Reset</button>
         </div>
     </div>
