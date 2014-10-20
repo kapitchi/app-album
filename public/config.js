@@ -42,7 +42,7 @@ require.config({
         caman: 'vendor/caman/dist/caman.min',
         'caman.full': 'vendor/caman/dist/caman.full.min',
         'fabric': 'vendor-import/darkroomjs/vendor/fabric',
-        'darkroom': 'vendor-import/darkroomjs/build/js/darkroom.min'
+        'darkroom': 'vendor-import/darkroomjs/mybuild/js/darkroom.min'
     },
     shim: {
         jquery: {
