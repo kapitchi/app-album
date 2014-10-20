@@ -291,6 +291,7 @@ define([
                       $scope.file = data;
                     });
                   }
+                  $scope.file = null;
                 });
                 
                 var uploader = $scope.uploader = globalFileUploader;

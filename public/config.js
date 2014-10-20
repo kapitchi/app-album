@@ -26,7 +26,7 @@ require.config({
         'angular-ui-tree': 'vendor/angular-ui-tree/dist/angular-ui-tree',
         moment: 'vendor/moment/min/moment-with-locales.min',
         'angular-moment': 'vendor/angular-moment/angular-moment',
-        textAngular: 'vendor/textAngular/dist/textAngular.min',
+        textAngular: 'vendor-import/textAngular/dist/textAngular.min',
         'angular-sanitize': 'vendor/angular-sanitize/angular-sanitize',
         'angular-animate': 'vendor/angular-animate/angular-animate',
         'angular-strap': 'vendor/angular-strap/dist/angular-strap.min',
@@ -37,7 +37,12 @@ require.config({
         'ng-preload-src': 'vendor/ng-preload-src/ng-preload-src',
         'angular-loading-bar': 'vendor/angular-loading-bar/build/loading-bar',
         ngImgCrop: 'vendor/ngImgCrop/compile/minified/ng-img-crop',
-        ngstorage: 'vendor/ngstorage/ngStorage'
+        ngstorage: 'vendor/ngstorage/ngStorage',
+        jcrop: 'vendor/Jcrop/js/jquery.Jcrop',
+        caman: 'vendor/caman/dist/caman.min',
+        'caman.full': 'vendor/caman/dist/caman.full.min',
+        'fabric': 'vendor-import/darkroomjs/vendor/fabric',
+        'darkroom': 'vendor-import/darkroomjs/build/js/darkroom.min'
     },
     shim: {
         jquery: {
@@ -48,7 +53,18 @@ require.config({
                 'jquery'
             ]
         },
-        'angular-strap': {
+        jcrop: {
+            deps: [
+                'jquery'
+            ]
+        },
+      darkroom: {
+        exports: 'Darkroom',
+        deps: [
+          'fabric'
+        ]
+      },
+      'angular-strap': {
             deps: [
                 'angular'
             ]
@@ -235,9 +251,9 @@ require.config({
             ]
         },
         ngstorage: {
-          deps: [
-            'angular'
-          ]
+            deps: [
+                'angular'
+            ]
         }
     },
     packages: [

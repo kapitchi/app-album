@@ -37,7 +37,6 @@ class AlbumItemResource extends EntityRepositoryResource {
         $res = parent::update($id, $data);
 
         if($data->_embedded['tag_collection']) {
-            //$res['_tags'] = $this->albumItemTagRepository->setTags($res, $data->_tags);
             $this->albumItemTagRepository->setTags($res, $data->_embedded['tag_collection']);
         }
         
@@ -49,7 +48,6 @@ class AlbumItemResource extends EntityRepositoryResource {
         $res = parent::create($data);
 
         if($data->_embedded['tag_collection']) {
-            //$res['_tags'] = $this->albumItemTagRepository->setTags($res, $data->_tags);
             $this->albumItemTagRepository->setTags($res, $data->_embedded['tag_collection']);
         }
 

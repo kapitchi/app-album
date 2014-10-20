@@ -8,7 +8,8 @@
         <input nv-file-select uploader="uploader" options="fileOptions" type="file" />
     </div>
     <div ng-show="file">
-        <img ng-src="{{file._links.thumbnail_album.href}}" class="img-responsive">
+        <button ng-click="$showImage = !$showImage" class="btn">Show image</button>
+        <img ng-show="$showImage" ng-src="{{file._links.thumbnail_album.href}}" class="img-responsive">
         <button ng-click="remove()" class="btn btn-danger">Remove</button>
     </div>
 </div>

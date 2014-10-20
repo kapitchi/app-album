@@ -98,6 +98,12 @@ class AlbumItemRepository extends DbEntityRepository
 
     public function update($id, array $data)
     {
+        if(!empty($data['thumbnail_crop'])) {
+            $cropData = $data['thumbnail_crop'];
+            $data['thumbnail_crop_json'] = json_encode($cropData);
+            unset($data['thumbnail_crop']);
+        }
+
         if($data['type'] === 'FILE' && empty($data['thumbnail_file_id'])) {
             $data['thumbnail_file_id'] = $data['file_id'];
         }
@@ -117,6 +123,17 @@ class AlbumItemRepository extends DbEntityRepository
         return $entity;
     }
 
+    public function find($id)
+    {
+        $entity = parent::find($id);
+        if(!empty($entity['thumbnail_crop_json'])) {
+            $entity['thumbnail_crop'] = json_decode($entity['thumbnail_crop_json'], true);
+        }
+
+        unset($entity['thumbnail_crop_json']);
+        
+        return $entity;
+    }
 
     public function getPaginatorAdapter(array $criteria, array $orderBy = null)
     {

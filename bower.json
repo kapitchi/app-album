@@ -15,7 +15,6 @@
     "angular-ui-sortable": "~0.12.10",
     "angular-ui-tree": "~2.1.5",
     "angular-moment": "~0.8.0",
-    "textAngular": "~1.2.2",
     "angular-sanitize": "~1.2.23",
     "components-font-awesome": "~4.1.0",
     "animate.css": "~3.2.0",
@@ -27,7 +26,9 @@
     "ng-preload-src": "~0.0.4",
     "angular-loading-bar": "~0.6.0",
     "ngImgCrop": "~0.2.0",
-    "ngstorage": "~0.3.0"
+    "ngstorage": "~0.3.0",
+    "Jcrop": "~0.9.12",
+    "caman": "~4.1.2"
   },
   "devDependencies": {},
   "resolutions": {

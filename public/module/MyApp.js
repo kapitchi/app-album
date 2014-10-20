@@ -18,7 +18,8 @@ define([
     //'angular-xeditable',
     //'module/KapLogin',
     'module/kap-security',
-    'module/KapFileManager'
+    'module/KapFileManager',
+    'module/ng-darkroom',
     //'module/KapAlbum'
 ], function(angular, moment) {
 
@@ -53,7 +54,8 @@ define([
         //'xeditable',
         //'KapLogin',
         'KapSecurity',
-        'KapFileManager'
+        'KapFileManager',
+        'ng-darkroom'
         //'KapAlbum'
     ]);
     
@@ -382,7 +384,7 @@ define([
     }
   });
 
-  module.controller('AlbumItemFormController', function($scope, apiClient, $http, $q) {
+  module.controller('AlbumItemFormController', function($scope, apiClient, $http, $q, globalFileUploader) {
     //$scope.item = albumItem;
 
     $scope.thumbnails = [];
@@ -427,18 +429,45 @@ define([
         });
       }
     }
+    
+    function setThumbnailFile(response) {
+      $scope.item.thumbnail_file_id = response.id;
+      $scope.item._embedded.thumbnail_file = response;
+    }
+
+    $scope.onThumbnailSave = function(blob) {
+      globalFileUploader.addToQueue(blob, {
+        formData: [{
+          filesystem: 'album_item_thumbnail'
+        }],
+        onSuccess: function(response) {
+          setThumbnailFile(response);
+        }
+      });
+      globalFileUploader.uploadItem(blob);
+    }
+    
+    $scope.resetThumbnail = function() {
+      apiClient.fetch('file', $scope.item.file_id).then(function(response) {
+        setThumbnailFile(response);
+      })
+    }
 
     $scope.$watch('item.youtube_video_id', function(newValue, oldValue) {
-      if(newValue && newValue != oldValue) {
+      if(newValue && newValue !== oldValue) {
         $scope.loadYoutubeThumbnails();
       }
     });
 
     $scope.$watch('item.file_id', function(newValue, oldValue) {
-      if($scope.item.type === 'FILE' && newValue) {
+      if($scope.item.type === 'FILE' && newValue !== oldValue) {
         $scope.item.thumbnail_file_id = newValue;
+        apiClient.fetch('file', newValue).then(function(response) {
+          setThumbnailFile(response);
+        })
       }
     });
+    
   });
 
   module.controller('ContactController', function($scope) {
@@ -553,6 +582,10 @@ define([
             },
             size: 'lg'
           });
+          
+          modalInstance.result.then(function() {
+            $scope.albumItemRelCollection.fetchCurrent();
+          });
 
           return modalInstance.result;
         };
@@ -600,6 +633,20 @@ define([
             album_item_id: item.id
           });
         });
+      }
+      
+      $scope.saveAll = function() {
+        angular.forEach($scope.uploader.queue, function(fileItem) {
+          if(!fileItem.albumItem) {
+            return;
+          }
+          
+          $scope.save(fileItem);
+        });
+      }
+      
+      $scope.close = function() {
+        
       }
     });
   
