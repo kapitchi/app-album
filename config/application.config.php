@@ -6,7 +6,6 @@
  */
 return array(
     'modules' => array(
-        'Application',
         'ZF\\DevelopmentMode',
         'ZF\\Apigility',
         'ZF\\Apigility\\Provider',
@@ -29,7 +28,8 @@ return array(
         'KapFileManager',
         'KapAlbum',
         'KapTaxonomy',
-        'Dev'
+        'Dev',
+        'Application',
     ),
     'module_listener_options' => array(
         'module_paths' => array(
