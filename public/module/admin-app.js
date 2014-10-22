@@ -164,7 +164,7 @@ define([
     }
   });
 
-  module.controller('AlbumItemFormController', function($scope, apiClient, $http, $q, globalFileUploader) {
+  module.controller('AlbumItemFormController', function($scope, apiClient, $http, $q, globalFileUploader, fabricUtils) {
     //$scope.item = albumItem;
 
     $scope.thumbnails = [];
@@ -218,7 +218,11 @@ define([
       $scope.item._embedded.thumbnail_file = response;
     }
 
-    $scope.onThumbnailSave = function(blob) {
+    $scope.saveThumbnail = function(dataURL) {
+      console.log(dataURL); //XXX
+      var blob = fabricUtils.dataUriToBlob(dataURL);
+      console.log(blob); //XXX
+
       globalFileUploader.addToQueue(blob, {
         formData: [{
           filesystem: 'album_item_thumbnail'

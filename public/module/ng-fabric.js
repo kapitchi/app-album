@@ -2,17 +2,19 @@ define([
   'angular',
   'fabric'
 ], function(angular, fabric) {
-
-  function dataURItoBlob(dataURI) {
-    var binary = atob(dataURI.split(',')[1]);
-    var array = [];
-    for(var i = 0; i < binary.length; i++) {
-      array.push(binary.charCodeAt(i));
-    }
-    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
-  }
-
+  
   var module = angular.module('ng-fabric', []);
+  
+  module.service('fabricUtils', function() {
+    this.dataUriToBlob = function(dataURI) {
+      var binary = atob(dataURI.split(',')[1]);
+      var array = [];
+      for(var i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i));
+      }
+      return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+    }
+  });
 
   module.directive('fabricImg', function() {
     return {
@@ -73,7 +75,7 @@ define([
           width: 1,
           height: 1,
           stroke: 'white',
-          strokeWidth: 1,
+          strokeWidth: 3,
           strokeDashArray: [2, 2],
           visible: false,
           //selectable: false
@@ -105,8 +107,6 @@ define([
             return;
           }
           
-          console.log(event); //XXX
-
           drag = true;
 
           rect.setVisible(true);
@@ -205,11 +205,15 @@ define([
             originY: 'top'
           });
           
-          var width = canvas.getWidth();
-
-          image.scaleToWidth(width);
-          canvas.setHeight(image.getHeight());
-
+          if(image.width / image.height > 1) {
+            image.scaleToWidth(canvas.getWidth());
+            canvas.setHeight(image.getHeight());
+          }
+          else {
+            image.scaleToHeight(canvas.getHeight());
+            canvas.setWidth(image.getWidth());
+          }
+          
           scale = image.getScaleX();
 
           canvas.setBackgroundImage(image, function() {
@@ -225,180 +229,6 @@ define([
       }
     }
 
-  });
-
-  module.directive('abricEditor', function() {
-    return {
-      scope: {
-        //selectionDataUrl: '=',
-        //imageDataUrl: '='
-      },
-      replace: true,
-      template: '<div class="fabric-editor" ng-style="{width: elementWidth, height: elementHeight}"><canvas></canvas></div>',
-      //priority: 150,
-      link: function($scope, $element, $attrs) {
-        var canvasEl = $element.find('canvas')[0];
-        var canvas = new fabric.Canvas(canvasEl);
-
-        $scope.elementWidth = 400;
-        $scope.elementHeight = 0;
-
-        canvas.selection = false;
-        
-        $scope.$canvas = canvas;
-
-        $scope.$on('$destroy', function() {
-          //todo
-        });
-        
-      },
-      controller: function($scope) {
-        var img;
-
-        var rect = new fabric.Rect({
-          fill: 'transparent',
-          lockRotation: true,
-          lockUniScaling: true,
-          originX: 'left',
-          originY: 'top',
-          width: 1,
-          height: 1,
-          stroke: 'white',
-          strokeWidth: 1,
-          strokeDashArray: [2, 2],
-          visible: false,
-          selectable: false,
-        });
-
-        canvas.add(rect);
-
-//        rect.on('modified', function(e) {
-//          console.log(e); //XXX
-//        });
-
-        canvas.setWidth($scope.elementWidth);
-        canvas.setHeight(0);
-
-        //canvas.renderAll();
-
-        function rectConstrains() {
-          console.log(rect); //XXX
-          if(rect.getLeft() < 0) {
-            rect.set('left', 0);
-          }
-          if(rect.getTop() < 0) {
-            rect.set('top', 0);
-          }
-          if(rect.getTop() + rect.currentHeight > canvas.getHeight()) {
-            rect.set('top', canvas.getHeight() - rect.currentHeight);
-          }
-          if(rect.getLeft() + rect.currentWidth > canvas.getWidth()) {
-            rect.set('left', canvas.getWidth() - rect.currentWidth);
-          }
-        }
-
-        //rect.on('moving', rectConstrains);
-        //rect.on('scaling', rectConstrains);
-
-        var selected = false;
-        var drag = false;
-
-        canvas.on('mouse:down', function(event) {
-          if(selected) {
-            return;
-          }
-
-          console.log(event); //XXX
-
-          drag = true;
-
-          rect.setVisible(true);
-
-          rect.setLeft(event.e.layerX);
-          rect.setTop(event.e.layerY);
-
-          //canvas.renderAll();
-        });
-
-        canvas.on("mouse:move", function (event) {
-          if (!drag) {
-            return;
-          }
-
-          rect.setWidth(event.e.layerX - rect.getLeft());
-          rect.setHeight(event.e.layerY - rect.getTop());
-
-          canvas.renderAll();
-        });
-
-        canvas.on("mouse:up", function (event) {
-          rect.set('selectable', true);
-          rect.setCoords();
-
-          canvas.renderAll();
-
-          drag = false;
-          selected = true;
-        });
-
-        $scope.crop = function() {
-
-          var scale = img.getScaleX();
-
-          var width = rect.getWidth();
-          var height = rect.getHeight();
-          var top = rect.getTop();
-          var left = rect.getLeft();
-
-          rect.setVisible(false);
-
-          var dataURL = img.toDataURL({
-            format: 'jpeg',
-            left: left,
-            top: top,
-            width: width,
-            height: height,
-            multiplier: 1 / scale
-          });
-
-          rect.setVisible(true);
-
-          $scope.cropDataUrl = dataURL;
-        };
-
-        canvas.setActiveObject(rect);
-        canvas.on('selection:cleared', function() {
-          canvas.setActiveObject(rect);
-        });
-
-        $attrs.$observe('ngSrc', function(ngSrc) {
-          fabric.Image.fromURL(ngSrc, function(urlImage) {
-
-            img = urlImage;
-
-            img.set({originX: 'left',
-              originY: 'top'
-            });
-
-            img.scaleToWidth($scope.elementWidth);
-
-            $scope.elementHeight = img.getHeight();
-
-            canvas.setHeight($scope.elementHeight);
-
-            //rect.setWidth($scope.elementWidth);
-            //rect.setHeight($scope.elementHeight);
-
-            canvas.setBackgroundImage(img, function() {
-              canvas.renderAll();
-            });
-          });
-
-        });
-
-      }
-    }
-    
   });
 
 })

@@ -51,14 +51,16 @@
     
     <div class="form-group">
         <label>Thumbnail</label>
-        <div>
-            <div fabric-editor style="max-width: 400px; max-height: 400px">
+        <div class="row">
+            <div fabric-editor class="col-md-6" style="height: 300px">
                 <img fabric-img fabric-selection fabric-selection-preview="preview.previewImageData" ng-src="{{item._embedded.thumbnail_file._links.access.href}}">
             </div>
-            <div>
-                <img ng-src="{{preview.previewImageData}}">
+            <div class="col-md-6">
+                <img ng-src="{{preview.previewImageData}}" class="img-responsive" style="max-height: 300px">
             </div>
-            <button ng-click="saveThumbnail(previewImage)" class="btn btn-warning">Reset</button>
+        </div>
+        <div class="row">
+            <button ng-click="saveThumbnail(preview.previewImageData)" class="btn btn-success">Save</button>
             <button ng-click="resetThumbnail()" class="btn btn-warning">Reset</button>
         </div>
     </div>
