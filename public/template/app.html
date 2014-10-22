@@ -1,4 +1,4 @@
-<nav class="navbar navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-fixed-top" role="navigation" extend-controller="AdminAppController">
     <div class="container">
         <div class="navbar-header">
             <button ng-click="app.nav.collapsed = !app.nav.collapsed" type="button" class="navbar-toggle">
@@ -14,15 +14,14 @@
                 <li>
                     <a ui-sref="app.home">Home</a>
                 </li>
-
                 <li>
-                    <a ng-show="auth.identity" ng-click="toggleEdit()" href>Edit</a>
+                    <a ng-show="$auth.identity" ng-click="toggleEdit()" href>Edit</a>
                 </li>
                 <li>
-                    <a ng-show="auth.identity" ng-click="logout()" href>Logout</a>
+                    <a ng-show="$auth.identity" ng-click="logout()" href>Logout</a>
                 </li>
                 <li>
-                    <a ng-hide="auth.identity" ng-click="login()" href>Login</a>
+                    <a ng-hide="$auth.identity" ng-click="login()" href>Login</a>
                 </li>
             </ul>
         </div>
@@ -39,9 +38,9 @@
         <!-- /.row -->
     </footer>
 </nav>
-
+        
 <!-- file uploader -->
-<div ng-show="false" class="col-md-9" ng-controller="GlobalFileUploadManagerController" n-show="uploader.queue.length">
+<div ng-if="app.edit" class="col-md-9" ng-controller="GlobalFileUploadManagerController" n-show="uploader.queue.length">
     <p>Queue length: {{ uploader.queue.length }}</p>
 
     <div>

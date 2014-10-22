@@ -261,7 +261,10 @@
       this.container.appendChild(canvasContainer);
 
       // Replace image with new DOM
-      element.parentNode.replaceChild(this.container, element);
+      //element.parentNode.replaceChild(this.container, element);
+      this.element = element;
+      element.parentNode.appendChild(this.container);
+      element.style.display = 'none';
 
       // Save elements
       this.toolbar = new Toolbar(toolbar);
@@ -352,12 +355,15 @@
     selfDestroy: function() {
       var container = this.container;
 
-      var image = new Image();
-      image.onload = function() {
-        container.parentNode.replaceChild(image, container);
-      }
+      this.element.src = this.snapshotImage();
+      container.parentNode.removeChild(container);
+      
+      //var image = new Image();
+//      image.onload = function() {
+//        container.parentNode.replaceChild(image, container);
+//      }
 
-      image.src = this.snapshotImage();
+      //image.src = this.snapshotImage();
 
       /* TODO
        - destroy plugins

@@ -29,20 +29,24 @@ define([
 
   var module = angular.module('ng-darkroom', []);
 
-  module.directive('cropSelection', function($filter, $http, globalFileUploader) {
+  module.directive('cropSelection', function($filter, $http, globalFileUploader, $timeout) {
     function link($scope, $element, $attrs, ngModel) {
       var darkroom;
       
-      console.log($attrs.ngSrc); //XXX
+//      $attrs.$observe('ngSrc', function(newValue, oldValue) {
+//        if(darkroom) {
+//          darkroom.selfDestroy();
+//        }
+//        $element.attr('src', newValue);
+//      });
       
-      $scope.$watch(function() {
-        return $attrs.ngSrc;
-      }, function(newValue, oldValue) {
-        if(newValue && newValue != oldValue) {
-          if(darkroom) {
-            darkroom.selfDestroy();
-          }
+      $element.bind('load', function() {
 
+        if(darkroom) {
+          darkroom.selfDestroy();
+        }
+        
+        $timeout(function() {
           darkroom = new Darkroom($element[0], {
             plugins: {
               save: false,//disable default save
@@ -52,22 +56,19 @@ define([
                     'format': 'jpeg'
                   });
                   var blob = dataURItoBlob(dataURL);
-
+  
                   $scope.save({
                     $dataURL: dataURL,
                     $blob: blob
                   });
-
+  
                   //this.darkroom.selfDestroy();
                 }
               }
             }
+            
           });
-        }
-      });
-      
-      $element.bind('load', function() {
-        
+        });
       });
 
       $scope.$on('$destroy', function() {
@@ -79,6 +80,7 @@ define([
 
     return {
       link: link,
+      //priority: 150,
       scope: {
         save: '&onSave'
       }

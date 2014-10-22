@@ -4,8 +4,18 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-ng-annotate');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('build', ['requirejs', 'ngtemplates', 'concat:dist']);
+    //grunt.registerTask('build', ['requirejs', 'ngtemplates', 'concat:dist']);
+    grunt.registerTask('build', [
+      'clean:jsbuild', 'requirejs:common',
+      'requirejs:clientApp', 'ngAnnotate:clientApp', //'uglify:clientApp',
+      'requirejs:adminApp', 'ngAnnotate:adminApp', //'uglify:adminApp'
+    ]);
+  
+    var commonLibs = ['module/main-app'];
 
     grunt.initConfig({
         bower: {
@@ -22,17 +32,44 @@ module.exports = function(grunt) {
             }
         },
         requirejs: {
-            compile: {
-                options: {
-                  baseUrl: "public",
-                  name: 'module/MyApp',
-                  mainConfigFile: "public/config.js",
-                  out: "public/build/js/app.js",
-                  optimize: 'none',
-                  //todo
-                  generateSourceMaps: true
-                }
+          common: {
+            options: {
+              baseUrl: "public",
+              include: commonLibs,
+              mainConfigFile: "public/config.js",
+              out: "public/build/js/common.js",
+              optimize: 'none',
+              wrapShim: true,
+              preserveLicenseComments: false
+              //generateSourceMaps: true
             }
+          },
+          clientApp: {
+              options: {
+                baseUrl: "public",
+                name: 'module/client-app',
+                mainConfigFile: "public/config.js",
+                out: "public/build/js/client-app.js",
+                exclude: commonLibs,
+                optimize: 'none',
+                wrapShim: true,
+                preserveLicenseComments: false
+                //generateSourceMaps: true
+              }
+          },
+          adminApp: {
+            options: {
+              baseUrl: "public",
+              name: 'module/admin-app',
+              mainConfigFile: "public/config.js",
+              out: "public/build/js/admin-app.js",
+              exclude: commonLibs,
+              optimize: 'none',
+              wrapShim: true,
+              preserveLicenseComments: false
+              //generateSourceMaps: true
+            }
+          }
         },
         ngtemplates: {
           MyApp:        {
@@ -41,7 +78,6 @@ module.exports = function(grunt) {
             dest:     'public/build/js/template.js',
             options:  {
               prefix:   '/'
-              //usemin: 'dist/vendors.js' // <~~ This came from the <!-- build:js --> block
             }
           }
         },
@@ -50,6 +86,38 @@ module.exports = function(grunt) {
             src: ['public/build/js/*.js'],
             dest: 'public/build/all.js',
             sourceMap: true
+          }
+        },
+        ngAnnotate: {
+          options: {
+            singleQuotes: true
+          },
+          clientApp: {
+            files: {
+              'public/build/js/client-app.js': ['public/build/js/client-app.js']
+            }
+          },
+          adminApp: {
+            files: {
+              'public/build/js/admin-app.js': ['public/build/js/admin-app.js']
+            }
+          }
+        },
+        clean: {
+          jsbuild: {
+            src: ["public/build/js/*"]
+          }
+        },
+        uglify: {
+          clientApp: {
+            files: {
+              'public/build/js/client-app.js': ['public/build/js/client-app.js']
+            }
+          },
+          adminApp: {
+            files: {
+              'public/build/js/admin-app.js': ['public/build/js/admin-app.js']
+            }
           }
         }
     });

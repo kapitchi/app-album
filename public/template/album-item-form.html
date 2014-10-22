@@ -2,7 +2,7 @@
 
     <div class="form-group">
         <label for="title">Title</label>
-        <input ng-model="item.name" id="title" class="form-control" placeholder="Title">
+        <input ng-model="item.name" id="title" class="form-control" placeholder="Title" required>
     </div>
     <div class="form-group">
         <label for="description">Tags</label>
@@ -52,7 +52,13 @@
     <div class="form-group">
         <label>Thumbnail</label>
         <div>
-            <img crop-selection on-save="onThumbnailSave($blob)" ng-src="{{item._embedded.thumbnail_file._links.access.href}}" class="img-responsive">
+            <div fabric-editor style="max-width: 400px; max-height: 400px">
+                <img fabric-img fabric-selection fabric-selection-preview="preview.previewImageData" ng-src="{{item._embedded.thumbnail_file._links.access.href}}">
+            </div>
+            <div>
+                <img ng-src="{{preview.previewImageData}}">
+            </div>
+            <button ng-click="saveThumbnail(previewImage)" class="btn btn-warning">Reset</button>
             <button ng-click="resetThumbnail()" class="btn btn-warning">Reset</button>
         </div>
     </div>
