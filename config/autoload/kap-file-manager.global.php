@@ -38,13 +38,13 @@ return [
             ],
             'album' => [
                 'filter' => 'fit',
-                'width' => 800,
-                'height' => 600
+                'width' => 350,
+                'height' => 350
             ],
             'gallery_item' => [
                 'filter' => 'fit',
-                'width' => 800,
-                'height' => 600
+                'width' => 350,
+                'height' => 350
             ]
         ]
     ),
