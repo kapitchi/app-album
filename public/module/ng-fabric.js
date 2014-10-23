@@ -79,6 +79,8 @@ define([
         
         var scale = 1;
         var canvas = fabricEditor.getCanvas();
+        
+        console.log(canvas); //XXX
 
         var rect = new fabric.Rect({
           fill: 'transparent',
@@ -153,9 +155,6 @@ define([
         //rect.on('scaling', rectConstrains);
         
         rect.on('modified', function() {
-          console.log(rect.scaleX); //XXX
-          console.log(rect.scaleY); //XXX
-          
           broadcast();
         });
         
@@ -260,20 +259,24 @@ define([
   module.directive('fabricEditor', function() {
     return {
       restrict: 'EA',
-      transclude: true,
+      //transclude: true,
       //replace: true,
-      template: '<canvas></canvas><div ng-transclude></div>',
+      //template: '<canvas></canvas><div ng-transclude></div>',
       //priority: 150,
+      scope: true,
       link: function($scope, $element, $attrs) {
         
       },
       controller: function($scope, $element) {
 
+        var image;
         var self = this;
         var scale = 1;
+        
+        var canvasEl = angular.element('<canvas></canvas>');
+        $element.append(canvasEl);
 
-        var canvasEl = $element.find('canvas')[0];
-        var canvas = new fabric.Canvas(canvasEl);
+        var canvas = new fabric.Canvas(canvasEl[0]);
 
         canvas.selection = false;
 
@@ -281,8 +284,6 @@ define([
           //todo
         });
         
-        console.log($element[0].offsetWidth); //XXX
-        console.log($element[0].offsetHeight); //XXX
         canvas.setWidth($element[0].offsetWidth);
         canvas.setHeight($element[0].offsetHeight);
         
@@ -315,13 +316,10 @@ define([
           
           scale = image.getScaleX();
           
-          console.log(canvas.getWidth()); //XXX
-          console.log(canvas.getHeight()); //XXX
-
           canvas.setBackgroundImage(image, function() {
-            canvas.renderAll();
-            
             $scope.$broadcast('fabric:image', self);
+
+            canvas.renderAll();
           });
           
         };

@@ -11,7 +11,7 @@ define([
 
   //moment stuff
   //http://momentjs.com/docs/#/customization/calendar/
-  moment.lang('en-GB', {
+  moment.locale('en-GB', {
     calendar : {
       lastDay : '[Yesterday]',
       sameDay : '[Today]',

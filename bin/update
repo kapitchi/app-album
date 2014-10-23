@@ -3,13 +3,13 @@
 echo "Running compass ..."
 compass compile
 
+echo "Running bower ..."
+bower install
+
 grunt production
 
 echo "Running npm ..."
 npm install
-
-echo "Running bower ..."
-bower install
 
 echo "Running composer ..."
 composer update

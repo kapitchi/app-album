@@ -6,20 +6,6 @@ define([
 
     var module = angular.module('KapFileManager', ['ui.bootstrap', 'angularFileUpload']);
   
-    module.factory('globalFileUploader', function(FileUploader, cfpLoadingBar) {
-      var uploader = new FileUploader({
-        url: '/file',
-        autoUpload: true,
-        removeAfterUpload: true
-      });
-      return uploader;
-    });
-  
-    module.controller('GlobalFileUploadManagerController', function($scope, globalFileUploader) {
-      $scope.uploader = globalFileUploader;
-      
-    });
-
     module.controller('fileManagerController', function($scope, $rootScope, $timeout, $http, $fileUploader) {
 
         $scope.uploadFilesAction = false;

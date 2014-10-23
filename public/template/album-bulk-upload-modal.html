@@ -13,33 +13,25 @@
     </div>
 
     <accordion close-others="true">
-        <accordion-group ng-repeat="fileItem in uploader.queue|filter:{albumItemFile:true}:true" is-disabled="!fileItem.isSuccess">
+        <accordion-group ng-repeat="albumItem in albumItems">
             <accordion-heading>
                 <div class="row">
-                    <strong class="col-md-5">{{fileItem.albumItem.name||fileItem.file.name }}</strong>
-                    <div ng-show="uploader.isHTML5" ng-thumb="{ file: fileItem._file, height: 50 }"></div>
+                    <strong class="col-md-8">{{albumItem.name}}</strong>
                     <div class="col-md-3">
-                        <div class="progress" style="margin-bottom: 0;">
-                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': fileItem.progress + '%' }"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-1 text-center">
-                        <span ng-show="fileItem.albumItem.id"><i class="glyphicon glyphicon-ok"></i></span>
-                        <span ng-show="fileItem.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
-                        <span ng-show="fileItem.isError"><i class="glyphicon glyphicon-remove"></i></span>
-                    </div>
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-success" ng-click="save(fileItem)" stop-event ng-disabled="!fileItem.isSuccess">
+                        <button type="button" class="btn btn-success" ng-click="save(albumItem)" stop-event>
                             <span class="glyphicon glyphicon-upload"></span> Save
                         </button>
-                        <button type="button" class="btn btn-danger" ng-click="remove(fileItem)" stop-event>
+                        <button type="button" class="btn btn-danger" ng-click="remove(albumItem)" stop-event>
                             <span class="glyphicon glyphicon-trash"></span> Remove
                         </button>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span ng-show="albumItem.id"><i class="glyphicon glyphicon-ok"></i></span>
                     </div>
                 </div>
             </accordion-heading>
 
-            <div album-item-form item="fileItem.albumItem"></div>
+            <div album-item-form item="albumItem"></div>
             
         </accordion-group>
     </accordion>
@@ -47,5 +39,5 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="saveAll()">Save all</button>
-    <button class="btn btn-warning" ng-click="$close()">Close</button>
+    <button class="btn btn-warning" ng-click="close()">Close</button>
 </div>

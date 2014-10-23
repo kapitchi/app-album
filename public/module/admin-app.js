@@ -36,6 +36,20 @@ define([
     //editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
   });
 
+  module.factory('globalFileUploader', function(FileUploader) {
+    var uploader = new FileUploader({
+      url: '/file',
+      autoUpload: true,
+      removeAfterUpload: true
+    });
+    return uploader;
+  });
+
+  module.controller('GlobalFileUploadManagerController', function($scope, globalFileUploader) {
+    $scope.uploader = globalFileUploader;
+
+  });
+
   module.controller('AdminAppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, $sessionStorage) {
 
     $rootScope.logout = function() {
@@ -219,14 +233,13 @@ define([
     }
 
     $scope.saveThumbnail = function(dataURL) {
-      console.log(dataURL); //XXX
       var blob = fabricUtils.dataUriToBlob(dataURL);
-      console.log(blob); //XXX
 
       globalFileUploader.addToQueue(blob, {
         formData: [{
           filesystem: 'album_item_thumbnail'
         }],
+        removeAfterUpload: true,
         onSuccess: function(response) {
           setThumbnailFile(response);
         }
@@ -332,9 +345,10 @@ define([
 
   module.controller('AlbumBulkUploadModalController', function($scope, globalFileUploader, album, $modalInstance, apiClient) {
     $scope.uploader = globalFileUploader;
+    
+    $scope.albumItems = [];
 
     $scope.fileOptions = {
-      albumItemFile: true,
       formData: [{
         filesystem: 'album_item'
       }],
@@ -343,20 +357,32 @@ define([
           name: this._file.name,
           type: 'FILE',
           file_id: response.id,
-          thumbnail_file_id: response.id
+          thumbnail_file_id: response.id,
+          _embedded: {
+            thumbnail_file: response
+          }
         };
+        
+        $scope.addAlbumItem(this.albumItem);
       }
+    };
+    
+    $scope.addAlbumItem = function(albumItem) {
+      $scope.albumItems.push(albumItem);
+    }
+    
+    $scope.remove = function(albumItem) {
+      
+      if(albumItem.id) {
+        apiClient.remove('album_item', albumItem.id).then(function() {
+          //TODO
+        });
+      }
+
+      $scope.albumItems.splice($scope.albumItems.indexOf(albumItem), 1);
     }
 
-    $scope.remove = function(fileItem) {
-      if(fileItem.albumItem && fileItem.albumItem.id) {
-        apiClient.remove('album_item', fileItem.albumItem.id);
-      }
-      fileItem.remove();
-    }
-
-    $scope.save = function(fileItem) {
-      var item = fileItem.albumItem;
+    $scope.save = function(item) {
 
       if(item.id) {
         apiClient.update('album_item', item.id, item).then(function(data) {
@@ -375,17 +401,13 @@ define([
     }
 
     $scope.saveAll = function() {
-      angular.forEach($scope.uploader.queue, function(fileItem) {
-        if(!fileItem.albumItem) {
-          return;
-        }
-
-        $scope.save(fileItem);
+      angular.forEach($scope.uploader.queue, function(albumItem) {
+        $scope.save(albumItem);
       });
     }
 
     $scope.close = function() {
-
+      $modalInstance.close();
     }
   });
 
