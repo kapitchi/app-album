@@ -80,8 +80,6 @@ define([
         var scale = 1;
         var canvas = fabricEditor.getCanvas();
         
-        console.log(canvas); //XXX
-
         var rect = new fabric.Rect({
           fill: 'transparent',
           lockRotation: true,

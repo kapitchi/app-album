@@ -49,13 +49,13 @@
         </div>
     </div>
     
-    <div class="form-group">
+    <div fabric-editor class="form-group">
         <label>Thumbnail</label>
         <div class="row">
-            <button ng-click="saveThumbnail(preview.previewImageData)" class="btn btn-success">Save</button>
+            <button ng-click="saveThumbnail(previewImageData)" class="btn btn-success">Save</button>
             <button ng-click="resetThumbnail()" class="btn btn-warning">Reset</button>
         </div>
-        <div class="row" fabric-editor>
+        <div class="row">
             <div class="col-md-6" style="height: 300px; width: 300px">
                 <img fabric-img fabric-selection="fabricSelectionOptions" fabric-selection-preview="previewImageData" ng-src="{{item._embedded.thumbnail_file._links.access.href}}">
             </div>
