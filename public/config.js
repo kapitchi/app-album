@@ -41,8 +41,8 @@ require.config({
         jcrop: 'vendor/Jcrop/js/jquery.Jcrop',
         caman: 'vendor/caman/dist/caman.min',
         'caman.full': 'vendor/caman/dist/caman.full.min',
-        'fabric': 'vendor-import/darkroomjs/vendor/fabric',
-        'darkroom': 'vendor-import/darkroomjs/mybuild/js/darkroom'
+        fabric: 'vendor/fabric/dist/fabric',
+        darkroom: 'vendor-import/darkroomjs/mybuild/js/darkroom'
     },
     shim: {
         jquery: {
@@ -58,16 +58,16 @@ require.config({
                 'jquery'
             ]
         },
-      darkroom: {
-        exports: 'Darkroom',
-        deps: [
-          'fabric'
-        ]
-      },
-      fabric: {
-        exports: 'fabric'
-      },
-      'angular-strap': {
+        darkroom: {
+            exports: 'Darkroom',
+            deps: [
+                'fabric'
+            ]
+        },
+        fabric: {
+            exports: 'fabric'
+        },
+        'angular-strap': {
             deps: [
                 'angular'
             ]

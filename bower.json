@@ -28,7 +28,8 @@
     "ngImgCrop": "~0.2.0",
     "ngstorage": "~0.3.0",
     "Jcrop": "~0.9.12",
-    "caman": "~4.1.2"
+    "caman": "~4.1.2",
+    "fabric": "~1.4.12"
   },
   "devDependencies": {},
   "resolutions": {

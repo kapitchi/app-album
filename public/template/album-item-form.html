@@ -1,4 +1,4 @@
-<form role="form">
+<form role="form" class="container-fluid">
 
     <div class="form-group">
         <label for="title">Title</label>
@@ -52,16 +52,16 @@
     <div class="form-group">
         <label>Thumbnail</label>
         <div class="row">
-            <div fabric-editor class="col-md-6" style="height: 300px">
-                <img fabric-img fabric-selection fabric-selection-preview="preview.previewImageData" ng-src="{{item._embedded.thumbnail_file._links.access.href}}">
+            <button ng-click="saveThumbnail(preview.previewImageData)" class="btn btn-success">Save</button>
+            <button ng-click="resetThumbnail()" class="btn btn-warning">Reset</button>
+        </div>
+        <div class="row">
+            <div fabric-editor class="col-md-6" style="height: 300px; width: 300px">
+                <img fabric-img fabric-selection="fabricSelectionOptions" fabric-selection-preview="preview.previewImageData" ng-src="{{item._embedded.thumbnail_file._links.access.href}}">
             </div>
             <div class="col-md-6">
                 <img ng-src="{{preview.previewImageData}}" class="img-responsive" style="max-height: 300px">
             </div>
-        </div>
-        <div class="row">
-            <button ng-click="saveThumbnail(preview.previewImageData)" class="btn btn-success">Save</button>
-            <button ng-click="resetThumbnail()" class="btn btn-warning">Reset</button>
         </div>
     </div>
 </form>

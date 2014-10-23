@@ -6,11 +6,11 @@ define([
 
     var module = angular.module('KapFileManager', ['ui.bootstrap', 'angularFileUpload']);
   
-    module.factory('globalFileUploader', function(FileUploader) {
+    module.factory('globalFileUploader', function(FileUploader, cfpLoadingBar) {
       var uploader = new FileUploader({
         url: '/file',
-        autoUpload: true
-        //removeAfterUpload: true
+        autoUpload: true,
+        removeAfterUpload: true
       });
       return uploader;
     });

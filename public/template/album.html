@@ -16,11 +16,11 @@
     </div>
 </div>
     
-<div class="thumb-container" ui-tree="treeOptions" data-empty-place-holder-enabled="false" data-drag-enabled="app.edit" ui-tree-nodes ng-model="albumItemRelCollection.items" class="album row">
+<div class="thumb-container" ui-tree="treeOptions" max-depth="1" drag-delay="0" data-empty-place-holder-enabled="false" data-drag-enabled="app.edit" ui-tree-nodes ng-model="albumItemRelCollection.items" class="album row">
 
     
 
-    <div ng-repeat="itemRel in albumItemRelCollection.items" ui-tree-node ng-class="{'album-primary-item': album.primary_item_id == itemRel.album_item_id}" class="col-lg-3 col-md-4 col-xs-6 thumb">
+    <div ng-repeat="itemRel in albumItemRelCollection.items" ui-tree-node collapsed="false" ng-class="{'album-primary-item': album.primary_item_id == itemRel.album_item_id}" class="col-lg-3 col-md-4 col-xs-6 thumb">
         <div class="thumbnail">
             <a href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)" ng-style="{'background-image': 'url(' + itemRel._embedded.album_item._embedded.thumbnail_file._links.thumbnail_album.href + ')'}" class="image-holder"></a> 
             <div class="caption">

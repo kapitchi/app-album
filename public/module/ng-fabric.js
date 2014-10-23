@@ -64,25 +64,50 @@ define([
       require: '^fabricEditor',
       link: function($scope, $element, $attrs, fabricEditor) {
 
+        var options = $scope.$eval($attrs.fabricSelection);
+        options = angular.extend({
+          aspectRatio: false,
+          minWidth: 1,
+          minHeight: 1
+        }, options);
+        
+        if(options.aspectRatio) {
+          options.minHeight = options.minWidth / options.aspectRatio;
+        }
+        
+        var ready = false;
+        
+        var scale = 1;
         var canvas = fabricEditor.getCanvas();
 
         var rect = new fabric.Rect({
           fill: 'transparent',
           lockRotation: true,
-          //lockUniScaling: true,
+          hasRotatingPoint: false,
+          lockUniScaling: !!options.aspectRatio,
           originX: 'left',
           originY: 'top',
-          width: 1,
-          height: 1,
+          width: options.minWidth,
+          height: options.minHeight,
+          minScaleLimit: 1,
           stroke: 'white',
           strokeWidth: 3,
           strokeDashArray: [2, 2],
-          visible: false,
-          //selectable: false
+          visible: false
         });
 
         canvas.add(rect);
         
+        //"ON LOAD"
+        $scope.$on('fabric:image', function(e, fabricEditor) {
+          scale = fabricEditor.getScale();
+          ready = true;
+          
+          rect.width = options.minWidth * scale;
+          rect.height = options.minHeight * scale;
+        });
+        //END
+
         canvas.setActiveObject(rect);
         canvas.on('selection:cleared', function() {
           canvas.setActiveObject(rect);
@@ -90,8 +115,47 @@ define([
 
         var selected = false;
         var drag = false;
+        var previousCorrect = false;
+
+        function rectConstrains() {
+
+          var coords = rect.getBoundingRect();
+
+          var canvasWidth = canvas.getWidth();
+          var canvasHeight = canvas.getWidth();
+
+          if(rect.isContainedWithinRect({x: 0, y: 0}, {x: canvasWidth, y: canvasHeight})) {
+            return;
+          }
+          
+          if(coords.left < 0) {
+            rect.setLeft(0);
+          }
+          
+          if(coords.top < 0) {
+            rect.setTop(0);
+          }
+          
+          if(coords.top + coords.height > canvasHeight) {
+            rect.setHeight(canvasHeight - coords.top);
+          }
+          if(coords.left + coords.width > canvasWidth) {
+            rect.setWidth(canvasWidth - coords.left);
+          }
+          
+          rect.setCoords();
+          
+          var state = rect.saveState();
+          console.log(state); //XXX
+        }
+
+        //rect.on('moving', rectConstrains);
+        //rect.on('scaling', rectConstrains);
         
         rect.on('modified', function() {
+          console.log(rect.scaleX); //XXX
+          console.log(rect.scaleY); //XXX
+          
           broadcast();
         });
         
@@ -101,9 +165,9 @@ define([
             y: e.e.offsetY
           }
         }
-
+        
         canvas.on('mouse:down', function(event) {
-          if(selected) {
+          if(!ready || selected) {
             return;
           }
           
@@ -115,7 +179,6 @@ define([
 
           rect.setLeft(mouse.x);
           rect.setTop(mouse.y);
-          //rect.setCoords();
 
           canvas.renderAll();
         });
@@ -127,14 +190,44 @@ define([
 
           var mouse = mouseCoords(event);
 
-          rect.setWidth(mouse.x - rect.getLeft());
-          rect.setHeight(mouse.y - rect.getTop());
-          //rect.setCoords();
+          var width = mouse.x - rect.getLeft();
+          var height = mouse.y - rect.getTop();
+
+          //fix scaling
+          var scaledWidth = options.minWidth * scale;
+          var scaledHeight = options.minHeight * scale;
+
+          if(width < scaledWidth) {
+            width = scaledWidth;
+          }
+
+          if(height < scaledHeight) {
+            height = scaledHeight;
+          }
+          //END
+
+          //aspectRatio
+          if(options.aspectRatio) {
+            var curr = rect.width / rect.height;
+            
+            if(curr > options.aspectRatio) {
+              height = rect.width / options.aspectRatio;
+            }
+            else {
+              width = rect.height * options.aspectRatio;
+            }
+          }
+          //END
+
+          rect.setWidth(width);
+          rect.setHeight(height);
 
           canvas.renderAll();
         });
 
         canvas.on("mouse:up", function (event) {
+          //rectConstrains();
+          
           if(!drag) {
             return;
           }
@@ -175,7 +268,8 @@ define([
         
       },
       controller: function($scope, $element) {
-        
+
+        var self = this;
         var scale = 1;
 
         var canvasEl = $element.find('canvas')[0];
@@ -187,9 +281,14 @@ define([
           //todo
         });
         
+        console.log($element[0].offsetWidth); //XXX
+        console.log($element[0].offsetHeight); //XXX
         canvas.setWidth($element[0].offsetWidth);
         canvas.setHeight($element[0].offsetHeight);
         
+        canvas.setWidth(300);
+        canvas.setHeight(300);
+
         this.getCanvas = function() {
           return canvas;
         }
@@ -215,9 +314,14 @@ define([
           }
           
           scale = image.getScaleX();
+          
+          console.log(canvas.getWidth()); //XXX
+          console.log(canvas.getHeight()); //XXX
 
           canvas.setBackgroundImage(image, function() {
             canvas.renderAll();
+            
+            $scope.$broadcast('fabric:image', self);
           });
           
         };

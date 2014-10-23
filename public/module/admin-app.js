@@ -172,6 +172,11 @@ define([
     $scope.preview = {
       
     };
+    
+    $scope.fabricSelectionOptions = {
+      aspectRatio: 350 / 350,
+      minWidth: 350
+    };
 
     $scope.selectThumbnailUrl = function(thumb) {
       $scope.selectedThumbnail = thumb;
@@ -249,6 +254,7 @@ define([
     $scope.$watch('item.file_id', function(newValue, oldValue) {
       if($scope.item.type === 'FILE' && newValue !== oldValue) {
         $scope.item.thumbnail_file_id = newValue;
+        console.log(newValue); //XXX
         apiClient.fetch('file', newValue).then(function(response) {
           setThumbnailFile(response);
         })
@@ -263,6 +269,11 @@ define([
 
   module.controller('AdminAlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce) {
 
+    var albumId = $stateParams.albumId;
+    if(!albumId) {
+      albumId = $state.current.albumId;
+    }
+    
     $scope.treeOptions = {
       dropped: function(e) {
         var nodes = e.dest.nodesScope.$modelValue;
