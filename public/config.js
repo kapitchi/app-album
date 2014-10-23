@@ -1,5 +1,6 @@
 require.config({
     baseUrl: '/',
+    waitSeconds: 30,
     paths: {
         jquery: 'vendor/jquery/dist/jquery',
         'jquery-ui': 'vendor/jquery-ui/jquery-ui.min',
