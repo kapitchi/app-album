@@ -41,7 +41,7 @@ require.config({
         jcrop: 'vendor/Jcrop/js/jquery.Jcrop',
         caman: 'vendor/caman/dist/caman.min',
         'caman.full': 'vendor/caman/dist/caman.full.min',
-        fabric: 'vendor/fabric/dist/fabric',
+        fabric: 'vendor/fabric/dist/fabric.require',
         darkroom: 'vendor-import/darkroomjs/mybuild/js/darkroom'
     },
     shim: {

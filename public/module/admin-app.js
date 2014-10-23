@@ -12,8 +12,6 @@ define([
   //'module/KapLogin',
   'module/kap-security',
   'module/KapFileManager',
-  'module/ng-darkroom'
-  //'module/KapAlbum'
 ], function(angular, moment) {
 
   var module = angular.module('admin-app', [
@@ -28,8 +26,6 @@ define([
     //'KapLogin',
     'KapSecurity',
     'KapFileManager',
-    'ng-darkroom'
-    //'KapAlbum'
   ]);
 
   module.config(function($stateProvider, $urlRouterProvider, $provide) {
@@ -38,7 +34,6 @@ define([
 
   module.run(function($rootScope) {
     //editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-
   });
 
   module.controller('AdminAppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, $sessionStorage) {

@@ -3,6 +3,8 @@
 echo "Running compass ..."
 compass compile
 
+grunt production
+
 echo "Running npm ..."
 npm install
 

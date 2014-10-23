@@ -1,22 +1,25 @@
 module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt);
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    //grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-ng-annotate');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-run');
 
     //grunt.registerTask('build', ['requirejs', 'ngtemplates', 'concat:dist']);
     grunt.registerTask('build', [
-      'clean:jsbuild', 'requirejs:common',
-      'requirejs:clientApp', 'ngAnnotate:clientApp', //'uglify:clientApp',
-      'requirejs:adminApp', 'ngAnnotate:adminApp', //'uglify:adminApp'
+      'clean:jsbuild', 'run',
+      'ngAnnotate:clientApp', 'uglify:clientApp',
+      'ngAnnotate:adminApp', 'uglify:adminApp'
     ]);
-  
-    var commonLibs = ['module/main-app'];
 
+    grunt.registerTask('production', ['build']);
+
+    var commonLibs = ['module/main-app'];
+  
     grunt.initConfig({
         bower: {
             requirejs: {
@@ -31,44 +34,12 @@ module.exports = function(grunt) {
                 configFile: 'test/karma.conf.js'
             }
         },
-        requirejs: {
-          common: {
-            options: {
-              baseUrl: "public",
-              include: commonLibs,
-              mainConfigFile: "public/config.js",
-              out: "public/build/js/common.js",
-              optimize: 'none',
-              wrapShim: true,
-              preserveLicenseComments: false
-              //generateSourceMaps: true
-            }
+        run: {
+          options: {
+            // Task-specific options go here.
           },
-          clientApp: {
-              options: {
-                baseUrl: "public",
-                name: 'module/client-app',
-                mainConfigFile: "public/config.js",
-                out: "public/build/js/client-app.js",
-                exclude: commonLibs,
-                optimize: 'none',
-                wrapShim: true,
-                preserveLicenseComments: false
-                //generateSourceMaps: true
-              }
-          },
-          adminApp: {
-            options: {
-              baseUrl: "public",
-              name: 'module/admin-app',
-              mainConfigFile: "public/config.js",
-              out: "public/build/js/admin-app.js",
-              exclude: commonLibs,
-              optimize: 'none',
-              wrapShim: true,
-              preserveLicenseComments: false
-              //generateSourceMaps: true
-            }
+          requirebuilder: {
+            cmd: './requirebuilder.js'
           }
         },
         ngtemplates: {
