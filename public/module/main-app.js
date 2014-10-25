@@ -55,7 +55,56 @@ define([
     });
 
   });
-  
+
+  module.config(function($stateProvider, $urlRouterProvider, $provide, datepickerConfig, datepickerPopupConfig) {
+
+    $stateProvider
+      .state('app', {
+        abstract: true,
+        templateUrl: 'template/app.html',
+        controller: 'AppController'
+      })
+      .state('app.home', {
+        url: "/home",
+        views: {
+          'content': {
+            controller: "AlbumCollectionController",
+            templateUrl: "template/album-collection.html"
+          },
+          'contact': {
+            controller: 'ContactController',
+            templateUrl: 'template/contact.html'
+          }
+        },
+        albumId: 1
+      })
+      .state('app.home.album', {
+        url: "/album/:albumId",
+        views: {
+          'content@app': {
+            controller: "AlbumController",
+            templateUrl: "template/album.html"
+          }
+        }
+      })
+      .state('app.home.tag', {
+        url: "/tag/:tagId",
+        views: {
+          'content@app': {
+            controller: "TagFilterController",
+            templateUrl: "template/tag-filter.html"
+          }
+        }
+      })
+      .state('app.login', {
+        url: "/login",
+        templateUrl: "template/KapLogin/login.html",
+        controller: 'loginController'
+      })
+
+    $urlRouterProvider.otherwise("/home");
+  });
+
   module.factory('apiClient', function(HalClient) {
     var baseUrl = '/';
     var client = new HalClient(baseUrl);
@@ -80,6 +129,11 @@ define([
         defaultToolbar: [['bold','italics', 'underline'], ['ul', 'ol'], ['html']]
       }
     };
+
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      console.log(e); //XXX
+      $rootScope.app.nav.collapsed = false;  
+    });
     
     $rootScope.$auth = authenticationService;
 
