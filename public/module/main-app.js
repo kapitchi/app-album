@@ -1,4 +1,5 @@
 define([
+  'module',
   'angular',
   'moment',
   'ngstorage',
@@ -7,7 +8,7 @@ define([
   'angular-bootstrap',
   'angular-moment',
   'module/kap-hal'
-], function(angular, moment) {
+], function(requireModule, angular, moment) {
 
   //moment stuff
   //http://momentjs.com/docs/#/customization/calendar/
@@ -31,6 +32,8 @@ define([
     'angularMoment',
     'kap-hal'
   ]);
+  
+  module.constant('serverConfig', requireModule.config());
 
   module.config(function(datepickerConfig, datepickerPopupConfig, $provide) {
 
@@ -56,7 +59,7 @@ define([
 
   });
 
-  module.config(function($stateProvider, $urlRouterProvider, $provide, datepickerConfig, datepickerPopupConfig) {
+  module.config(function($stateProvider, $urlRouterProvider, $provide, datepickerConfig, datepickerPopupConfig, serverConfig) {
 
     $stateProvider
       .state('app', {
@@ -68,15 +71,16 @@ define([
         url: "/home",
         views: {
           'content': {
-            controller: "AlbumCollectionController",
-            templateUrl: "template/album-collection.html"
+            controller: "AlbumController",
+            templateUrl: "template/album.html"
+            
           },
           'contact': {
             controller: 'ContactController',
             templateUrl: 'template/contact.html'
           }
         },
-        albumId: 1
+        albumId: serverConfig.homeAlbumId
       })
       .state('app.home.album', {
         url: "/album/:albumId",
@@ -113,25 +117,29 @@ define([
     return client;
   })
 
-  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage) {
+  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage, $state, serverConfig) {
 
     $sessionStorage.$default({
       edit: false
     });
+    
+    var mainNav = serverConfig.mainNavigation;
+    
+    for(var i in mainNav) {
+      var nav = mainNav[i];
+      
+      nav.href = $state.href(nav.state.name, nav.state.params);
+    }
 
     $rootScope.app = {
       edit: $sessionStorage.edit,
       nav: {
-        collapsed: true
-      },
-      editor: {
-        //https://github.com/fraywing/textAngular/wiki/Customising-The-Toolbar
-        defaultToolbar: [['bold','italics', 'underline'], ['ul', 'ol'], ['html']]
+        collapsed: true,
+        main: mainNav
       }
     };
-
+    
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      console.log(e); //XXX
       $rootScope.app.nav.collapsed = false;  
     });
     

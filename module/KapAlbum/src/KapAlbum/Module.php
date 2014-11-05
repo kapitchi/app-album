@@ -46,14 +46,14 @@ class Module implements ApigilityProviderInterface
         }
         
         $embeddingHal = $e->getParam('embeddingHalEntity');
-
-        if($entity instanceof AlbumEntity && !($embeddingHal && $embeddingHal->entity instanceof AlbumItemEntity)) {
-            
-            if(!empty($entity['primary_item_id'])) {
-                $albumItemRepo = $this->sm->get('KapAlbum\\AlbumItemRepository');
-                $entity['primary_item'] = $albumItemRepo->find($entity['primary_item_id']);
-            }
-        }
+        
+//        if($entity instanceof AlbumEntity && !($embeddingHal && $embeddingHal->entity instanceof AlbumItemEntity)) {
+//            
+//            if(!empty($entity['primary_item_id'])) {
+//                $albumItemRepo = $this->sm->get('KapAlbum\\AlbumItemRepository');
+//                $entity['primary_item'] = $albumItemRepo->find($entity['primary_item_id']);
+//            }
+//        }
 
         if($entity instanceof AlbumItemEntity) {
             //tags
@@ -70,19 +70,19 @@ class Module implements ApigilityProviderInterface
             
             $entity['tag_collection'] = new TagCollection(new ArrayAdapter($tags));
             //END
-            
-            //albums
-            $albumRepo = $this->sm->get('KapAlbum\\AlbumRepository');
-            $adapter = $this->sm->get('KapAlbum\AlbumItemRelRepository')->getPaginatorAdapter([
-                'album_item_id' => $entity['id']
-            ]);
 
+            //albums
+            $albumItemRepository = $this->sm->get('KapAlbum\\AlbumItemRepository');
+            $adapter = $this->sm->get('KapAlbum\AlbumItemRelRepository')->getPaginatorAdapter([
+                'item_id' => $entity['id']
+            ]);
+            
             $tags = [];
             foreach($adapter->getItems(0, 9999)->toArray() as $itemTag) {
-                $tags[] = $albumRepo->find($itemTag['album_id']);
+                $tags[] = $albumItemRepository->find($itemTag['parent_id']);
             }
             
-            $entity['album_collection'] = new AlbumCollection(new ArrayAdapter($tags));
+            $entity['parent_collection'] = new AlbumItemCollection(new ArrayAdapter($tags));
             //END
             
             if(!empty($entity['file_id'])) {
@@ -94,14 +94,40 @@ class Module implements ApigilityProviderInterface
                 $fileRepo = $this->sm->get('KapFileManager\\FileRepository');
                 $entity['thumbnail_file'] = $fileRepo->find($entity['thumbnail_file_id']);
             }
+
+            if($entity['type'] == 'ALBUM') {
+                $embeddingHal = $e->getParam('embeddingHalEntity');
+                if($embeddingHal && $embeddingHal->entity instanceof AlbumItemEntity) {
+                    //XXXXXXXXXX RETURN HERE!!!
+                    return;
+                }
+                
+                $albumItemRepository = $this->sm->get('KapAlbum\\AlbumItemRepository');
+                $albumItemRelRepository = $this->sm->get('KapAlbum\AlbumItemRelRepository');
+
+                $adapter = $albumItemRelRepository->getPaginatorAdapter([
+                    'parent_id' => $entity['id'],
+                    'showcase' => true,
+                ]);
+
+                $items = [];
+                foreach($adapter->getItems(0, 9999)->toArray() as $item) {
+                    $items[] = $albumItemRepository->find($item['item_id']);
+                }
+
+                $entity['showcase_items'] = new AlbumItemCollection(new ArrayAdapter($items));
+            }
         }
 
 
         if($entity instanceof AlbumItemRelEntity) {
             $itemRepo = $this->sm->get('KapAlbum\\AlbumItemRepository');
-            $item = $itemRepo->find($entity['album_item_id']);
+            $item = $itemRepo->find($entity['item_id']);
             
             $entity['album_item'] = $item;
+            
+            //fix to return true/false
+            $entity['showcase'] = !!$entity['showcase'];
         }
 
         if($entity instanceof AlbumItemTagEntity) {
@@ -145,18 +171,6 @@ class Module implements ApigilityProviderInterface
     {
         return [
             'factories' => [
-                'KapAlbum\\AlbumRepository' => function($sm) {
-                        $ins = new DbEntityRepository(
-                            $sm->get('KapAlbum\V1\Rest\Album\AlbumResource\Table')
-                        );
-                        return $ins;
-                    },
-                "KapAlbum\\V1\\Rest\\Album\\AlbumResource" => function($sm) {
-                        $ins = new EntityRepositoryResource(
-                            $sm->get('KapAlbum\\AlbumRepository')
-                        );
-                        return $ins;
-                    },
                 'KapAlbum\\AlbumItemRepository' => function($sm) {
                         $ins = new AlbumItemRepository(
                             $sm->get('KapAlbum\V1\Rest\AlbumItem\AlbumItemResource\Table'),

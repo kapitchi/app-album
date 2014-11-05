@@ -11,8 +11,8 @@
         </div>
         <div class="collapse navbar-collapse" collapse="app.nav.collapsed">
             <ul class="nav navbar-nav" ng-click="app.nav.collapsed = false">
-                <li>
-                    <a ui-sref="app.home">Home</a>
+                <li ng-repeat="navItem in app.nav.main">
+                    <a ng-href="{{navItem.href}}">{{navItem.label}}</a>
                 </li>
                 <li>
                     <a ng-show="$auth.identity" ng-click="toggleEdit()" href>Edit</a>

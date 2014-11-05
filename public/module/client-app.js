@@ -67,14 +67,14 @@ define([
         
         $scope.album = null;
         
-        $scope.loader.load(apiClient.fetch('album', albumId).then(function(data) {
+        $scope.loader.load(apiClient.fetch('album_item', albumId).then(function(data) {
             $scope.album = data;
         }));
         
         $scope.albumItemRelCollection = new HalCollection('album_item_rel');
         $scope.loader.load($scope.albumItemRelCollection.fetch({
             query: {
-                album_id: albumId
+                parent_id: albumId
             },
             page_size: 9999,
             order_by: {

@@ -35,6 +35,11 @@ define([
   module.run(function($rootScope) {
     //editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
   });
+  
+  module.constant('editorConfig', {
+      //https://github.com/fraywing/textAngular/wiki/Customising-The-Toolbar
+      defaultToolbar: [['bold','italics', 'underline'], ['ul', 'ol'], ['insertLink'], ['html']]
+  });
 
   module.factory('globalFileUploader', function(FileUploader) {
     var uploader = new FileUploader({
@@ -173,9 +178,9 @@ define([
     }
   });
 
-  module.controller('AlbumItemFormController', function($scope, apiClient, $http, $q, globalFileUploader, fabricUtils) {
-    //$scope.item = albumItem;
-
+  module.controller('AlbumItemFormController', function($scope, $rootScope, apiClient, $http, $q, globalFileUploader, fabricUtils, editorConfig) {
+    $scope.editorToolbar = editorConfig.defaultToolbar;
+    
     $scope.thumbnails = [];
     $scope.selectedThumbnail = null;
     $scope.preview = {
@@ -298,18 +303,19 @@ define([
     };
 
     $scope.setPrimaryItem = function(album, relItem) {
-      apiClient.partialUpdate('album', relItem.album_id, {
-        primary_item_id: relItem.album_item_id
+      
+      apiClient.partialUpdate('album_item_rel', relItem.id, {
+        showcase: !relItem.showcase
       }).then(function(data) {
-        angular.copy(data, album);
+        angular.copy(data, relItem);
       });
     }
 
     $scope.createItemAfter = function(relItem) {
       $scope.albumItemCreate().then(function(data) {
         $scope.albumItemRelCollection.createAfter(relItem, {
-          'album_id': albumId,
-          'album_item_id': data.id
+          'parent_id': albumId,
+          'item_id': data.id
         }, true);
       });
     }
@@ -317,8 +323,8 @@ define([
     $scope.createItem = function() {
       $scope.albumItemCreate().then(function(data) {
         $scope.albumItemRelCollection.createFirst({
-          'album_id': albumId,
-          'album_item_id': data.id
+          'parent_id': albumId,
+          'item_id': data.id
         }, true);
       });
     }
@@ -394,8 +400,8 @@ define([
       apiClient.create('album_item', item).then(function(data) {
         angular.extend(item, data);
         apiClient.create('album_item_rel', {
-          album_id: album.id,
-          album_item_id: item.id
+          parent_id: album.id,
+          item_id: item.id
         });
       });
     }

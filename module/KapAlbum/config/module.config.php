@@ -310,7 +310,7 @@ return array(
                 'required' => false,
                 'filters' => array(),
                 'validators' => array(),
-                'allow_empty' => false,
+                'allow_empty' => true,
                 'continue_if_empty' => false,
             ),
             4 => array(
