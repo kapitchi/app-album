@@ -6,7 +6,7 @@
     "kangax", "Kienz"
   ],
   "description": "Object model for HTML5 canvas, and SVG-to-canvas parser. Backed by jsdom and node-canvas.",
-  "main": "./dist/fabric.min.js",
+  "main": "./dist/fabric.require.js",
   "ignore": [
     "lib",
     "src",
