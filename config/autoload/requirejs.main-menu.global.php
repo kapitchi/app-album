@@ -15,7 +15,10 @@ return [
                     [
                         'label' => 'O mne',
                         'state' => [
-                            'name' => 'app.home',
+                            'name' => 'app.home.page',
+                            'params' => [
+                                'key' => 'about-me'
+                            ]
                         ]
                     ],
                     [
@@ -39,9 +42,9 @@ return [
                     [
                         'label' => 'Spoluprace',
                         'state' => [
-                            'name' => 'app.home.page',
+                            'name' => 'app.home.album',
                             'params' => [
-                                'key' => 'collaboration'
+                                'albumId' => 2
                             ]
                         ]
                     ],
