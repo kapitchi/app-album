@@ -76,7 +76,7 @@ module.exports = function(grunt) {
         },
         clean: {
           jsbuild: {
-            src: ["public/build/js/*", 'public/file_thumbnail/*']
+            src: ["public/build/js/*"/*, 'public/file_thumbnail/*'*/]
           }
         },
         uglify: {
