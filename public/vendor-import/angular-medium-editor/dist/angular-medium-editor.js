@@ -39,7 +39,7 @@ angular.module('angular-medium-editor', [])
             opts.placeholder = '';
           }
           ctrl.editor = new MediumEditor(iElement, opts);
-        });
+        }, true);
 
         var onChange = function() {
 
