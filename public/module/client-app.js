@@ -87,21 +87,39 @@ define([
 
   module.controller('AlbumCollectionController', function($scope, $state, $modal, $stateParams, apiClient, HalCollection) {
 
-        $scope.albumCollection = HalCollection.createAndFetch('album', {
-            order_by: {
-                album_time: 'DESC'
-            }
-        });
+    $scope.albumCollection = HalCollection.createAndFetch('album', {
+        order_by: {
+            album_time: 'DESC'
+        }
     });
+  });
   
-    module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient) {
-        $scope.tag = null;
-        
-        apiClient.fetch('tag', $stateParams.tagId).then(function(tag) {
-            $scope.tag = tag;
-        });
-        
-    });
+  module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient) {
+      $scope.tag = null;
+      
+      apiClient.fetch('tag', $stateParams.tagId).then(function(tag) {
+          $scope.tag = tag;
+      });
+      
+  });
 
-    return module;
+  module.controller('PageController', function($scope, $state, $modal, $stateParams, pageEntity) {
+    $scope.mediumEditorOptions = {
+      disableToolbar: true,
+      disableEditing: true
+    };
+
+    $scope.page = pageEntity;
+  });
+
+  module.controller('ContactController', function($scope) {
+    $scope.formData = {};
+    
+    $scope.submitForm = function(data) {
+      console.log(data); //XXX
+    }
+  });
+
+  return module;
+  
 });

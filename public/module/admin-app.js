@@ -8,6 +8,7 @@ define([
   'ng-tags-input',
   'textAngular',
   'ngImgCrop',
+  'angular-medium-editor',
   //'angular-xeditable',
   //'module/KapLogin',
   'module/kap-security',
@@ -22,6 +23,7 @@ define([
     'ngTagsInput',
     'textAngular',
     'ngImgCrop',
+    'angular-medium-editor',
     //'xeditable',
     //'KapLogin',
     'KapSecurity',
@@ -421,10 +423,60 @@ define([
 
     $scope.createNewAlbum = function(relItem) {
       $scope.albumCreate().then(function(data) {
-        $state.go('app.home.album', {albumId: data.id});
+        $state.go('app.album', {albumId: data.id});
       });
     }
 
+  });
+  
+  module.controller('AdminPageController', function($scope, $rootScope, apiClient) {
+
+    $rootScope.$watch('app.edit', function(val) {
+      $scope.mediumEditorOptions.disableEditing = !val;
+      $scope.mediumEditorOptions.disableToolbar = !val;
+    });
+
+    $scope.save = function(page) {
+      var promise;
+      if(page.id) {
+        promise = apiClient.update('page', page.id, page);
+      }
+      else {
+        promise = apiClient.create('page', page);
+      }
+      
+      promise.then(function(data) {
+        angular.extend(page, data);
+      });
+    }
+    
+  });
+
+  module.directive("kapContenteditable", function($timeout) {
+    return {
+      restrict: "A",
+      require: "ngModel",
+      link: function(scope, element, attrs, ngModel) {
+        
+        function read() {
+          ngModel.$setViewValue(element.html());
+        }
+        
+        element.attr('contentEditable', true);
+
+        ngModel.$render = function() {
+          element.html(ngModel.$viewValue || "");
+        };
+
+        element.bind("blur keyup change", function() {
+          scope.$apply(read);
+        });
+
+        $timeout(function() {
+          console.log(element[0]);//XXX
+        });
+      }
+    };
   });
 
   return module;

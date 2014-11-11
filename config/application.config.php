@@ -30,6 +30,7 @@ return array(
         'KapTaxonomy',
         'Dev',
         'Application',
+        'KapPage'
     ),
     'module_listener_options' => array(
         'module_paths' => array(

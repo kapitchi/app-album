@@ -6,6 +6,7 @@ define([
   'angular-sanitize',
   'angular-ui-router',
   'angular-bootstrap',
+  'angular-messages',
   'angular-moment',
   'module/kap-hal'
 ], function(requireModule, angular, moment) {
@@ -29,6 +30,7 @@ define([
     'ngSanitize',
     'ui.bootstrap',
     'ui.router',
+    'ngMessages',
     'angularMoment',
     'kap-hal'
   ]);
@@ -97,6 +99,47 @@ define([
           'content@app': {
             controller: "TagFilterController",
             templateUrl: "template/tag-filter.html"
+          }
+        }
+      })
+      .state('app.home.contact', {
+        url: "/contact",
+        views: {
+          'content@app': {
+            controller: "ContactController",
+            templateUrl: "template/contact.html"
+          }
+        }
+      })
+      .state('app.home.page', {
+        url: "/p/:key",
+        views: {
+          'content@app': {
+            controller: "PageController",
+            templateUrl: "template/page.html"
+          }
+        },
+        resolve: {
+          pageEntity: function($stateParams, apiClient) {
+            //try {
+              return apiClient.fetchAll('page', {
+                query: {
+                  key: $stateParams.key
+                }
+              }).then(function(data) {
+                if(data._embedded.page[0]) {
+                  return data._embedded.page[0];
+                }
+
+                return {
+                  key: $stateParams.key
+                }
+              }, function() {
+                
+              });
+            //} catch(e) {
+              //console.log(e); //XXX
+            //}
           }
         }
       })
@@ -247,11 +290,6 @@ define([
         });
     };
     
-  });
-
-  module.controller('XXXController', function($rootScope, apiClient, authenticationService, $sessionStorage) {
-    console.log($sessionStorage, 'XXX'); //XXX
-
   });
 
   module.directive('stopEvent', function () {

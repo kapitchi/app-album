@@ -42,8 +42,11 @@ require.config({
         jcrop: 'vendor/Jcrop/js/jquery.Jcrop',
         caman: 'vendor/caman/dist/caman.min',
         'caman.full': 'vendor/caman/dist/caman.full.min',
-        fabric: 'vendor/fabric/dist/fabric.require',
-        darkroom: 'vendor-import/darkroomjs/mybuild/js/darkroom'
+        fabric: 'vendor/fabric/dist/fabric.min',
+        darkroom: 'vendor-import/darkroomjs/mybuild/js/darkroom',
+        'angular-medium-editor': 'vendor/angular-medium-editor/dist/angular-medium-editor',
+        'medium-editor': 'vendor/medium-editor/dist/js/medium-editor',
+        'angular-messages': 'vendor/angular-messages/angular-messages'
     },
     shim: {
         jquery: {
@@ -93,6 +96,11 @@ require.config({
             deps: [
                 'angular'
             ]
+        },
+        'angular-messages': {
+          deps: [
+            'angular'
+          ]
         },
         affix: {
             deps: [
@@ -256,6 +264,12 @@ require.config({
         },
         ngstorage: {
             deps: [
+                'angular'
+            ]
+        },
+        'angular-medium-editor': {
+            deps: [
+                'medium-editor',
                 'angular'
             ]
         }

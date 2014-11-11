@@ -25,6 +25,10 @@
 
 @import "../../public/vendor/angular-ui-tree/source/angular-ui-tree";
 
+//medium editor
+@import "../../public/vendor/medium-editor/src/sass/medium-editor";
+@import "../../public/vendor/medium-editor/src/sass/themes/bootstrap";
+
 //modules
 @import "module/kap-file-manager";
 
@@ -533,6 +537,16 @@ footer {
 
   }
 
+
+//forms
+
+.ng-form {
+  
+}
+
+.ng-form .ng-invalid {
+  @include form-control-validation($state-danger-text, $state-danger-text, $state-danger-bg);
+}
 
 //ANIMATIONS
 //http://www.divshot.com/blog/tips-and-tricks/angular-1-2-and-animate-css/
