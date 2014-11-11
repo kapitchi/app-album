@@ -12,8 +12,8 @@ module.exports = function(grunt) {
     //grunt.registerTask('build', ['requirejs', 'ngtemplates', 'concat:dist']);
     grunt.registerTask('build', [
       'clean:jsbuild', 'run',
-      'ngAnnotate:clientApp', 'uglify:clientApp',
-      'ngAnnotate:adminApp', 'uglify:adminApp'
+      'ngAnnotate:clientApp', //'uglify:clientApp',
+      'ngAnnotate:adminApp', //'uglify:adminApp'
     ]);
 
     grunt.registerTask('production', ['build']);
