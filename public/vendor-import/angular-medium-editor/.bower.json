@@ -1,0 +1,25 @@
+{
+  "name": "angular-medium-editor",
+  "version": "0.0.6",
+  "dependencies": {
+    "angular": "latest",
+    "medium-editor": "1.8.*"
+  },
+  "main": "./dist/angular-medium-editor.js",
+  "devDependencies": {
+    "angular": "latest",
+    "angular-mocks": "latest",
+    "medium-editor": "1.8.*"
+  },
+  "homepage": "https://github.com/thijsw/angular-medium-editor",
+  "_release": "0.0.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.6",
+    "commit": "1a3e7e4437a597a2eb7ce350785e72ca9dbe874a"
+  },
+  "_source": "git://github.com/thijsw/angular-medium-editor.git",
+  "_target": "~0.0.6",
+  "_originalSource": "angular-medium-editor",
+  "_direct": true
+}
