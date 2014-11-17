@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "Running compass ..."
-compass compile
-
 echo "Running bower ..."
 bower install
+
+echo "Running compass ..."
+compass compile
 
 grunt production
 

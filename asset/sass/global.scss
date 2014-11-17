@@ -16,18 +16,22 @@
 
 //AngularJS
 @import "angular";
-@import url(http://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic);
-@import url(http://fonts.googleapis.com/css?family=Raleway:600,500,300,700,400,200,100);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
 //AngularJS - xeditable
 @import "vendor/angular-xeditable";
 @import "vendor/angular-loading-bar";
-//@import "vendor/darkroom.min";
+@import "vendor/textAngular";
 
 @import "../../public/vendor/angular-ui-tree/source/angular-ui-tree";
 
 //medium editor
 @import "../../public/vendor/medium-editor/src/sass/medium-editor";
 @import "../../public/vendor/medium-editor/src/sass/themes/bootstrap";
+
+.medium-editor-toolbar {
+  z-index: 1040;
+}
+
 
 //modules
 @import "module/kap-file-manager";
@@ -37,7 +41,7 @@
 
 html, body {
 
-  font-family: Raleway;
+  font-family: 'Open Sans', sans-serif;
   font-weight: 100;
   font-size: 16px;
   height: 100%;
@@ -177,7 +181,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 .album-title {
   font-size: 36px;
   font-weight: 400;
-   font-family: 'Playfair Display', cursive;
+  font-family: 'Open Sans', sans-serif;
   &.site-title {
   
     text-transform: none;
@@ -206,7 +210,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
   box-shadow: 0px 0px 28px 0px rgba(86, 55, 43, 0.5);
   color: #000;
   border-top: dashed 1px rgba(0,0,0,0.1);
-  font-family: Playfair Display;
+  font-family: 'Open Sans', sans-serif;
   text-align: center;
   &:before {
     content: " ";
@@ -475,8 +479,8 @@ h1, h2, h3, h4 {
   box-shadow: 0px 0px 28px 0px rgba(86, 55, 43, 0.5);
   color: #000;
   border-top: dashed 1px rgba(0,0,0,0);
-  font-family: Playfair Display;
-  text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
   &:before {
     display: none;
   }
