@@ -13,7 +13,7 @@ return [
                 'homeAlbumId' => 1,
                 'mainNavigation' => [
                     [
-                        'label' => 'O mne',
+                        'label' => 'O mně',
                         'state' => [
                             'name' => 'app.home.page',
                             'params' => [
@@ -40,7 +40,7 @@ return [
                         ]
                     ],
                     [
-                        'label' => 'Spoluprace',
+                        'label' => 'Spolupráce',
                         'state' => [
                             'name' => 'app.home.album',
                             'params' => [
@@ -58,11 +58,11 @@ return [
                         ]
                     ],
                     [
-                        'label' => 'Cennik',
+                        'label' => 'Přehled služeb',
                         'state' => [
                             'name' => 'app.home.page',
                             'params' => [
-                                'key' => 'cennik'
+                                'key' => 'services'
                             ]
                         ]
                     ],
