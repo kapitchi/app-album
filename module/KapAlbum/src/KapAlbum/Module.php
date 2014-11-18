@@ -72,17 +72,17 @@ class Module implements ApigilityProviderInterface
             //END
 
             //albums
-            $albumItemRepository = $this->sm->get('KapAlbum\\AlbumItemRepository');
-            $adapter = $this->sm->get('KapAlbum\AlbumItemRelRepository')->getPaginatorAdapter([
-                'item_id' => $entity['id']
-            ]);
-            
-            $tags = [];
-            foreach($adapter->getItems(0, 9999)->toArray() as $itemTag) {
-                $tags[] = $albumItemRepository->find($itemTag['parent_id']);
-            }
-            
-            $entity['parent_collection'] = new AlbumItemCollection(new ArrayAdapter($tags));
+//            $albumItemRepository = $this->sm->get('KapAlbum\\AlbumItemRepository');
+//            $adapter = $this->sm->get('KapAlbum\AlbumItemRelRepository')->getPaginatorAdapter([
+//                'item_id' => $entity['id']
+//            ]);
+//            
+//            $tags = [];
+//            foreach($adapter->getItems(0, 9999)->toArray() as $itemTag) {
+//                $tags[] = $albumItemRepository->find($itemTag['parent_id']);
+//            }
+//            
+//            $entity['parent_collection'] = new AlbumItemCollection(new ArrayAdapter($tags));
             //END
             
             if(!empty($entity['file_id'])) {
@@ -105,16 +105,36 @@ class Module implements ApigilityProviderInterface
                 $albumItemRepository = $this->sm->get('KapAlbum\\AlbumItemRepository');
                 $albumItemRelRepository = $this->sm->get('KapAlbum\AlbumItemRelRepository');
 
-                $adapter = $albumItemRelRepository->getPaginatorAdapter([
+                $albumItemRels = $albumItemRelRepository->fetchAll([
                     'parent_id' => $entity['id'],
                     'showcase' => true,
                 ]);
 
                 $items = [];
-                foreach($adapter->getItems(0, 9999)->toArray() as $item) {
+                foreach($albumItemRels as $item) {
                     $items[] = $albumItemRepository->find($item['item_id']);
                 }
+                
+                //no showcase items from direct children? try sub-albums if some
+                if(empty($items)) {
+                    $albumItemRels = $albumItemRelRepository->fetchAll([
+                        'parent_id' => $entity['id'],
+                        'item_type' => 'ALBUM',
+                    ]);
+                    
+                    foreach($albumItemRels as $albumRel) {
 
+                        $itemRels = $albumItemRelRepository->fetchAll([
+                            'parent_id' => $albumRel['item_id'],
+                            'showcase' => true,
+                        ]);
+                        
+                        foreach($itemRels as $itemRel) {
+                            $items[] = $albumItemRepository->find($itemRel['item_id']);
+                        }
+                    }
+                }
+                
                 $entity['showcase_items'] = new AlbumItemCollection(new ArrayAdapter($items));
             }
         }

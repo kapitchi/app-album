@@ -70,6 +70,9 @@ class AlbumItemRelRepository extends DbEntityRepository
     protected function configurePaginatorSelect(Select $select, array $criteria, array $orderBy)
     {
         if(!empty($criteria['album_owner_id'])) {
+            //TODO
+            throw new \Exception("N/I");
+            
             $ownerId = $criteria['album_owner_id'];
 
             $select->join('album', 'album_item_rel.album_id = album.id', []);
@@ -78,6 +81,17 @@ class AlbumItemRelRepository extends DbEntityRepository
             ]);
 
             unset($criteria['album_owner_id']);
+        }
+
+        if(!empty($criteria['item_type'])) {
+            $value = $criteria['item_type'];
+
+            $select->join('album_item', 'album_item_rel.item_id = album_item.id', []);
+            $select->where([
+                'album_item.type' => $value
+            ]);
+
+            unset($criteria['item_type']);
         }
 
         parent::configurePaginatorSelect($select, $criteria, $orderBy);
