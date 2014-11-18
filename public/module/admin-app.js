@@ -3,10 +3,10 @@ define([
   'moment',
   'module/main-app',
   'module/client-app',
+  'module/admin-editor',
   'module/ng-fabric',
   'angular-ui-tree',
   'ng-tags-input',
-  'textAngular',
   'ngImgCrop',
   'angular-medium-editor',
   //'angular-xeditable',
@@ -18,10 +18,10 @@ define([
   var module = angular.module('admin-app', [
     'main-app',
     'client-app',
+    'admin-editor',
     'ng-fabric',
     'ui.tree',
     'ngTagsInput',
-    'textAngular',
     'ngImgCrop',
     'angular-medium-editor',
     //'xeditable',
@@ -32,15 +32,6 @@ define([
 
   module.config(function($stateProvider, $urlRouterProvider, $provide) {
 
-  });
-
-  module.run(function($rootScope) {
-    //editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-  });
-  
-  module.constant('editorConfig', {
-      //https://github.com/fraywing/textAngular/wiki/Customising-The-Toolbar
-      defaultToolbar: [['bold','italics', 'underline'], ['ul', 'ol'], ['insertLink'], ['html']]
   });
 
   module.factory('globalFileUploader', function(FileUploader) {
@@ -181,7 +172,7 @@ define([
   });
 
   module.controller('AlbumItemFormController', function($scope, $rootScope, apiClient, $http, $q, globalFileUploader, fabricUtils, editorConfig) {
-    $scope.editorToolbar = editorConfig.defaultToolbar;
+    $scope.editorToolbar = editorConfig.descriptionToolbar;
     
     $scope.thumbnails = [];
     $scope.selectedThumbnail = null;
@@ -429,11 +420,21 @@ define([
 
   });
   
-  module.controller('AdminPageController', function($scope, $rootScope, apiClient) {
+  module.controller('AdminPageController', function($scope, $rootScope, apiClient, editorConfig) {
 
+    var disabledOptions = {
+      disableEditing: true,
+      disableToolbar: true
+    };
+    
+    var enabledOptions = {
+      disableToolbar: true
+    }
+    
+    $scope.editorToolbar = editorConfig.pageToolbar;
+    
     $rootScope.$watch('app.edit', function(val) {
-      $scope.mediumEditorOptions.disableEditing = !val;
-      $scope.mediumEditorOptions.disableToolbar = !val;
+      $scope.mediumEditorOptions = val ? enabledOptions : disabledOptions; 
     });
 
     $scope.save = function(page) {
@@ -450,33 +451,6 @@ define([
       });
     }
     
-  });
-
-  module.directive("kapContenteditable", function($timeout) {
-    return {
-      restrict: "A",
-      require: "ngModel",
-      link: function(scope, element, attrs, ngModel) {
-        
-        function read() {
-          ngModel.$setViewValue(element.html());
-        }
-        
-        element.attr('contentEditable', true);
-
-        ngModel.$render = function() {
-          element.html(ngModel.$viewValue || "");
-        };
-
-        element.bind("blur keyup change", function() {
-          scope.$apply(read);
-        });
-
-        $timeout(function() {
-          console.log(element[0]);//XXX
-        });
-      }
-    };
   });
 
   return module;

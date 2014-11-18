@@ -49,13 +49,14 @@ class AlbumItemTagRepository extends DbEntityRepository
     protected function configurePaginatorSelect(Select $select, array $criteria, array $orderBy)
     {
         //order by album_time and position in a album itself
+        //TODO this is not finished as we changed db structure (there is no album table anymore)
         if(!empty($orderBy['album_time'])) {
             $albumTimeOrder = $orderBy['album_time'];
             
-            $select->join('album_item_rel', 'album_item_tag.album_item_id = album_item_rel.album_item_id', []);
-            $select->join('album', 'album_item_rel.album_id = album.id', []);
+            $select->join('album_item_rel', 'album_item_tag.album_item_id = album_item_rel.item_id', []);
+            $select->join('album_item', 'album_item_rel.parent_id = album_item.id', []);
             $select->order([
-                'album_time' => $albumTimeOrder,
+                //'album_time' => $albumTimeOrder,
                 'album_item_rel.index' => 'ASC'
             ]);
             

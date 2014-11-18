@@ -22,13 +22,12 @@ require.config({
         'angular-ui-router': 'vendor/angular-ui-router/release/angular-ui-router',
         'angular-file-upload': 'vendor/angular-file-upload/angular-file-upload',
         'angular-xeditable': 'vendor/angular-xeditable/dist/js/xeditable',
-        'ng-aloha-editor': 'vendor/ng-aloha-editor/ng-aloha-editor',
         'angular-ui-sortable': 'vendor/angular-ui-sortable/sortable',
         'angular-ui-tree': 'vendor/angular-ui-tree/dist/angular-ui-tree',
         moment: 'vendor/moment/min/moment-with-locales.min',
         'angular-moment': 'vendor/angular-moment/angular-moment',
-        textAngular: 'vendor-import/textAngular/dist/textAngular.min',
-        'angular-sanitize': 'vendor/angular-sanitize/angular-sanitize',
+        textAngular: 'vendor/textAngular/src/textAngular',
+        'angular-sanitize': 'vendor/textAngular/src/textAngular-sanitize',
         'angular-animate': 'vendor/angular-animate/angular-animate',
         'angular-strap': 'vendor/angular-strap/dist/angular-strap.min',
         'angular-strap.tpl': 'vendor/angular-strap/dist/angular-strap.tpl.min',
@@ -46,10 +45,11 @@ require.config({
         'angular-medium-editor': 'vendor/angular-medium-editor/dist/angular-medium-editor',
         'medium-editor': 'vendor/medium-editor/dist/js/medium-editor',
         'angular-messages': 'vendor/angular-messages/angular-messages',
-        fabric: 'vendor/fabric/dist/fabric.require'
+        fabric: 'vendor/fabric/dist/fabric.require',
+        textAngularSetup: 'vendor/textAngular/src/textAngularSetup',
     },
     shim: {
-        jquery: {
+      jquery: {
             exports: 'jquery'
         },
         'jquery-ui': {
@@ -228,9 +228,16 @@ require.config({
         textAngular: {
             deps: [
                 'angular',
-                'angular-sanitize'
+                'angular-sanitize',
+                'textAngularSetup',
+                'vendor/textAngular/dist/textAngular-rangy.min'
             ]
         },
+      textAngularSetup: {
+        deps: [
+          'angular',
+        ]
+      },
         'ng-tags-input': {
             deps: [
                 'angular'
@@ -265,6 +272,11 @@ require.config({
         ngstorage: {
             deps: [
                 'angular'
+            ]
+        },
+        'medium-editor-button': {
+            deps: [
+                'medium-editor'
             ]
         },
         'angular-medium-editor': {
