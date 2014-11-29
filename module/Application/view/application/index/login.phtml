@@ -13,9 +13,9 @@ $this->ng()->constant('fbAuthUrl', $url);
 ?>
 
 <oauth
-    site="http://localhost:9002"
+    site="<?=$this->escapeHtmlAttr($this->serverUrl())?>"
     client-id="jsclient"
-    redirect-uri="http://localhost:9002/login"
+    redirect-uri="<?=$this->escapeHtmlAttr($this->serverUrl('/login'))?>"
     response-type="token"
     scope=""
     state="123"
