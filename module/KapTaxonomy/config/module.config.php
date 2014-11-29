@@ -34,7 +34,10 @@ return array(
                 0 => 'GET',
                 1 => 'POST',
             ),
-            'collection_query_whitelist' => array('query', 'order_by'),
+            'collection_query_whitelist' => array(
+                0 => 'query',
+                1 => 'order_by',
+            ),
             'page_size' => 25,
             'page_size_param' => 'page_size',
             'entity_class' => 'KapTaxonomy\\V1\\Rest\\Tag\\TagEntity',
@@ -84,6 +87,26 @@ return array(
                 'hydrator_name' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
                 'controller_service_name' => 'KapTaxonomy\\V1\\Rest\\Tag\\Controller',
                 'entity_identifier_name' => 'id',
+            ),
+        ),
+    ),
+    'zf-mvc-auth' => array(
+        'authorization' => array(
+            'KapTaxonomy\\V1\\Rest\\Tag\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
             ),
         ),
     ),

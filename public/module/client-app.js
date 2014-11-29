@@ -15,7 +15,7 @@ define([
         'infinite-scroll',
         'ng-preload-src',
         'angular-loading-bar',
-        'KapSecurity'
+        'kap-security'
     ]);
     
     module.run(function($rootScope) {

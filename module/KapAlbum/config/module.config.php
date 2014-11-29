@@ -64,7 +64,12 @@ return array(
                 0 => 'GET',
                 1 => 'POST',
             ),
-            'collection_query_whitelist' => array('query', 'page_size', 'order_by', 'embed'),
+            'collection_query_whitelist' => array(
+                0 => 'query',
+                1 => 'page_size',
+                2 => 'order_by',
+                3 => 'embed',
+            ),
             'page_size' => 25,
             'page_size_param' => 'page_size',
             'entity_class' => 'KapAlbum\\V1\\Rest\\Album\\AlbumEntity',
@@ -111,7 +116,12 @@ return array(
                 0 => 'GET',
                 1 => 'POST',
             ),
-            'collection_query_whitelist' => array('query', 'page_size', 'order_by', 'embed'),
+            'collection_query_whitelist' => array(
+                0 => 'query',
+                1 => 'page_size',
+                2 => 'order_by',
+                3 => 'embed',
+            ),
             'page_size' => 25,
             'page_size_param' => 'page_size',
             'entity_class' => 'KapAlbum\\V1\\Rest\\AlbumItemRel\\AlbumItemRelEntity',
@@ -328,17 +338,17 @@ return array(
             'KapAlbum\\V1\\Rest\\Album\\Controller' => array(
                 'entity' => array(
                     'GET' => false,
-                    'POST' => false,
+                    'POST' => true,
                     'PATCH' => true,
                     'PUT' => true,
                     'DELETE' => true,
                 ),
                 'collection' => array(
-                    'GET' => false,
+                    'GET' => true,
                     'POST' => true,
-                    'PATCH' => false,
-                    'PUT' => false,
-                    'DELETE' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
                 ),
             ),
             'KapAlbum\\V1\\Rest\\AlbumItem\\Controller' => array(
@@ -358,6 +368,22 @@ return array(
                 ),
             ),
             'KapAlbum\\V1\\Rest\\AlbumItemRel\\Controller' => array(
+                'entity' => array(
+                    'GET' => false,
+                    'POST' => false,
+                    'PATCH' => true,
+                    'PUT' => true,
+                    'DELETE' => true,
+                ),
+                'collection' => array(
+                    'GET' => false,
+                    'POST' => true,
+                    'PATCH' => false,
+                    'PUT' => false,
+                    'DELETE' => false,
+                ),
+            ),
+            'KapAlbum\\V1\\Rest\\AlbumItemTag\\Controller' => array(
                 'entity' => array(
                     'GET' => false,
                     'POST' => false,

@@ -1,13 +1,24 @@
 <?php
-$this->ng('ng-app', 'LoginApp');
-?>
-<div id="ng-app" ng-controller="FbLoginController" class="container">
-    <div ng-show="authResult.code == 1" class="row">
-        <h1>Hi {{authResult.userProfile.displayName}}!</h1>
-        <img ng-src="{{authResult.userProfile.imageUrl}}" class="img-responsive">
-        <a href="/" target="_self" class="btn btn-primary">Go to homepage</a>
-    </div>
+$this->ng('login-app');
 
-    <button ng-show="showLogin" ng-click="login()" class="btn btn-primary">Login</button>
-    <button ng-show="authResult.code == 1" ng-click="logout()" class="btn btn-primary">Logout</button>
-</div>
+$url = $this->authenticationAdapterManager()->getCallbackUrl('facebook_javascript', [
+    'response_type' => 'token',
+    'client_id' => 'jsclient',
+    'redirect_uri' => '/oauthcallback',
+    'state' => '123'
+]);
+
+$this->ng()->constant('fbAuthUrl', $url);
+
+?>
+
+<oauth
+    site="http://localhost:9002"
+    client-id="jsclient"
+    redirect-uri="http://localhost:9002/login"
+    response-type="token"
+    scope=""
+    state="123"
+    template="/template/login-button.html">
+    
+</oauth>

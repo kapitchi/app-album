@@ -27,7 +27,7 @@ require.config({
         moment: 'vendor/moment/min/moment-with-locales.min',
         'angular-moment': 'vendor/angular-moment/angular-moment',
         textAngular: 'vendor/textAngular/src/textAngular',
-        'angular-sanitize': 'vendor/textAngular/src/textAngular-sanitize',
+        'angular-sanitize': 'vendor/angular-sanitize/angular-sanitize',
         'angular-animate': 'vendor/angular-animate/angular-animate',
         'angular-strap': 'vendor/angular-strap/dist/angular-strap.min',
         'angular-strap.tpl': 'vendor/angular-strap/dist/angular-strap.tpl.min',
@@ -47,9 +47,10 @@ require.config({
         'angular-messages': 'vendor/angular-messages/angular-messages',
         fabric: 'vendor/fabric/dist/fabric.require',
         textAngularSetup: 'vendor/textAngular/src/textAngularSetup',
+        'oauth-ng': 'vendor/oauth-ng/dist/oauth-ng'
     },
     shim: {
-      jquery: {
+        jquery: {
             exports: 'jquery'
         },
         'jquery-ui': {
@@ -233,11 +234,11 @@ require.config({
                 'vendor/textAngular/dist/textAngular-rangy.min'
             ]
         },
-      textAngularSetup: {
-        deps: [
-          'angular',
-        ]
-      },
+        textAngularSetup: {
+            deps: [
+                'angular'
+            ]
+        },
         'ng-tags-input': {
             deps: [
                 'angular'
@@ -283,6 +284,12 @@ require.config({
             deps: [
                 'medium-editor',
                 'angular'
+            ]
+        },
+        'oauth-ng': {
+            deps: [
+                'angular',
+                'ngstorage'
             ]
         }
     },

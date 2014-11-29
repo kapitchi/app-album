@@ -1,6 +1,6 @@
 define(['angular'], function(angular) {
 
-    var module = angular.module('SharedRegistry', []);
+    var module = angular.module('shared-registry', []);
 
     module.service('sharedRegistry', function($window) {
         function sharedRegistry() {

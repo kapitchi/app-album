@@ -32,7 +32,6 @@ class Module implements ApigilityProviderInterface
     {
         $helpers = $this->sm->get('ViewHelperManager');
         $hal = $helpers->get('hal');
-
         $hal->getEventManager()->attach(['renderEntity', 'renderCollection.entity'], array($this, 'onRenderCollectionEntity'));
     }
 

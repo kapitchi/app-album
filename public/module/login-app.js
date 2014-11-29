@@ -1,6 +1,7 @@
 define([
     'module',
     'angular',
+    'oauth-ng',
     'module/kap-hal',
     'angular-easyfb',
     'module/kap-security'
@@ -8,20 +9,34 @@ define([
     
     var appConfig = requireModule.config();
 
-    var module = angular.module('LoginApp', [
+    var module = angular.module('login-app', [
+        'oauth',
         'kap-hal',
         'ezfb',
-        'KapSecurity'
+        'kap-security'
     ]);
 
-    module.config(function (ezfbProvider) {
+    module.config(function (ezfbProvider, $locationProvider) {
         ezfbProvider.setInitParams({
             appId: appConfig.facebookAppId,
             version: 'v2.0'
         });
+
+        $locationProvider.html5Mode(true).hashPrefix('!');
+    });
+  
+    module.run(function($rootScope, authenticationService, $sessionStorage) {
+      
+      $rootScope.$on('oauth:login', function(event, token) {
+        authenticationService.setToken(token);
+        
+        //delete token stored by oauth module
+        delete $sessionStorage.token;
+      });
+      
     });
     
-    module.controller('FbLoginController', function($scope, ezfb, $http, authenticationService) {
+    module.controller('FbLoginController', function($scope, ezfb, $http, authenticationService, $window, fbAuthUrl) {
 
         $scope.showLogin = false;
         
@@ -37,10 +52,7 @@ define([
             if(res && res.status === 'connected') {
                 $scope.showLogin = false;
                 
-                $http.post('/authenticate', {type: 'facebook_javascript'}).then(function(data) {
-                    authenticationService.handleResult(data.data);
-                    $scope.authResult = data.data;
-                });
+                //$window.location = fbAuthUrl;
                 
                 return;
             }

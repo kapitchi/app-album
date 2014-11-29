@@ -12,7 +12,7 @@ define([
   //'angular-xeditable',
   //'module/KapLogin',
   'module/kap-security',
-  'module/KapFileManager',
+  'module/kap-file-manager'
 ], function(angular, moment) {
 
   var module = angular.module('admin-app', [
@@ -26,8 +26,8 @@ define([
     'angular-medium-editor',
     //'xeditable',
     //'KapLogin',
-    'KapSecurity',
-    'KapFileManager',
+    'kap-security',
+    'kap-file-manager'
   ]);
 
   module.config(function($stateProvider, $urlRouterProvider, $provide) {
@@ -52,11 +52,6 @@ define([
 
     $rootScope.logout = function() {
       authenticationService.logout();
-      $window.location = '/logout';
-    }
-
-    $rootScope.login = function() {
-      $window.location = '/login';
     }
 
     $rootScope.toggleEdit = function() {

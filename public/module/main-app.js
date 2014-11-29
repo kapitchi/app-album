@@ -61,25 +61,29 @@ define([
 
   });
 
-  module.config(function($stateProvider, $urlRouterProvider, $provide, datepickerConfig, datepickerPopupConfig, serverConfig) {
+  module.config(function($stateProvider, $urlRouterProvider, $provide, $locationProvider, datepickerConfig, datepickerPopupConfig, serverConfig) {
 
     $stateProvider
       .state('app', {
         abstract: true,
-        templateUrl: 'template/app.html',
+        templateUrl: '/template/app.html',
         controller: 'AppController'
+      })
+      .state('oauthcallback', {
+        url: '/oauthcallback',
+        controller: 'OAuthCallbackController'
       })
       .state('app.home', {
         url: "/home",
         views: {
           'content': {
             controller: "AlbumController",
-            templateUrl: "template/album.html"
+            templateUrl: "/template/album.html"
             
           },
           'contact': {
             controller: 'ContactController',
-            templateUrl: 'template/contact.html'
+            templateUrl: '/template/contact.html'
           }
         },
         albumId: serverConfig.homeAlbumId
@@ -89,7 +93,7 @@ define([
         views: {
           'content@app': {
             controller: "AlbumController",
-            templateUrl: "template/album.html"
+            templateUrl: "/template/album.html"
           }
         }
       })
@@ -98,7 +102,7 @@ define([
         views: {
           'content@app': {
             controller: "TagFilterController",
-            templateUrl: "template/tag-filter.html"
+            templateUrl: "/template/tag-filter.html"
           }
         }
       })
@@ -107,7 +111,7 @@ define([
         views: {
           'content@app': {
             controller: "ContactController",
-            templateUrl: "template/contact.html"
+            templateUrl: "/template/contact.html"
           }
         }
       })
@@ -116,7 +120,7 @@ define([
         views: {
           'content@app': {
             controller: "PageController",
-            templateUrl: "template/page.html"
+            templateUrl: "/template/page.html"
           }
         },
         resolve: {
@@ -145,11 +149,14 @@ define([
       })
       .state('app.login', {
         url: "/login",
-        templateUrl: "template/KapLogin/login.html",
+        templateUrl: "/template/KapLogin/login.html",
         controller: 'loginController'
       })
 
     $urlRouterProvider.otherwise("/home");
+    
+    $locationProvider.html5Mode(true).hashPrefix('!');
+    
   });
 
   module.factory('apiClient', function(HalClient) {
@@ -160,7 +167,34 @@ define([
     return client;
   })
 
-  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage, $state, serverConfig) {
+  module.controller('OAuthCallbackController', function(authenticationService, $location) {
+    function getToken(hash) {
+      var params = {},
+        regex = /([^&=]+)=([^&]*)/g,
+        m;
+
+      while (m = regex.exec(hash)) {
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+      }
+
+      if(params.access_token || params.error){
+        return params;
+      }
+    }
+    
+    var hash = $location.hash();
+    
+    var token = getToken(hash);
+    
+    console.log(token); //XXX
+    
+  });
+
+  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage, $state, $window, serverConfig) {
+
+    $rootScope.login = function() {
+      $window.location = '/login';
+    }
 
     $sessionStorage.$default({
       edit: false
@@ -191,7 +225,7 @@ define([
     $rootScope.fullScreenGallery = function(albumItems, current) {
 
       var modalInstance = $modal.open({
-        templateUrl: 'template/fullscreen-gallery.html',
+        templateUrl: '/template/fullscreen-gallery.html',
         controller: function($scope, $modalInstance, apiClient, $sce, $timeout) {
           var currentIndex = 0;
           var controlPanelTimer = null;

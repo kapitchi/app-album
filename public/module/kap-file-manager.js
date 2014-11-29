@@ -4,7 +4,7 @@ define([
     'angular-file-upload'
 ], function(angular) {
 
-    var module = angular.module('KapFileManager', ['ui.bootstrap', 'angularFileUpload']);
+    var module = angular.module('kap-file-manager', ['ui.bootstrap', 'angularFileUpload']);
   
     module.controller('fileManagerController', function($scope, $rootScope, $timeout, $http, $fileUploader) {
 

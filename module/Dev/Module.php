@@ -40,10 +40,10 @@ class Module
 
     public function onAuthenticationPost(MvcAuthEvent $e)
     {
-        $identity = new AuthenticatedIdentity(1);
-        $identity->setName('user');
-
-        $e->setIdentity($identity);
+//        $identity = new AuthenticatedIdentity(1);
+//        $identity->setName('user');
+//
+//        $e->setIdentity($identity);
     }
 
     public function getConfig()
