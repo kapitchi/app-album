@@ -51,6 +51,7 @@ define([
   module.controller('AdminAppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, $sessionStorage) {
 
     $rootScope.logout = function() {
+      $rootScope.app.edit = false;
       authenticationService.logout();
     }
 
@@ -61,7 +62,7 @@ define([
 
     $rootScope.albumItemUpdate = function(item) {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-item-edit-modal.html',
+        templateUrl: '/template/album-item-edit-modal.html',
         controller: 'AlbumItemModalController',
         resolve: {
           albumItem: function() {
@@ -76,7 +77,7 @@ define([
 
     $rootScope.albumItemCreate = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-item-edit-modal.html',
+        templateUrl: '/template/album-item-edit-modal.html',
         controller: 'AlbumItemModalController',
         resolve: {
           albumItem: function() {
@@ -98,7 +99,7 @@ define([
 
     $rootScope.albumCreate = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-edit.html',
+        templateUrl: '/template/album-edit.html',
         controller: function($scope, $modalInstance, apiClient) {
           //$scope.item = item;
           $scope.item = {}
@@ -118,7 +119,7 @@ define([
 
     $rootScope.albumUpdate = function(album) {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-edit.html',
+        templateUrl: '/template/album-edit.html',
         controller: function($scope, $modalInstance, apiClient) {
           $scope.item = album;
           $scope.save = function(item) {
@@ -158,7 +159,7 @@ define([
 
   module.directive('albumItemForm', function() {
     return {
-      templateUrl: 'template/album-item-form.html',
+      templateUrl: '/template/album-item-form.html',
       scope: {
         item: '='
       },
@@ -319,7 +320,7 @@ define([
 
     $scope.bulkUpload = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-bulk-upload-modal.html',
+        templateUrl: '/template/album-bulk-upload-modal.html',
         controller: 'AlbumBulkUploadModalController',
         resolve: {
           album: function() {

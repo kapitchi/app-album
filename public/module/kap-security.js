@@ -32,13 +32,10 @@ define(['angular', 'module/shared-registry', 'ngstorage'], function(angular) {
 
           $sessionStorage.identityToken = token;
 
-          $http.get('/me').then(function(resp) {
+          return $http.get('/me').then(function(resp) {
             this.identity = resp.data;
             $sessionStorage.identity = this.identity;
-
-            $window.location = '/';
           });
-  
         }
       
         this.logout = function() {

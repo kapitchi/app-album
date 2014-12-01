@@ -1,7 +1,6 @@
 define([
     'module',
     'angular',
-    'oauth-ng',
     'module/kap-hal',
     'angular-easyfb',
     'module/kap-security'
@@ -10,7 +9,6 @@ define([
     var appConfig = requireModule.config();
 
     var module = angular.module('login-app', [
-        'oauth',
         'kap-hal',
         'ezfb',
         'kap-security'
@@ -25,43 +23,58 @@ define([
         $locationProvider.html5Mode(true).hashPrefix('!');
     });
   
-    module.run(function($rootScope, authenticationService, $sessionStorage) {
-      
-      $rootScope.$on('oauth:login', function(event, token) {
-        authenticationService.setToken(token);
-        
-        //delete token stored by oauth module
-        delete $sessionStorage.token;
-      });
-      
-    });
-    
-    module.controller('FbLoginController', function($scope, ezfb, $http, authenticationService, $window, fbAuthUrl) {
+    module.controller('FbLoginController', function($scope, ezfb, $http, authenticationService, $window, $location, fbAuthUrl) {
 
-        $scope.showLogin = false;
+      function getToken() {
+        var hash = $location.hash();
         
-        $scope.logout = function() {
-            ezfb.logout();
-        }
-        
-        $scope.login = function() {
-            ezfb.login(checkLoginStatus);
-        }
-        
-        function checkLoginStatus(res) {
-            if(res && res.status === 'connected') {
-                $scope.showLogin = false;
-                
-                //$window.location = fbAuthUrl;
-                
-                return;
-            }
+        var params = {},
+          regex = /([^&=]+)=([^&]*)/g,
+          m;
 
-            $scope.showLogin = true;
-            $scope.loginStatus = res;
+        while (m = regex.exec(hash)) {
+          params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
         }
+
+        if(params.access_token || params.error){
+          return params;
+        }
+      }
+      
+      $scope.showLogin = false;
+
+      var token = getToken();
+      
+      if(token && token.access_token) {
+        authenticationService.setToken(token).then(function() {
+          $window.location = '/?admin=true'
+        });
+        return;
+      }
+
+      $scope.logout = function() {
+          ezfb.logout();
+      }
+      
+      $scope.login = function() {
+          ezfb.login(checkLoginStatus);
+      }
+      
+      function checkLoginStatus(res) {
         
-        ezfb.getLoginStatus(checkLoginStatus);
+        if(res && res.status === 'connected') {
+            $scope.showLogin = false;
+            
+            $window.location = fbAuthUrl;
+            
+            return;
+        }
+
+        $scope.showLogin = true;
+        $scope.loginStatus = res;
+      }
+      
+      ezfb.getLoginStatus(checkLoginStatus);
     });
 
     module.factory('apiClient', function(HalClient) {

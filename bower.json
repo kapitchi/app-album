@@ -30,8 +30,7 @@
     "fabric": "./public/vendor-import/fabric",
     "angular-medium-editor": "./public/vendor-import/angular-medium-editor/",
     "angular-messages": "~1.3.2",
-    "textAngular": "~1.3.0",
-    "oauth-ng": "~0.3.4"
+    "textAngular": "~1.3.0"
   },
   "devDependencies": {},
   "resolutions": {

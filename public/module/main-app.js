@@ -69,12 +69,8 @@ define([
         templateUrl: '/template/app.html',
         controller: 'AppController'
       })
-      .state('oauthcallback', {
-        url: '/oauthcallback',
-        controller: 'OAuthCallbackController'
-      })
       .state('app.home', {
-        url: "/home",
+        url: "/",
         views: {
           'content': {
             controller: "AlbumController",
@@ -147,15 +143,10 @@ define([
           }
         }
       })
-      .state('app.login', {
-        url: "/login",
-        templateUrl: "/template/KapLogin/login.html",
-        controller: 'loginController'
-      })
+
+    $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise("/home");
-    
-    $locationProvider.html5Mode(true).hashPrefix('!');
     
   });
 
@@ -166,29 +157,6 @@ define([
   
     return client;
   })
-
-  module.controller('OAuthCallbackController', function(authenticationService, $location) {
-    function getToken(hash) {
-      var params = {},
-        regex = /([^&=]+)=([^&]*)/g,
-        m;
-
-      while (m = regex.exec(hash)) {
-        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-      }
-
-      if(params.access_token || params.error){
-        return params;
-      }
-    }
-    
-    var hash = $location.hash();
-    
-    var token = getToken(hash);
-    
-    console.log(token); //XXX
-    
-  });
 
   module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage, $state, $window, serverConfig) {
 

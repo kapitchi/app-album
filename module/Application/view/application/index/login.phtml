@@ -4,21 +4,13 @@ $this->ng('login-app');
 $url = $this->authenticationAdapterManager()->getCallbackUrl('facebook_javascript', [
     'response_type' => 'token',
     'client_id' => 'jsclient',
-    'redirect_uri' => '/oauthcallback',
+    'redirect_uri' => '/login',
     'state' => '123'
 ]);
 
 $this->ng()->constant('fbAuthUrl', $url);
-
 ?>
 
-<oauth
-    site="<?=$this->escapeHtmlAttr($this->serverUrl())?>"
-    client-id="jsclient"
-    redirect-uri="<?=$this->escapeHtmlAttr($this->serverUrl('/login'))?>"
-    response-type="token"
-    scope=""
-    state="123"
-    template="/template/login-button.html">
-    
-</oauth>
+<div ng-controller="FbLoginController">
+    <button ng-show="showLogin" ng-click="login()" class="btn btn-primary">Connect with Facebook</button>
+</div>

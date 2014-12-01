@@ -47,7 +47,6 @@ require.config({
         'angular-messages': 'vendor/angular-messages/angular-messages',
         fabric: 'vendor/fabric/dist/fabric.require',
         textAngularSetup: 'vendor/textAngular/src/textAngularSetup',
-        'oauth-ng': 'vendor/oauth-ng/dist/oauth-ng'
     },
     shim: {
         jquery: {
@@ -284,12 +283,6 @@ require.config({
             deps: [
                 'medium-editor',
                 'angular'
-            ]
-        },
-        'oauth-ng': {
-            deps: [
-                'angular',
-                'ngstorage'
             ]
         }
     },
