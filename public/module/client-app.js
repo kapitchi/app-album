@@ -83,6 +83,10 @@ define([
             }
         }));
       
+      $scope.showItemCaption = function(item) {
+        return item.name || item.description;
+      }
+      
     });
   
   module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient, page) {

@@ -34,12 +34,20 @@ define([
 
   });
 
-  module.factory('globalFileUploader', function(FileUploader) {
+  module.factory('globalFileUploader', function(FileUploader, authenticationService) {
     var uploader = new FileUploader({
       url: '/file',
       autoUpload: true,
       removeAfterUpload: true
     });
+    
+    //Authorization
+    uploader.onAfterAddingFile = function(item) {
+      if(authenticationService.token) {
+        item.headers.Authorization = authenticationService.token.token_type + ' ' + authenticationService.token.access_token;
+      }
+    }
+    
     return uploader;
   });
 
@@ -306,7 +314,8 @@ define([
       }],
       onSuccess: function(response, status, headers) {
         this.albumItem = {
-          name: this._file.name,
+          //name: this._file.name,
+          name: '',
           type: 'FILE',
           file_id: response.id,
           thumbnail_file_id: response.id,
