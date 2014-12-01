@@ -45,6 +45,11 @@ return [
                 'filter' => 'fit',
                 'width' => 350,
                 'height' => 350
+            ],
+            'image_browser' => [
+                'filter' => 'fit',
+                'width' => 150,
+                'height' => 150
             ]
         ]
     ),

@@ -17,7 +17,9 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return new ViewModel();
+        return new ViewModel([
+            'admin' => $this->params()->fromQuery('admin')
+        ]);
     }
     
     public function loginAction()

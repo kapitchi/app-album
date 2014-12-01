@@ -7,21 +7,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">D</a>
+            <a class="navbar-brand" ui-sref="app.home">D</a>
         </div>
         <div class="collapse navbar-collapse" collapse="app.nav.collapsed">
             <ul class="nav navbar-nav" ng-click="app.nav.collapsed = false">
-                <li>
-                    <a ui-sref="app.home">Home</a>
+                <li ng-repeat="navItem in app.nav.main">
+                    <a ng-href="{{navItem.href}}">{{navItem.label}}</a>
                 </li>
                 <li>
                     <a ng-show="$auth.identity" ng-click="toggleEdit()" href>Edit</a>
                 </li>
                 <li>
                     <a ng-show="$auth.identity" ng-click="logout()" href>Logout</a>
-                </li>
-                <li>
-                    <a ng-hide="$auth.identity" ng-click="login()" href>Login</a>
                 </li>
             </ul>
         </div>
@@ -31,8 +28,7 @@
     <footer>
         <div class="row">
             <div class="col-lg-12">
-                <div ui-view="contact"></div>
-                <p>Copyright © Your Website 2014</p>
+                <p>Copyright © Doubravka Marcinkova 2014</p>
             </div>
         </div>
         <!-- /.row -->
@@ -49,38 +45,11 @@
             </div>
         </div>
     </div>
-    <!-- table class="table">
-        <tbody>
-        <tr ng-repeat="item in uploader.queue">
-            <td>
-                <strong>{{ item._file.name }}</strong>
-                <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 50 }"></div>
-            </td>
-            <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
-            <td ng-show="uploader.isHTML5">
-                <div class="progress" style="margin-bottom: 0;">
-                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
-                </div>
-            </td>
-            <td class="text-center">
-                <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
-                <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
-                <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
-            </td>
-        </tr>
-        </tbody>
-    </table -->
-
 </div>
 <!-- file uploader -->
         
 <div class="">
-    
-    <!-- img crop-selection ng-src="http://localhost:9002/file_thumbnail/fit-800-600/1.jpg" on-save="onSave($imageBlob)"-->
-    
+
     <div ui-view="content" class="content-view"></div>
-    
-
     <!-- Footer -->
-
 </div>

@@ -1,26 +1,49 @@
-define(['angular', 'module/SharedRegistry'], function(angular) {
+define(['angular', 'module/shared-registry', 'ngstorage'], function(angular) {
 
-    var module = angular.module('KapSecurity', ['SharedRegistry']);
+    var module = angular.module('kap-security', ['shared-registry', 'ngStorage']);
 
-    module.service('authenticationService', function(apiClient, $window) {
+    module.config(function($httpProvider) {
+      
+      $httpProvider.interceptors.push(function($sessionStorage) {
+        return {
+          'request': function(config) {
+            var token = $sessionStorage.identityToken;
+            if(!token) {
+              return config;
+            }
+            
+            config.headers.Authorization = token.token_type + ' ' + token.access_token;
+            
+            return config;
+          }
+        };
+      });
+      
+    });
 
-        this.identity = null;
-        this.userProfile = null;
+    module.service('authenticationService', function(apiClient, $window, $sessionStorage, $http) {
 
-        //this.identity = $window.sessionStorage.getItem('identityId');
-        this.identity = 1;
+        this.identity = $sessionStorage.identity;
+        this.token = $sessionStorage.identityToken;
+        //this.identity = 1;
+      
+        this.setToken = function(token) {
+          this.token = token;
 
-        this.handleResult = function(result) {
-            this.identity = result.identityId;
-            this.userProfile = result.userProfile;
+          $sessionStorage.identityToken = token;
 
-            $window.sessionStorage.setItem('identityId', this.identity);
+          return $http.get('/me').then(function(resp) {
+            this.identity = resp.data;
+            $sessionStorage.identity = this.identity;
+          });
         }
-        
+      
         this.logout = function() {
             this.identity = null;
-            this.userProfile = null;
-            $window.sessionStorage.removeItem('identityId');
+            this.token = null;
+          
+            delete $sessionStorage.identity;
+            delete $sessionStorage.identityToken;
         }
     })
 
@@ -44,13 +67,13 @@ define(['angular', 'module/SharedRegistry'], function(angular) {
         $scope.authenticationService = authenticationService;
 
         //init
-        $timeout(function() {
-            $http.get('/authentication_service').success(function(data) {
-                $scope.authenticationOptions = data._embedded.authentication_service.filter(function(item) {
-                    return item.enabled;
-                });
-            });
-        });
+//        $timeout(function() {
+//            $http.get('/authentication_service').success(function(data) {
+//                $scope.authenticationOptions = data._embedded.authentication_service.filter(function(item) {
+//                    return item.enabled;
+//                });
+//            });
+//        });
 
         sharedRegistry.register('LoginController.status', $scope, 'status');
 
@@ -72,10 +95,13 @@ define(['angular', 'module/SharedRegistry'], function(angular) {
         }, true);
 
         //scope functions
-        $scope.openDialog = function(option) {
+        $scope.openDialog = function() {
             $scope.status.state = 'IN_PROGRESS';
+          
+            $window.location = '/login';
+          return;
 
-            dialog = $window.open(option._links.redirect_url.href, "Login dialog", "width=1024,height=768,dialog=1,location=1,status=1,minimizable=0,close=0,dependent");
+            dialog = $window.open('/login', "Login dialog", "width=1024,height=768,dialog=1,location=1,status=1,minimizable=0,close=0,dependent");
         }
 
         $scope.closeDialog = function() {

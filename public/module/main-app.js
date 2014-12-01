@@ -1,13 +1,15 @@
 define([
+  'module',
   'angular',
   'moment',
   'ngstorage',
   'angular-sanitize',
   'angular-ui-router',
   'angular-bootstrap',
+  'angular-messages',
   'angular-moment',
   'module/kap-hal'
-], function(angular, moment) {
+], function(requireModule, angular, moment) {
 
   //moment stuff
   //http://momentjs.com/docs/#/customization/calendar/
@@ -28,9 +30,12 @@ define([
     'ngSanitize',
     'ui.bootstrap',
     'ui.router',
+    'ngMessages',
     'angularMoment',
     'kap-hal'
   ]);
+  
+  module.constant('serverConfig', requireModule.config());
 
   module.config(function(datepickerConfig, datepickerPopupConfig, $provide) {
 
@@ -56,53 +61,93 @@ define([
 
   });
 
-  module.config(function($stateProvider, $urlRouterProvider, $provide, datepickerConfig, datepickerPopupConfig) {
+  module.config(function($stateProvider, $urlRouterProvider, $provide, $locationProvider, datepickerConfig, datepickerPopupConfig, serverConfig) {
 
     $stateProvider
       .state('app', {
         abstract: true,
-        templateUrl: 'template/app.html',
+        templateUrl: '/template/app.html',
         controller: 'AppController'
       })
       .state('app.home', {
-        url: "/home",
+        url: "/",
         views: {
           'content': {
-            controller: "AlbumCollectionController",
-            templateUrl: "template/album-collection.html"
+            controller: "AlbumController",
+            templateUrl: "/template/album.html"
+            
           },
           'contact': {
             controller: 'ContactController',
-            templateUrl: 'template/contact.html'
+            templateUrl: '/template/contact.html'
           }
         },
-        albumId: 1
+        albumId: serverConfig.homeAlbumId
       })
-      .state('app.home.album', {
+      .state('app.album', {
         url: "/album/:albumId",
         views: {
           'content@app': {
             controller: "AlbumController",
-            templateUrl: "template/album.html"
+            templateUrl: "/template/album.html"
           }
         }
       })
-      .state('app.home.tag', {
+      .state('app.tag', {
         url: "/tag/:tagId",
         views: {
           'content@app': {
             controller: "TagFilterController",
-            templateUrl: "template/tag-filter.html"
+            templateUrl: "/template/tag-filter.html"
           }
         }
       })
-      .state('app.login', {
-        url: "/login",
-        templateUrl: "template/KapLogin/login.html",
-        controller: 'loginController'
+      .state('app.contact', {
+        url: "/contact",
+        views: {
+          'content@app': {
+            controller: "ContactController",
+            templateUrl: "/template/contact.html"
+          }
+        }
+      })
+      .state('app.page', {
+        url: "/p/:key",
+        views: {
+          'content@app': {
+            controller: "PageController",
+            templateUrl: "/template/page.html"
+          }
+        },
+        resolve: {
+          pageEntity: function($stateParams, apiClient) {
+            //try {
+              return apiClient.fetchAll('page', {
+                query: {
+                  key: $stateParams.key
+                }
+              }).then(function(data) {
+                if(data._embedded.page[0]) {
+                  return data._embedded.page[0];
+                }
+
+                return {
+                  key: $stateParams.key
+                }
+              }, function() {
+                
+              });
+            //} catch(e) {
+              //console.log(e); //XXX
+            //}
+          }
+        }
       })
 
-    $urlRouterProvider.otherwise("/home");
+    $locationProvider.html5Mode(true);
+
+    $urlRouterProvider.otherwise("/");
+    
   });
 
   module.factory('apiClient', function(HalClient) {
@@ -113,34 +158,64 @@ define([
     return client;
   })
 
-  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage) {
+  /**
+   * todo we should move stuff into state resolve - e.g. app scope param
+   */
+  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage, $state, $window, $location, serverConfig, page) {
 
     $sessionStorage.$default({
       edit: false
     });
+    
+    var mainNav = serverConfig.mainNavigation;
+    
+    for(var i in mainNav) {
+      var nav = mainNav[i];
+      
+      nav.href = $state.href(nav.state.name, nav.state.params);
+    }
+    
+    $rootScope.page = page.model;
 
     $rootScope.app = {
       edit: $sessionStorage.edit,
       nav: {
-        collapsed: true
-      },
-      editor: {
-        //https://github.com/fraywing/textAngular/wiki/Customising-The-Toolbar
-        defaultToolbar: [['bold','italics', 'underline'], ['ul', 'ol'], ['html']]
+        collapsed: true,
+        main: mainNav
       }
     };
-
+    
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      console.log(e); //XXX
       $rootScope.app.nav.collapsed = false;  
     });
     
     $rootScope.$auth = authenticationService;
 
+    $rootScope.login = function() {
+      $window.location = '/login';
+    }
+
+    $rootScope.logout = function() {
+      $rootScope.app.edit = false;
+      authenticationService.logout();
+    }
+
+    //admin query param (/?admin=1) is used to load admin-app module instead of client-app only 
+    if(!$location.search().admin) {
+      //logged in? - we need admin module too
+      if(authenticationService.identity) {
+        $window.location = $window.location.href + '?admin=1';
+        return;
+      }
+      
+      //edit enabled and not authenticated? - disable edit
+      $rootScope.app.edit = false;
+    }
+
     $rootScope.fullScreenGallery = function(albumItems, current) {
 
       var modalInstance = $modal.open({
-        templateUrl: 'template/fullscreen-gallery.html',
+        templateUrl: '/template/fullscreen-gallery.html',
         controller: function($scope, $modalInstance, apiClient, $sce, $timeout) {
           var currentIndex = 0;
           var controlPanelTimer = null;
@@ -241,11 +316,6 @@ define([
     
   });
 
-  module.controller('XXXController', function($rootScope, apiClient, authenticationService, $sessionStorage) {
-    console.log($sessionStorage, 'XXX'); //XXX
-
-  });
-
   module.directive('stopEvent', function () {
     return {
       restrict: 'A',
@@ -273,6 +343,16 @@ define([
       link: link
     }
   })
+  
+  module.service('page', function($rootScope) {
+    this.model = {
+      title: ''
+    };
+    
+    this.setTitle = function(title) {
+      this.model.title = title;
+    };
+  });
 
   module.directive('extendController', function($controller) {
     return {

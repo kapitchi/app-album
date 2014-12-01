@@ -2,7 +2,7 @@
     
 <div class="row button-set">
     <div class="pull-right">
-        <button ng-show="app.edit" ng-click="albumUpdate(album)" class="btn btn-default">Edit album</button>
+        <button ng-show="app.edit" ng-click="albumItemUpdate(album)" class="btn btn-default">Edit album</button>
         <button ng-show="app.edit" ng-click="createItem()" class="btn btn-default">Create item</button>
         <button ng-show="app.edit" ng-click="bulkUpload()" class="btn btn-default">Bulk upload</button>
     </div>
@@ -20,18 +20,23 @@
 
     <div ng-repeat="itemRel in albumItemRelCollection.items" ui-tree-node collapsed="false" ng-class="{'album-primary-item': album.primary_item_id == itemRel.album_item_id}" class="col-lg-3 col-md-4 col-xs-6 thumb">
         <div class="thumbnail">
-            <a href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)" ng-style="{'background-image': 'url(' + itemRel._embedded.album_item._embedded.thumbnail_file._links.thumbnail_album.href + ')'}" class="image-holder"></a> 
+            <a ng-show="itemRel._embedded.album_item.type !== 'ALBUM'" href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)" ng-style="{'background-image': 'url(' + itemRel._embedded.album_item._embedded.thumbnail_file._links.thumbnail_album.href + ')'}" class="image-holder"></a>
+            <a ng-show="itemRel._embedded.album_item.type == 'ALBUM'" ui-sref="app.album({albumId: itemRel.item_id})" href ng-style="{'background-image': 'url(' + itemRel._embedded.album_item._embedded.showcase_items[0]._embedded.thumbnail_file._links.thumbnail_album.href + ')'}" class="image-holder"></a>
             <div class="caption">
-                <h3><a href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)">{{itemRel._embedded.album_item.name}}</a></h3>
+                <h3>
+                    <a ng-show="itemRel._embedded.album_item.type !== 'ALBUM'" href ng-click="fullScreenGalleryRel(albumItemRelCollection, itemRel)">{{itemRel._embedded.album_item.name}}</a>
+                    <a ng-show="itemRel._embedded.album_item.type == 'ALBUM'" ui-sref="app.album({albumId: itemRel.item_id})" href>{{itemRel._embedded.album_item.name}}</a>
+                </h3>
                 <ul class="tag-list">
                     <li ng-repeat="tag in itemRel._embedded.album_item._embedded.tag_collection">
-                        <a href ui-sref="app.home.tag({tagId: tag.id})">{{tag.name}}</a>
+                        <a href ui-sref="app.tag({tagId: tag.id})">{{tag.name}}</a>
                     </li>
                 </ul>
                 <div ng-show="app.edit">
                     <a ui-tree-handle class="btn btn-default" role="button"><i class="glyphicon glyphicon-sort" ></i></a>
                     <a ng-click="albumItemUpdate(itemRel._embedded.album_item)" class="btn btn-default" role="button">Edit</a>
-                    <a ng-click="setPrimaryItem(album, itemRel)" class="btn btn-default" role="button">Set as primary</a>
+                    <a ng-show="itemRel._embedded.album_item.type !== 'ALBUM' && !itemRel.showcase" ng-click="setPrimaryItem(album, itemRel)" class="btn btn-default" role="button">Showcase this</a>
+                    <a ng-show="itemRel._embedded.album_item.type !== 'ALBUM' && itemRel.showcase" ng-click="setPrimaryItem(album, itemRel)" class="btn btn-default" role="button">Don't showcase</a>
                     <a ng-click="createItemAfter(itemRel)" class="btn btn-default" role="button">Create after</a>
                     <a ng-click="albumItemRelRemove(albumItemRelCollection, itemRel)" class="btn btn-default" role="button"><i class="glyphicon glyphicon-trash" ></i></a>
                 </div>

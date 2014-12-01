@@ -1,4 +1,4 @@
-<form role="form" class="container-fluid">
+<form role="form">
 
     <div class="form-group">
         <label for="title">Title</label>
@@ -12,18 +12,24 @@
     </div>
     <div class="form-group">
         <label for="description">Description</label>
-        <div text-angular ta-toolbar="app.editor.defaultToolbar" ng-model="item.description" id="description" placeholder="Description"></div>
+        <div text-angular ta-toolbar="editorToolbar" ng-model="item.description" id="description" placeholder="Description"></div>
     </div>
-    <div id="url" class="btn-group" data-toggle="buttons">
+    <div ng-hide="item.type == 'ALBUM' && item.id" class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary" ng-class="{active: item.type === 'ALBUM'}">
+            <input ng-model="item.type" type="radio" value="ALBUM"> Album
+        </label>
+        <label class="btn btn-primary" ng-class="{active: item.type === 'FILE'}">
+            <input ng-model="item.type" type="radio" value="FILE"> File
+        </label>
         <label class="btn btn-primary" ng-class="{active: item.type === 'EMBED_URL'}">
             <input ng-model="item.type" type="radio" value="EMBED_URL"> Embed URL
         </label>
         <label class="btn btn-primary" ng-class="{active: item.type === 'YOUTUBE_VIDEO_ID'}">
             <input ng-model="item.type" type="radio" value="YOUTUBE_VIDEO_ID"> Youtube
         </label>
-        <label class="btn btn-primary" ng-class="{active: item.type === 'FILE'}">
-            <input ng-model="item.type" type="radio" value="FILE"> File
-        </label>
+    </div>
+    <div ng-show="item.type == 'ALBUM'">
+        <!-- nothing special for albums now -->
     </div>
     <div ng-show="item.type == 'YOUTUBE_VIDEO_ID'">
         <div class="form-group">
@@ -49,7 +55,7 @@
         </div>
     </div>
     
-    <div fabric-editor class="form-group">
+    <div ng-if="item.type !== 'ALBUM'" fabric-editor class="form-group">
         <label>Thumbnail</label>
         <div class="row">
             <button ng-click="saveThumbnail(previewImageData)" class="btn btn-success">Save</button>

@@ -7,7 +7,7 @@
  */ 
 
 return [
-    'authentication_options' => [
+    'authentication' => [
         'allow_registration' => true,
         'enable_on_registration' => true
     ],

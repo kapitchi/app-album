@@ -3,37 +3,35 @@ define([
   'moment',
   'module/main-app',
   'module/client-app',
+  'module/admin-editor',
   'module/ng-fabric',
   'angular-ui-tree',
   'ng-tags-input',
-  'textAngular',
   'ngImgCrop',
+  'angular-medium-editor',
   //'angular-xeditable',
   //'module/KapLogin',
   'module/kap-security',
-  'module/KapFileManager',
+  'module/kap-file-manager'
 ], function(angular, moment) {
 
   var module = angular.module('admin-app', [
     'main-app',
     'client-app',
+    'admin-editor',
     'ng-fabric',
     'ui.tree',
     'ngTagsInput',
-    'textAngular',
     'ngImgCrop',
+    'angular-medium-editor',
     //'xeditable',
     //'KapLogin',
-    'KapSecurity',
-    'KapFileManager',
+    'kap-security',
+    'kap-file-manager'
   ]);
 
   module.config(function($stateProvider, $urlRouterProvider, $provide) {
 
-  });
-
-  module.run(function($rootScope) {
-    //editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
   });
 
   module.factory('globalFileUploader', function(FileUploader) {
@@ -52,15 +50,6 @@ define([
 
   module.controller('AdminAppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, $sessionStorage) {
 
-    $rootScope.logout = function() {
-      authenticationService.logout();
-      $window.location = '/logout';
-    }
-
-    $rootScope.login = function() {
-      $window.location = '/login';
-    }
-
     $rootScope.toggleEdit = function() {
 
       $rootScope.app.edit = $sessionStorage.edit = !$rootScope.app.edit;
@@ -68,7 +57,7 @@ define([
 
     $rootScope.albumItemUpdate = function(item) {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-item-edit-modal.html',
+        templateUrl: '/template/album-item-edit-modal.html',
         controller: 'AlbumItemModalController',
         resolve: {
           albumItem: function() {
@@ -83,7 +72,7 @@ define([
 
     $rootScope.albumItemCreate = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-item-edit-modal.html',
+        templateUrl: '/template/album-item-edit-modal.html',
         controller: 'AlbumItemModalController',
         resolve: {
           albumItem: function() {
@@ -101,44 +90,6 @@ define([
 
     $rootScope.albumItemRelRemove = function(collection, item) {
       return collection.remove(item, true);
-    }
-
-    $rootScope.albumCreate = function() {
-      var modalInstance = $modal.open({
-        templateUrl: 'template/album-edit.html',
-        controller: function($scope, $modalInstance, apiClient) {
-          //$scope.item = item;
-          $scope.item = {}
-
-          $scope.save = function(item) {
-            item.create_time = moment().format('YYYY-MM-DDTHH:mm:ss');
-            apiClient.create('album', item).then(function(data) {
-              $modalInstance.close(data);
-            });
-          }
-        },
-        size: 'lg'
-      });
-
-      return modalInstance.result;
-    }
-
-    $rootScope.albumUpdate = function(album) {
-      var modalInstance = $modal.open({
-        templateUrl: 'template/album-edit.html',
-        controller: function($scope, $modalInstance, apiClient) {
-          $scope.item = album;
-          $scope.save = function(item) {
-            apiClient.update('album', item.id, item).then(function(data) {
-              angular.extend(item, data);
-              $modalInstance.close(data);
-            });
-          }
-        },
-        size: 'lg'
-      });
-
-      return modalInstance.result;
     }
 
   });
@@ -165,7 +116,7 @@ define([
 
   module.directive('albumItemForm', function() {
     return {
-      templateUrl: 'template/album-item-form.html',
+      templateUrl: '/template/album-item-form.html',
       scope: {
         item: '='
       },
@@ -173,9 +124,9 @@ define([
     }
   });
 
-  module.controller('AlbumItemFormController', function($scope, apiClient, $http, $q, globalFileUploader, fabricUtils) {
-    //$scope.item = albumItem;
-
+  module.controller('AlbumItemFormController', function($scope, $rootScope, apiClient, $http, $q, globalFileUploader, fabricUtils, editorConfig) {
+    $scope.editorToolbar = editorConfig.descriptionToolbar;
+    
     $scope.thumbnails = [];
     $scope.selectedThumbnail = null;
     $scope.preview = {
@@ -298,18 +249,19 @@ define([
     };
 
     $scope.setPrimaryItem = function(album, relItem) {
-      apiClient.partialUpdate('album', relItem.album_id, {
-        primary_item_id: relItem.album_item_id
+      
+      apiClient.partialUpdate('album_item_rel', relItem.id, {
+        showcase: !relItem.showcase
       }).then(function(data) {
-        angular.copy(data, album);
+        angular.copy(data, relItem);
       });
     }
 
     $scope.createItemAfter = function(relItem) {
       $scope.albumItemCreate().then(function(data) {
         $scope.albumItemRelCollection.createAfter(relItem, {
-          'album_id': albumId,
-          'album_item_id': data.id
+          'parent_id': albumId,
+          'item_id': data.id
         }, true);
       });
     }
@@ -317,15 +269,15 @@ define([
     $scope.createItem = function() {
       $scope.albumItemCreate().then(function(data) {
         $scope.albumItemRelCollection.createFirst({
-          'album_id': albumId,
-          'album_item_id': data.id
+          'parent_id': albumId,
+          'item_id': data.id
         }, true);
       });
     }
 
     $scope.bulkUpload = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'template/album-bulk-upload-modal.html',
+        templateUrl: '/template/album-bulk-upload-modal.html',
         controller: 'AlbumBulkUploadModalController',
         resolve: {
           album: function() {
@@ -394,8 +346,8 @@ define([
       apiClient.create('album_item', item).then(function(data) {
         angular.extend(item, data);
         apiClient.create('album_item_rel', {
-          album_id: album.id,
-          album_item_id: item.id
+          parent_id: album.id,
+          item_id: item.id
         });
       });
     }
@@ -415,10 +367,43 @@ define([
 
     $scope.createNewAlbum = function(relItem) {
       $scope.albumCreate().then(function(data) {
-        $state.go('app.home.album', {albumId: data.id});
+        $state.go('app.album', {albumId: data.id});
       });
     }
 
+  });
+  
+  module.controller('AdminPageController', function($scope, $rootScope, apiClient, editorConfig) {
+
+    var disabledOptions = {
+      disableEditing: true,
+      disableToolbar: true
+    };
+    
+    var enabledOptions = {
+      disableToolbar: true
+    }
+    
+    $scope.editorToolbar = editorConfig.pageToolbar;
+    
+    $rootScope.$watch('app.edit', function(val) {
+      $scope.mediumEditorOptions = val ? enabledOptions : disabledOptions; 
+    });
+
+    $scope.save = function(page) {
+      var promise;
+      if(page.id) {
+        promise = apiClient.update('page', page.id, page);
+      }
+      else {
+        promise = apiClient.create('page', page);
+      }
+      
+      promise.then(function(data) {
+        angular.extend(page, data);
+      });
+    }
+    
   });
 
   return module;

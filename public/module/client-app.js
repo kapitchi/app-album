@@ -15,7 +15,7 @@ define([
         'infinite-scroll',
         'ng-preload-src',
         'angular-loading-bar',
-        'KapSecurity'
+        'kap-security'
     ]);
     
     module.run(function($rootScope) {
@@ -26,7 +26,7 @@ define([
         $scope.test = 'DDDD';
     });
 
-    module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce) {
+    module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce, page) {
         
         function loader() {
             var self = this;
@@ -67,14 +67,15 @@ define([
         
         $scope.album = null;
         
-        $scope.loader.load(apiClient.fetch('album', albumId).then(function(data) {
-            $scope.album = data;
+        $scope.loader.load(apiClient.fetch('album_item', albumId).then(function(data) {
+          $scope.album = data;
+          page.setTitle($scope.album.name);
         }));
         
         $scope.albumItemRelCollection = new HalCollection('album_item_rel');
         $scope.loader.load($scope.albumItemRelCollection.fetch({
             query: {
-                album_id: albumId
+                parent_id: albumId
             },
             page_size: 9999,
             order_by: {
@@ -84,24 +85,34 @@ define([
       
     });
   
+  module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient, page) {
+      $scope.tag = null;
+      
+      apiClient.fetch('tag', $stateParams.tagId).then(function(tag) {
+        $scope.tag = tag;
+        page.setTitle("Search by tag: " + $scope.tag);
+      });
+      
+  });
 
-  module.controller('AlbumCollectionController', function($scope, $state, $modal, $stateParams, apiClient, HalCollection) {
+  module.controller('PageController', function($scope, $state, $modal, $stateParams, pageEntity, page) {
+    $scope.mediumEditorOptions = {
+      disableToolbar: true,
+      disableEditing: true
+    };
 
-        $scope.albumCollection = HalCollection.createAndFetch('album', {
-            order_by: {
-                album_time: 'DESC'
-            }
-        });
-    });
+    $scope.page = pageEntity;
+    page.setTitle(pageEntity.title);
+  });
+
+  module.controller('ContactController', function($scope) {
+    $scope.formData = {};
+    
+    $scope.submitForm = function(data) {
+      console.log(data); //XXX
+    }
+  });
+
+  return module;
   
-    module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient) {
-        $scope.tag = null;
-        
-        apiClient.fetch('tag', $stateParams.tagId).then(function(tag) {
-            $scope.tag = tag;
-        });
-        
-    });
-
-    return module;
 });
