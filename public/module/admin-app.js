@@ -50,11 +50,6 @@ define([
 
   module.controller('AdminAppController', function($rootScope, $scope, $modal, $state, apiClient, authenticationService, $window, $sessionStorage) {
 
-    $rootScope.logout = function() {
-      $rootScope.app.edit = false;
-      authenticationService.logout();
-    }
-
     $rootScope.toggleEdit = function() {
 
       $rootScope.app.edit = $sessionStorage.edit = !$rootScope.app.edit;
@@ -95,44 +90,6 @@ define([
 
     $rootScope.albumItemRelRemove = function(collection, item) {
       return collection.remove(item, true);
-    }
-
-    $rootScope.albumCreate = function() {
-      var modalInstance = $modal.open({
-        templateUrl: '/template/album-edit.html',
-        controller: function($scope, $modalInstance, apiClient) {
-          //$scope.item = item;
-          $scope.item = {}
-
-          $scope.save = function(item) {
-            item.create_time = moment().format('YYYY-MM-DDTHH:mm:ss');
-            apiClient.create('album', item).then(function(data) {
-              $modalInstance.close(data);
-            });
-          }
-        },
-        size: 'lg'
-      });
-
-      return modalInstance.result;
-    }
-
-    $rootScope.albumUpdate = function(album) {
-      var modalInstance = $modal.open({
-        templateUrl: '/template/album-edit.html',
-        controller: function($scope, $modalInstance, apiClient) {
-          $scope.item = album;
-          $scope.save = function(item) {
-            apiClient.update('album', item.id, item).then(function(data) {
-              angular.extend(item, data);
-              $modalInstance.close(data);
-            });
-          }
-        },
-        size: 'lg'
-      });
-
-      return modalInstance.result;
     }
 
   });

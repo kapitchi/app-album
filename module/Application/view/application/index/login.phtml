@@ -11,6 +11,6 @@ $url = $this->authenticationAdapterManager()->getCallbackUrl('facebook_javascrip
 $this->ng()->constant('fbAuthUrl', $url);
 ?>
 
-<div ng-controller="FbLoginController">
+<div ng-controller="FbLoginController" class="ng-cloak">
     <button ng-show="showLogin" ng-click="login()" class="btn btn-primary">Connect with Facebook</button>
 </div>

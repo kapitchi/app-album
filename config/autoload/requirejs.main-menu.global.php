@@ -15,7 +15,7 @@ return [
                     [
                         'label' => 'O mně',
                         'state' => [
-                            'name' => 'app.home.page',
+                            'name' => 'app.page',
                             'params' => [
                                 'key' => 'about-me'
                             ]
@@ -24,7 +24,7 @@ return [
                     [
                         'label' => 'Aktuality',
                         'state' => [
-                            'name' => 'app.home.page',
+                            'name' => 'app.page',
                             'params' => [
                                 'key' => 'news'
                             ]
@@ -33,7 +33,7 @@ return [
                     [
                         'label' => 'Galerie',
                         'state' => [
-                            'name' => 'app.home.album',
+                            'name' => 'app.album',
                             'params' => [
                                 'albumId' => 1
                             ]
@@ -42,7 +42,7 @@ return [
                     [
                         'label' => 'Spolupráce',
                         'state' => [
-                            'name' => 'app.home.album',
+                            'name' => 'app.album',
                             'params' => [
                                 'albumId' => 2
                             ]
@@ -51,7 +51,7 @@ return [
                     [
                         'label' => 'Reference',
                         'state' => [
-                            'name' => 'app.home.page',
+                            'name' => 'app.page',
                             'params' => [
                                 'key' => 'references'
                             ]
@@ -60,7 +60,7 @@ return [
                     [
                         'label' => 'Přehled služeb',
                         'state' => [
-                            'name' => 'app.home.page',
+                            'name' => 'app.page',
                             'params' => [
                                 'key' => 'services'
                             ]
@@ -69,7 +69,7 @@ return [
                     [
                         'label' => 'Kontakt',
                         'state' => [
-                            'name' => 'app.home.contact',
+                            'name' => 'app.contact',
                         ]
                     ]
                 ]

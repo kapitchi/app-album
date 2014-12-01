@@ -10,13 +10,13 @@
                 <ul class="tag-list summary">
                     <li class="title">Tags:</li>
                     <li ng-repeat="tag in album_item._embedded.tag_collection">
-                        <a href ui-sref="app.home.tag({tagId: tag.id})">{{tag.name}}</a>
+                        <a href ui-sref="app.tag({tagId: tag.id})">{{tag.name}}</a>
                     </li>
                 </ul>
                 <ul class="tag-list">
                     <li class="title">Albums:</li>
                     <li ng-repeat="album in album_item._embedded.album_collection">
-                        <a href ui-sref="app.home.album({albumId: album.id})">{{album.name}}</a>
+                        <a href ui-sref="app.album({albumId: album.id})">{{album.name}}</a>
                     </li>
                 </ul>
             </div>

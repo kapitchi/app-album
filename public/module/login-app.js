@@ -47,7 +47,7 @@ define([
       
       if(token && token.access_token) {
         authenticationService.setToken(token).then(function() {
-          $window.location = '/?admin=true'
+          $window.location = '/?admin=1'
         });
         return;
       }

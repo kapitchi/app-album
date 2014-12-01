@@ -84,7 +84,7 @@ define([
         },
         albumId: serverConfig.homeAlbumId
       })
-      .state('app.home.album', {
+      .state('app.album', {
         url: "/album/:albumId",
         views: {
           'content@app': {
@@ -93,7 +93,7 @@ define([
           }
         }
       })
-      .state('app.home.tag', {
+      .state('app.tag', {
         url: "/tag/:tagId",
         views: {
           'content@app': {
@@ -102,7 +102,7 @@ define([
           }
         }
       })
-      .state('app.home.contact', {
+      .state('app.contact', {
         url: "/contact",
         views: {
           'content@app': {
@@ -111,7 +111,7 @@ define([
           }
         }
       })
-      .state('app.home.page', {
+      .state('app.page', {
         url: "/p/:key",
         views: {
           'content@app': {
@@ -146,7 +146,7 @@ define([
 
     $locationProvider.html5Mode(true);
 
-    $urlRouterProvider.otherwise("/home");
+    $urlRouterProvider.otherwise("/");
     
   });
 
@@ -158,11 +158,10 @@ define([
     return client;
   })
 
-  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage, $state, $window, serverConfig) {
-
-    $rootScope.login = function() {
-      $window.location = '/login';
-    }
+  /**
+   * todo we should move stuff into state resolve - e.g. app scope param
+   */
+  module.controller('AppController', function($rootScope, apiClient, $modal, authenticationService, $sessionStorage, $state, $window, $location, serverConfig, page) {
 
     $sessionStorage.$default({
       edit: false
@@ -175,6 +174,8 @@ define([
       
       nav.href = $state.href(nav.state.name, nav.state.params);
     }
+    
+    $rootScope.page = page.model;
 
     $rootScope.app = {
       edit: $sessionStorage.edit,
@@ -189,6 +190,27 @@ define([
     });
     
     $rootScope.$auth = authenticationService;
+
+    $rootScope.login = function() {
+      $window.location = '/login';
+    }
+
+    $rootScope.logout = function() {
+      $rootScope.app.edit = false;
+      authenticationService.logout();
+    }
+
+    //admin query param (/?admin=1) is used to load admin-app module instead of client-app only 
+    if(!$location.search().admin) {
+      //logged in? - we need admin module too
+      if(authenticationService.identity) {
+        $window.location = $window.location.href + '?admin=1';
+        return;
+      }
+      
+      //edit enabled and not authenticated? - disable edit
+      $rootScope.app.edit = false;
+    }
 
     $rootScope.fullScreenGallery = function(albumItems, current) {
 
@@ -321,6 +343,16 @@ define([
       link: link
     }
   })
+  
+  module.service('page', function($rootScope) {
+    this.model = {
+      title: ''
+    };
+    
+    this.setTitle = function(title) {
+      this.model.title = title;
+    };
+  });
 
   module.directive('extendController', function($controller) {
     return {

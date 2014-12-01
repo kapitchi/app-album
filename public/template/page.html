@@ -6,12 +6,9 @@
         </div>
     </div>
     
-    <h1 ng-model="page.title" medium-editor bind-options="mediumEditorOptions" options='{"placeholder": "Page title"}'>{{page.title}}</h1>
+    <h1 ng-if="!app.edit" ng-bind-html="page.title"></h1>
+    <h1 ng-if="app.edit" ng-model="page.title" medium-editor bind-options="mediumEditorOptions" options='{"placeholder": "Page title"}'>{{page.title}}</h1>
     
-    <!-- div ng-if="app.edit" ta-bind ng-model="page.content"></div -->
-    <div ng-if="app.edit" ng-model="page.content" text-angular ta-toolbar="editorToolbar" placeholder="Page main content"></div>
     <div ng-if="!app.edit" ta-bind ng-model="page.content"></div>
-
-    <!-- h1 ng-model="page.title" medium-editor bind-options="mediumEditorOptions" options='{"placeholder": "Page title"}'>{{page.title}}</h1>
-    <!-- div ng-model="page.content" medium-editor bind-options="mediumEditorOptions" options='{"placeholder": "Here comes your page content"}'></div-->
+    <div ng-if="app.edit" ng-model="page.content" text-angular ta-toolbar="editorToolbar" placeholder="Page main content"></div>
 </div>

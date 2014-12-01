@@ -26,7 +26,7 @@ define([
         $scope.test = 'DDDD';
     });
 
-    module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce) {
+    module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce, page) {
         
         function loader() {
             var self = this;
@@ -68,7 +68,8 @@ define([
         $scope.album = null;
         
         $scope.loader.load(apiClient.fetch('album_item', albumId).then(function(data) {
-            $scope.album = data;
+          $scope.album = data;
+          page.setTitle($scope.album.name);
         }));
         
         $scope.albumItemRelCollection = new HalCollection('album_item_rel');
@@ -84,32 +85,24 @@ define([
       
     });
   
-
-  module.controller('AlbumCollectionController', function($scope, $state, $modal, $stateParams, apiClient, HalCollection) {
-
-    $scope.albumCollection = HalCollection.createAndFetch('album', {
-        order_by: {
-            album_time: 'DESC'
-        }
-    });
-  });
-  
-  module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient) {
+  module.controller('TagFilterController', function($scope, $state, $modal, $stateParams, apiClient, page) {
       $scope.tag = null;
       
       apiClient.fetch('tag', $stateParams.tagId).then(function(tag) {
-          $scope.tag = tag;
+        $scope.tag = tag;
+        page.setTitle("Search by tag: " + $scope.tag);
       });
       
   });
 
-  module.controller('PageController', function($scope, $state, $modal, $stateParams, pageEntity) {
+  module.controller('PageController', function($scope, $state, $modal, $stateParams, pageEntity, page) {
     $scope.mediumEditorOptions = {
       disableToolbar: true,
       disableEditing: true
     };
 
     $scope.page = pageEntity;
+    page.setTitle(pageEntity.title);
   });
 
   module.controller('ContactController', function($scope) {
