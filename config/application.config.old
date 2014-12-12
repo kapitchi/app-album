@@ -29,7 +29,8 @@ return array(
         'KapAlbum',
         'KapTaxonomy',
         'Dev',
-        'Application'
+        'Application',
+        'KapPage'
     ),
     'module_listener_options' => array(
         'module_paths' => array(

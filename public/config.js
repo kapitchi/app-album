@@ -47,8 +47,17 @@ require.config({
         'angular-messages': 'vendor/angular-messages/angular-messages',
         fabric: 'vendor/fabric/dist/fabric.require',
         textAngularSetup: 'vendor/textAngular/src/textAngularSetup',
+        'oauth-ng': 'vendor/oauth-ng/dist/oauth-ng',
+        'angular-google-maps': 'vendor/angular-google-maps/dist/angular-google-maps',
+        lodash: 'vendor/lodash/dist/lodash.compat'
     },
     shim: {
+        'angular-google-maps': {
+            deps: [
+                'angular',
+                'lodash'
+            ]
+        },
         jquery: {
             exports: 'jquery'
         },

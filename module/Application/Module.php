@@ -24,6 +24,7 @@ class Module
 
         //handle 404 by angularjs app (and its routing) if it's not angular app request i.e. with application/json accept header
         $eventManager->attach('dispatch.error', function($e) {
+            //return;
             
             if ($e->getError() !== Application::ERROR_ROUTER_NO_MATCH) {
                 return;

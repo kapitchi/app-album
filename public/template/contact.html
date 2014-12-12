@@ -1,46 +1,55 @@
-<form ng-submit="submitForm(formData)" name="form" role="form" class="form-horizontal" novalidate>
-    <div class="form-group">
-        <label>Tvoje meno</label>
-        <input ng-model="formData.name" class="form-control" placeholder="Tvoje meno">
+<div class="row">
+    <div class="col-md-12">
+        <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+            <ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id">
+                <ui-gmap-window options="windowOptions" show="true">
+                    <div>
+                        <b>Adresa</b><br>
+                        43 Melville Road<br>
+                        London<br>UK
+                        <br>
+                        <b>Telefon</b><br>
+                        +420 (0) 933 333 555
+                    </div>
+                </ui-gmap-window>
+            </ui-gmap-marker>
+        </ui-gmap-google-map>   
     </div>
-    <div class="form-group">
-        <label>Email address</label>
-        <input ng-model="formData.email" type="email" class="form-control" placeholder="Tvoja email adresa">
-    </div>
-    <div class="form-group">
-        <label>Kedy nas potrebujes?</label>
-        <input datepicker-popup is-open="datepickerOpen" ng-click="datepickerOpen = true" name="eventTime" ng-model="formData.eventTime" local-date-to-string ng-required="true" class="form-control">
-    </div>
-    <div class="form-group">
-        <label>Prides ku nam alebo potrebujes aby sme prisli za tebou?</label>
-        <div class="btn-group">
-            <label class="btn btn-primary" ng-model="formData.place" btn-radio="'studio'">Pridem do vasho studia</label>
-            <label class="btn btn-primary" ng-model="formData.place" btn-radio="'client'">Potrebujem vas na adrese</label>
-        </div>
-    </div>
+</div>
+<h2>Kontaktuj nas</h2>  
+<div class="row">
+    <div class="col-md-12">
+        <form ng-submit="submitForm(formData)" name="form" role="form" novalidate>
+            <div class="form-group">
+                <label>Jmeno</label>
+                <input ng-model="formData.name" name="name" required class="form-control">
+                <div ng-messages="form.name.$error" ng-show="form.name.$dirty">
+                    <div ng-message="required">Jako se jmenujes?</div>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{'has-error': !form.email.$valid}">
+                <label>Emailova adresa</label>
+                <input ng-model="formData.email" name="email" type="email" required class="form-control">
+                <div ng-messages="form.email.$error" ng-show="form.email.$dirty">
+                    <div ng-message="email">Je toto spravna email adresa?</div>
+                    <div ng-message="required">Jaky mas email?</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Datum</label>
+                <input datepicker-popup is-open="datepickerOpen" ng-click="datepickerOpen = true" name="eventTime" ng-model="formData.when" local-date-to-string class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Typ sluzby</label>
+                <input ng-model="formData.service" type="text" class="form-control">
+            </div>
 
-    <div ng-show="formData.place == 'client'" class="form-group">
-        <label>Tvoja adresa</label>
-        <input ng-model="formData.clientAddress" class="form-control">
-    </div>
+            <div class="form-group">
+                <label>Poznamka</label>
+                <textarea ng-model="formData.note" class="form-control" rows="2"></textarea>
+            </div>
 
-    <div class="form-group">
-        <label>S cim ti treba pomoct?</label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox1" value="option1"> Hairstyle
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox2" value="option2"> Make-up
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox3" value="option3"> Oblecenie
-        </label>
+            <button ng-click="submitForm(form)" ng-disabled="!form.$valid" type="submit" class="btn btn-primary">Poslat</button>
+        </form>
     </div>
-
-    <div class="form-group">
-        <label>Na aky typ akcie nas potrebujes?</label>
-        <input ng-model="formData.event" class="form-control">
-    </div>
-    
-    <button type="submit" class="btn btn-default">Poslat</button>
-</form>
+</div>

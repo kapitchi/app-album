@@ -552,6 +552,14 @@ footer {
   @include form-control-validation($state-danger-text, $state-danger-text, $state-danger-bg);
 }
 
+
+
+.angular-google-map-container { height: 400px; }
+.gm-style-iw {
+  color: black;
+  height: 120px;
+}
+
 //ANIMATIONS
 //http://www.divshot.com/blog/tips-and-tricks/angular-1-2-and-animate-css/
 //https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-animate-ui-view-with-ng-animate

@@ -6,6 +6,7 @@ define([
     'ngInfiniteScroll',
     'ng-preload-src',
     'angular-loading-bar',
+    'angular-google-maps',
     'module/kap-security'
 ], function(angular, moment) {
 
@@ -15,15 +16,19 @@ define([
         'infinite-scroll',
         'ng-preload-src',
         'angular-loading-bar',
-        'kap-security'
+        'kap-security',
+        'uiGmapgoogle-maps'
     ]);
+  
+    module.config(function(uiGmapGoogleMapApiProvider) {
+      uiGmapGoogleMapApiProvider.configure({
+        //v: '3.17',
+        //libraries: 'weather,geometry,visualization'
+      });
+    });
     
     module.run(function($rootScope) {
         //editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-    });
-
-    module.controller('ContactController', function($scope) {
-        $scope.test = 'DDDD';
     });
 
     module.controller('AlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce, page) {
@@ -109,11 +114,44 @@ define([
     page.setTitle(pageEntity.title);
   });
 
-  module.controller('ContactController', function($scope) {
+  module.controller('ContactController', function($scope, $http) {
     $scope.formData = {};
-    
-    $scope.submitForm = function(data) {
-      console.log(data); //XXX
+    $scope.status = '';
+    $scope.sending = false;
+
+    var location = {
+      latitude: 48.2089941,
+      longitude: 17.2077859
+    };
+
+    $scope.map = { center: location, zoom: 8 };
+
+    $scope.windowOptions = {
+    };
+
+    $scope.marker = {
+      id: 0,
+      //icon: '/images/map-icon.png',
+      coords: location,
+      options: {
+        draggable: false
+      }
+    };
+
+    $scope.submitForm = function(form) {
+
+      if(form.$invalid || $scope.status) {
+        return;
+      }
+      
+      $scope.status = 'SENDING';
+      $http.post('/email', $scope.formData).then(function(res) {
+        $scope.status = 'SENT';
+        $scope.sending = false;
+      }).catch(function(res) {
+        $scope.status = 'ERROR';
+        $scope.error = 'Nastala chyba pri posielani. Prosim zavolajte nam.'
+      });
     }
   });
 
