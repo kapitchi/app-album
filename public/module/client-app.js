@@ -4,7 +4,6 @@ define([
     'module/main-app',
     'angular-ui-router',
     'ngInfiniteScroll',
-    'ng-preload-src',
     'angular-loading-bar',
     'angular-google-maps',
     'module/kap-security'
@@ -14,7 +13,6 @@ define([
         'main-app',
         'ui.router',
         'infinite-scroll',
-        'ng-preload-src',
         'angular-loading-bar',
         'kap-security',
         'uiGmapgoogle-maps'
@@ -118,6 +116,7 @@ define([
     $scope.formData = {};
     $scope.status = '';
     $scope.sending = false;
+    $scope.buttonLabel = 'Poslat';
 
     var location = {
       latitude: 48.2089941,
@@ -145,6 +144,7 @@ define([
       }
       
       $scope.status = 'SENDING';
+      $scope.buttonLabel = 'Posilim ...'
       $http.post('/email', $scope.formData).then(function(res) {
         $scope.status = 'SENT';
         $scope.sending = false;
