@@ -17,16 +17,11 @@
 //AngularJS
 @import "angular";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans);
-//AngularJS - xeditable
-@import "vendor/angular-xeditable";
+
 @import "vendor/angular-loading-bar";
 @import "vendor/textAngular";
 
 @import "../../public/vendor/angular-ui-tree/source/angular-ui-tree";
-
-//medium editor
-@import "../../public/vendor/medium-editor/src/sass/medium-editor";
-@import "../../public/vendor/medium-editor/src/sass/themes/bootstrap";
 
 .medium-editor-toolbar {
   z-index: 1040;
@@ -555,10 +550,10 @@ footer {
 
 
 .angular-google-map-container { height: 400px; }
-.gm-style-iw {
-  color: black;
-  height: 120px;
-}
+//.gm-style-iw {
+//  color: black;
+//  height: 120px;
+//}
 
 //ANIMATIONS
 //http://www.divshot.com/blog/tips-and-tricks/angular-1-2-and-animate-css/
