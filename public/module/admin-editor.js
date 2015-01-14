@@ -4,8 +4,7 @@ define([
 ], function(angular) {
 
   var module = angular.module('admin-editor', [
-    'textAngular',
-    'angular-medium-editor'
+    'textAngular'
   ]);
 
   module.constant('editorConfig', {
