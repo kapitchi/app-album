@@ -5,7 +5,7 @@ echo $this->doctype();
     <head>
         <?=$this->render('layout/partial/head')?>
     </head>
-    <body>
+    <body ng-class="'page-' + page.className">
         <?=$this->content?>
         <?=$this->inlineScript() ?>
         <?=$this->ng()?>

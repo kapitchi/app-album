@@ -8,7 +8,8 @@ define([
   'angular-bootstrap',
   'angular-messages',
   'angular-moment',
-  'module/kap-hal'
+  'module/kap-hal',
+  'angular-easyfb'
 ], function(requireModule, angular, moment) {
 
   //moment stuff
@@ -32,8 +33,18 @@ define([
     'ui.router',
     'ngMessages',
     'angularMoment',
-    'kap-hal'
+    'kap-hal',
+    'ezfb'
   ]);
+
+  module.config(function (ezfbProvider, $locationProvider, serverConfig) {
+    ezfbProvider.setInitParams({
+      appId: serverConfig.facebookAppId,
+      version: 'v2.0'
+    });
+
+    $locationProvider.html5Mode(true).hashPrefix('!');
+  });
   
   module.constant('serverConfig', requireModule.config());
 
@@ -176,6 +187,7 @@ define([
     }
     
     $rootScope.page = page.model;
+    $rootScope.$window = $window;
 
     $rootScope.app = {
       edit: $sessionStorage.edit,
@@ -185,8 +197,8 @@ define([
       }
     };
     
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      $rootScope.app.nav.collapsed = false;  
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      $rootScope.app.nav.collapsed = true;  
     });
     
     $rootScope.$auth = authenticationService;
@@ -352,6 +364,10 @@ define([
     this.setTitle = function(title) {
       this.model.title = title;
     };
+
+    this.setClassName = function(className) {
+      this.model.className = className;
+    };
   });
 
   module.directive('extendController', function($controller) {
@@ -369,6 +385,16 @@ define([
       }
     };
   });
+
+  module.filter('htmlToPlaintext', function() {
+      return function(text) {
+        if(!text) {
+          return '';
+        }
+        return String(text).replace(/<[^>]+>/gm, '');
+      }
+    }
+  );
   
   return module;
   

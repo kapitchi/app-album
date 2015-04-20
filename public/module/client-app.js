@@ -110,6 +110,7 @@ define([
 
     $scope.page = pageEntity;
     page.setTitle(pageEntity.title);
+    page.setClassName($stateParams.key);
   });
 
   module.controller('ContactController', function($scope, $http) {

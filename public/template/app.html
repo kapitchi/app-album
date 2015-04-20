@@ -10,7 +10,7 @@
             <a class="navbar-brand" ui-sref="app.home">D</a>
         </div>
         <div class="collapse navbar-collapse" collapse="app.nav.collapsed">
-            <ul class="nav navbar-nav" ng-click="app.nav.collapsed = false">
+            <ul class="nav navbar-nav">
                 <li ng-repeat="navItem in app.nav.main">
                     <a ng-href="{{navItem.href}}">{{navItem.label}}</a>
                 </li>
@@ -49,7 +49,7 @@
 <!-- file uploader -->
         
 <div class="">
-
+    {{app.nav.collapsed}}
     <div ui-view="content" class="content-view"></div>
     <!-- Footer -->
 </div>
