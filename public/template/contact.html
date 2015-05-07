@@ -1,34 +1,32 @@
 <div class="row">
     <div class="col-md-12">
-        <ui-gmap-google-map center='map.center' zoom='map.zoom'>
-            <ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id">
-                <ui-gmap-window options="windowOptions" show="true">
-                    <div>
-                        <b>Adresa</b><br>
-                        43 Melville Road<br>
-                        London<br>UK
-                        <br>
-                        <b>Telefon</b><br>
-                        +420 (0) 933 333 555
-                    </div>
-                </ui-gmap-window>
-            </ui-gmap-marker>
-        </ui-gmap-google-map>   
+        <!--<ui-gmap-google-map center='map.center' zoom='map.zoom'>-->
+            <!--<ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id">-->
+                <!--<ui-gmap-window options="windowOptions" show="true">-->
+                    <!--<div>-->
+                        <!--<b>Studio PINK ANT</b><br>-->
+                        <!--Wikyland u Olympie (za Sconto nábytkem)<br>-->
+                        <!--Svratecká 845, 664 42 Modřice-->
+                    <!--</div>-->
+                <!--</ui-gmap-window>-->
+            <!--</ui-gmap-marker>-->
+        <!--</ui-gmap-google-map>-->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2610.5820701709263!2d16.635248!3d49.132571999999996!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4712bff8f8e26875%3A0x790c114bf1d3cd1c!2sStudio+Ewelyn-+Eva+Vlachov%C3%A1!5e0!3m2!1sen!2s!4v1430835005575" width="100%" height="450" frameborder="0" style="border:0"></iframe>
     </div>
 </div>
-<h2>Kontaktuj nas</h2>  
 <div class="row">
-    <div class="col-md-12">
-        <form ng-submit="submitForm(formData)" name="form" role="form" novalidate>
-            <div class="form-group">
-                <label>Jmeno</label>
+    <div ng-show="canShowForm()" class="col-md-12">
+        <h2>Kontaktujte nás</h2>  
+        <form ng-submit="submitForm(formData)" name="form" role="form" novalidate class="form-horizontal contact-form">
+            <div class="form-group" ng-class="{'has-error': !form.email.$valid && form.email.$dirty}">
+                <label>Jméno *</label>
                 <input ng-model="formData.name" name="name" required class="form-control">
                 <div ng-messages="form.name.$error" ng-show="form.name.$dirty">
                     <div ng-message="required">Jako se jmenujes?</div>
                 </div>
             </div>
-            <div class="form-group" ng-class="{'has-error': !form.email.$valid}">
-                <label>Emailova adresa</label>
+            <div class="form-group" ng-class="{'has-error': !form.email.$valid && form.email.$dirty}">
+                <label>Email *</label>
                 <input ng-model="formData.email" name="email" type="email" required class="form-control">
                 <div ng-messages="form.email.$error" ng-show="form.email.$dirty">
                     <div ng-message="email">Je toto spravna email adresa?</div>
@@ -45,11 +43,19 @@
             </div>
 
             <div class="form-group">
-                <label>Poznamka</label>
+                <label>Poznámka</label>
                 <textarea ng-model="formData.note" class="form-control" rows="2"></textarea>
             </div>
 
-            <button ng-click="submitForm(form)" ng-disabled="!form.$valid" type="submit" class="btn btn-primary">Poslat</button>
+            <button ng-click="submitForm(form)" ng-disabled="!form.$valid || status" type="submit" class="btn btn-primary">
+                {{buttonLabel}}
+            </button>
         </form>
+    </div>
+    <div ng-show="!canShowForm()" class="col-md-12 text-center" style="margin: 50px; margin-top: 150px">
+        <h2>Dekujem, ozvěme se Vám naspět.</h2>
+    </div>
+    <div ng-show="status === 'ERROR'" class="col-md-12 text-center" style="margin: 50px; margin-top: 150px">
+        <h3>{{error}}</h3>
     </div>
 </div>

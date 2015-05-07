@@ -20,6 +20,7 @@ define([
   
     module.config(function(uiGmapGoogleMapApiProvider) {
       uiGmapGoogleMapApiProvider.configure({
+        key: 'AIzaSyCUKg8yV2CGG7qpSBliQ7j1b8mKX-mDjU8'
         //v: '3.17',
         //libraries: 'weather,geometry,visualization'
       });
@@ -119,24 +120,28 @@ define([
     $scope.sending = false;
     $scope.buttonLabel = 'Poslat';
 
-    var location = {
-      latitude: 48.2089941,
-      longitude: 17.2077859
-    };
-
-    $scope.map = { center: location, zoom: 8 };
-
-    $scope.windowOptions = {
-    };
-
-    $scope.marker = {
-      id: 0,
-      //icon: '/images/map-icon.png',
-      coords: location,
-      options: {
-        draggable: false
-      }
-    };
+//    var location = {
+//      latitude: 48.2089941,
+//      longitude: 17.2077859
+//    };
+//
+//    $scope.map = { center: angular.copy(location), zoom: 8 };
+//
+//    $scope.windowOptions = {
+//    };
+//
+//    $scope.marker = {
+//      id: 111,
+//      //icon: '/images/map-icon.png',
+//      coords: angular.copy(location),
+//      options: {
+//        draggable: false
+//      }
+//    };
+    
+    $scope.canShowForm = function() {
+      return $scope.status  === '' || $scope.status !== 'SENT';
+    }
 
     $scope.submitForm = function(form) {
 
@@ -145,13 +150,13 @@ define([
       }
       
       $scope.status = 'SENDING';
-      $scope.buttonLabel = 'Posilim ...'
+      $scope.buttonLabel = 'Posílám ...'
       $http.post('/email', $scope.formData).then(function(res) {
         $scope.status = 'SENT';
         $scope.sending = false;
       }).catch(function(res) {
         $scope.status = 'ERROR';
-        $scope.error = 'Nastala chyba pri posielani. Prosim zavolajte nam.'
+        $scope.error = 'Nepodařilo se poslat Váš požadvek. Zavolajte nám prosím.'
       });
     }
   });

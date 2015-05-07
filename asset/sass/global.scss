@@ -536,6 +536,13 @@ footer {
 
   }
 
+//pages
+page-news {
+  img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+}
 
 //forms
 
@@ -548,12 +555,17 @@ footer {
 }
 
 
+.contact-form {
+  .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
 
 .angular-google-map-container { height: 400px; }
-//.gm-style-iw {
-//  color: black;
-//  height: 120px;
-//}
+.gm-style-iw {
+  color: black;
+}
 
 //ANIMATIONS
 //http://www.divshot.com/blog/tips-and-tricks/angular-1-2-and-animate-css/
