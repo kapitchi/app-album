@@ -230,10 +230,6 @@ define([
 
   });
 
-  module.controller('ContactController', function($scope) {
-    $scope.test = 'DDDD';
-  });
-
   module.controller('AdminAlbumController', function($scope, $state,$modal, $stateParams, apiClient, HalCollection, $sce) {
 
     var albumId = $stateParams.albumId;

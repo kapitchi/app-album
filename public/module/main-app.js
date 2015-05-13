@@ -87,10 +87,6 @@ define([
             controller: "AlbumController",
             templateUrl: "/template/album.html"
             
-          },
-          'contact': {
-            controller: 'ContactController',
-            templateUrl: '/template/contact.html'
           }
         },
         albumId: serverConfig.homeAlbumId

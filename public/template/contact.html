@@ -18,42 +18,55 @@
     <div ng-show="canShowForm()" class="col-md-12">
         <h2>Kontaktujte nás</h2>  
         <form ng-submit="submitForm(formData)" name="form" role="form" novalidate class="form-horizontal contact-form">
-            <div class="form-group" ng-class="{'has-error': !form.email.$valid && form.email.$dirty}">
-                <label>Jméno *</label>
-                <input ng-model="formData.name" name="name" required class="form-control">
-                <div ng-messages="form.name.$error" ng-show="form.name.$dirty">
-                    <div ng-message="required">Jako se jmenujes?</div>
+            <div class="form-group" ng-class="{'has-error': !form.name.$valid && form.name.$dirty}">
+                <label class="col-sm-2 control-label">Jméno *</label>
+                <div class="col-sm-10">
+                    <input ng-model="formData.name" name="name" required class="form-control">
+                    <div ng-messages="form.name.$error" ng-show="form.name.$dirty">
+                        <div ng-message="required">Jaké je Vaše jméno?</div>
+                    </div>
                 </div>
             </div>
             <div class="form-group" ng-class="{'has-error': !form.email.$valid && form.email.$dirty}">
-                <label>Email *</label>
-                <input ng-model="formData.email" name="email" type="email" required class="form-control">
-                <div ng-messages="form.email.$error" ng-show="form.email.$dirty">
-                    <div ng-message="email">Je toto spravna email adresa?</div>
-                    <div ng-message="required">Jaky mas email?</div>
+                <label class="col-sm-2 control-label">Email *</label>
+                <div class="col-sm-10">
+                    <input ng-model="formData.email" name="email" type="email" required class="form-control">
+                    <div ng-messages="form.email.$error" ng-show="form.email.$dirty">
+                        <div ng-message="email">Je toto správná e-mailová adresa?</div>
+                        <div ng-message="required">Jaký je Váš e-mail?</div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
-                <label>Datum</label>
-                <input datepicker-popup is-open="datepickerOpen" ng-click="datepickerOpen = true" name="eventTime" ng-model="formData.when" local-date-to-string class="form-control">
+                <label class="col-sm-2 control-label">Datum</label>
+                <div class="col-sm-10">
+                    <input datepicker-popup is-open="datepickerOpen" ng-click="datepickerOpen = true" name="eventTime" ng-model="formData.when" local-date-to-string class="form-control">
+                </div>
             </div>
             <div class="form-group">
-                <label>Typ sluzby</label>
-                <input ng-model="formData.service" type="text" class="form-control">
+                <label class="col-sm-2 control-label">Typ sluzby</label>
+                <div class="col-sm-10">
+                    <input ng-model="formData.service" type="text" class="form-control">
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Poznámka</label>
-                <textarea ng-model="formData.note" class="form-control" rows="2"></textarea>
+                <label class="col-sm-2 control-label">Poznámka</label>
+                <div class="col-sm-10">
+                    <textarea ng-model="formData.note" class="form-control" rows="2"></textarea>
+                </div>
             </div>
-
-            <button ng-click="submitForm(form)" ng-disabled="!form.$valid || status" type="submit" class="btn btn-primary">
-                {{buttonLabel}}
-            </button>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button ng-click="submitForm(form)" ng-disabled="!form.$valid || status" type="submit" class="btn btn-primary">
+                        {{buttonLabel}}
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
-    <div ng-show="!canShowForm()" class="col-md-12 text-center" style="margin: 50px; margin-top: 150px">
-        <h2>Dekujem, ozvěme se Vám naspět.</h2>
+    <div ng-show="status === 'SENT'" class="col-md-12 text-center" style="margin: 50px; margin-top: 150px">
+        <h2>Děkujeme, budeme Vás kontaktovat.</h2>
     </div>
     <div ng-show="status === 'ERROR'" class="col-md-12 text-center" style="margin: 50px; margin-top: 150px">
         <h3>{{error}}</h3>
