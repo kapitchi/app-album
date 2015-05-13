@@ -63,27 +63,13 @@ class Module implements ApigilityProviderInterface
             ]);
             
             $tags = [];
-            foreach($adapter->getItems(0, 9999)->toArray() as $itemTag) {
-                $tags[] = $tagRepository->find($itemTag['tag_id']);
+            foreach($adapter->getItems(0, 9999)->toArray() as $parentItem) {
+                $tags[] = $tagRepository->find($parentItem['tag_id']);
             }
             
             $entity['tag_collection'] = new TagCollection(new ArrayAdapter($tags));
             //END
 
-            //albums
-//            $albumItemRepository = $this->sm->get('KapAlbum\\AlbumItemRepository');
-//            $adapter = $this->sm->get('KapAlbum\AlbumItemRelRepository')->getPaginatorAdapter([
-//                'item_id' => $entity['id']
-//            ]);
-//            
-//            $tags = [];
-//            foreach($adapter->getItems(0, 9999)->toArray() as $itemTag) {
-//                $tags[] = $albumItemRepository->find($itemTag['parent_id']);
-//            }
-//            
-//            $entity['parent_collection'] = new AlbumItemCollection(new ArrayAdapter($tags));
-            //END
-            
             if(!empty($entity['file_id'])) {
                 $fileRepo = $this->sm->get('KapFileManager\\FileRepository');
                 $entity['file'] = $fileRepo->find($entity['file_id']);
@@ -135,6 +121,19 @@ class Module implements ApigilityProviderInterface
                 }
                 
                 $entity['showcase_items'] = new AlbumItemCollection(new ArrayAdapter($items));
+
+
+                //parent album
+                $adapter = $this->sm->get('KapAlbum\AlbumItemRelRepository')->getPaginatorAdapter([
+                    'item_id' => $entity['id']
+                ]);
+
+                //todo xxx take first album for now only
+                foreach($adapter->getItems(0, 9999)->toArray() as $parentItem) {
+                    $entity['parent_album'] = $albumItemRepository->find($parentItem['parent_id']);
+                    break;
+                }
+                //END
             }
         }
 
@@ -176,8 +175,8 @@ class Module implements ApigilityProviderInterface
                 ]);
 
                 $embedItems = [];
-                foreach($adapter->getItems(0, 9999)->toArray() as $itemTag) {
-                    $embedItems[] = $albumItemRepository->find($itemTag['album_item_id']);
+                foreach($adapter->getItems(0, 9999)->toArray() as $parentItem) {
+                    $embedItems[] = $albumItemRepository->find($parentItem['album_item_id']);
                 }
 
                 $entity['album_item_collection'] = new AlbumItemCollection(new ArrayAdapter($embedItems));

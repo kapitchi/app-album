@@ -296,10 +296,8 @@ h1, h2, h3, h4 {
 .previous, .next {
   width: 50px;
   height: 100px;
-  position: fixed;
-  top: 50%;
-  margin-top: -25px;
   opacity: 0.5;
+  display: inline-block;
   &:hover {
     opacity: 1;
   }
@@ -312,6 +310,15 @@ h1, h2, h3, h4 {
   right: 20px;
   background: url(../../images/next.png);
 }
+
+.full-screen {
+  .previous, .next {
+    position: fixed;
+    top: 50%;
+    margin-top: -25px;
+  }
+}
+
 .modal {
   &.full-screen {
     height: 100%;

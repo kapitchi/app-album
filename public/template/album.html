@@ -9,11 +9,18 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 thumb album-info">
+    <div class="col-md-1 ">
+        <div ng-show="album._embedded.parent_album">
+            <a ui-sref="app.album({albumId: album._embedded.parent_album.id})" class="previous"></a>
+        </div>
+    </div>
+    <div class="col-lg-10 col-md-10 col-xs-10 thumb album-info">
          <h1 class="album-title">{{album.name}}</h1>
         <p class="album-description" ng-bind-html="album.description"></p>
         <p class="album-date">{{album.album_time|amCalendar}}</p>
         <div class="fb-like" data-href="{{$window.location.href}}" data-layout="button" data-action="like" data-show-faces="false" data-share="true"></div>
+    </div>
+    <div class="col-md-1">
     </div>
 </div>
     
