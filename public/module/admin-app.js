@@ -154,17 +154,23 @@ define([
     $scope.loadYoutubeThumbnails = function() {
       var videoId = $scope.item.youtube_video_id;
 
-      $http.get('http://gdata.youtube.com/feeds/api/videos/' + videoId + '?v=2&alt=json').then(function(data) {
-        for(var i in data.data.entry['media$group']['media$thumbnail']) {
-          var thumb = data.data.entry['media$group']['media$thumbnail'][i];
-          if(thumb['yt$name'] === 'sddefault') {
-            $scope.selectThumbnailUrl({
-              url: thumb['url']
-            });
-            return;
-          }
-        }
+      //http://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
+      $scope.selectThumbnailUrl({
+        url: 'http://i1.ytimg.com/vi/' + videoId + '/maxresdefault.jpg'
       });
+      
+      //We were getting HTTP 401 when using the below.
+//      $http.get('http://gdata.youtube.com/feeds/api/videos/' + videoId + '?v=2&alt=json').then(function(data) {
+//        for(var i in data.data.entry['media$group']['media$thumbnail']) {
+//          var thumb = data.data.entry['media$group']['media$thumbnail'][i];
+//          if(thumb['yt$name'] === 'sddefault') {
+//            $scope.selectThumbnailUrl({
+//              url: thumb['url']
+//            });
+//            return;
+//          }
+//        }
+//      });
     }
 
     $scope.loadTags = function(query) {
