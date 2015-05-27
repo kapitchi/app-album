@@ -156,7 +156,7 @@ define([
 
       //http://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
       $scope.selectThumbnailUrl({
-        url: 'http://i1.ytimg.com/vi/' + videoId + '/maxresdefault.jpg'
+        url: 'http://i1.ytimg.com/vi/' + videoId + '/sddefault.jpg'
       });
       
       //We were getting HTTP 401 when using the below.
