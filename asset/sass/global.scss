@@ -171,6 +171,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
   -webkit-animation-fill-mode: forwards; /* Chrome, Safari, Opera */
   animation-fill-mode: forwards;
   text-align: center;
+  z-index: 1;
 }
 .album-title {
   font-size: 36px;
