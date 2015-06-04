@@ -27,7 +27,7 @@ require.config({
         moment: 'vendor/moment/min/moment-with-locales.min',
         'angular-moment': 'vendor/angular-moment/angular-moment',
         textAngular: 'vendor/textAngular/src/textAngular',
-        'angular-sanitize': 'vendor/angular-sanitize/angular-sanitize',
+        'angular-sanitize': 'vendor/textAngular/dist/textAngular-sanitize.min',
         'angular-animate': 'vendor/angular-animate/angular-animate',
         'angular-strap': 'vendor/angular-strap/dist/angular-strap.min',
         'angular-strap.tpl': 'vendor/angular-strap/dist/angular-strap.tpl.min',
